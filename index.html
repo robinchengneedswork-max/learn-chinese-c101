@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>C101 · Learn Chinese</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/icon.svg" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- HOME -->
+  <section id="home" class="screen active">
+    <header class="app-header">
+      <div class="brand">課程 101</div>
+      <div class="stats">
+        <div class="stat"><span class="stat-ico">🔥</span><span id="stat-streak">0</span></div>
+        <div class="stat"><span class="stat-ico">⭐</span><span id="stat-xp">0</span></div>
+      </div>
+    </header>
+
+    <main class="home-main">
+      <button id="review-btn" class="review-btn">Review</button>
+      <div id="chapter-list" class="chapter-list"></div>
+      <p class="tagline">Vocabulary from <em>Course 101: Christian Foundations</em>.</p>
+    </main>
+  </section>
+
+  <!-- SESSION -->
+  <section id="session" class="screen">
+    <header class="session-top">
+      <button id="session-exit" class="exit" aria-label="Exit lesson">✕</button>
+      <div class="bar session-bar"><div id="session-bar-fill" class="bar-fill"></div></div>
+    </header>
+    <main id="session-stage" class="session-stage"></main>
+    <footer id="session-foot" class="session-foot"></footer>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="results" class="screen">
+    <main class="results-main">
+      <div class="results-emoji">🎉</div>
+      <h1 id="results-title">Lesson complete!</h1>
+      <div id="results-body" class="results-body"></div>
+      <button id="results-done" class="continue">Continue</button>
+    </main>
+  </section>
+
+  <!-- load order = dependency order -->
+  <script src="src/config.js"></script>
+  <script src="src/content.js"></script>
+  <script src="content/chapter-01.js"></script>
+  <script src="src/state.js"></script>
+  <script src="src/srs.js"></script>
+  <script src="src/session.js"></script>
+  <script src="src/audio.js"></script>
+  <script src="src/ui.js"></script>
+  <script src="src/main.js"></script>
+</body>
+</html>

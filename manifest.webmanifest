@@ -1,0 +1,15 @@
+{
+  "name": "C101 · Learn Chinese",
+  "short_name": "C101",
+  "description": "Learn the Chinese vocabulary of Course 101: Christian Foundations.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icons/icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

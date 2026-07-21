@@ -1,0 +1,12 @@
+# Large source assets — kept locally for the content pipeline, not deployed.
+*.pdf
+cedict.txt
+cedict.txt.gz
+_extract_full.txt
+
+# Python
+__pycache__/
+*.pyc
+
+node_modules/
+.vercel/

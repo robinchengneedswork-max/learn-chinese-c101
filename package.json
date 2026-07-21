@@ -1,0 +1,10 @@
+{
+  "name": "learn-c101",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Duolingo-style PWA for the Chinese vocabulary of Course 101: Christian Foundations.",
+  "scripts": {
+    "start": "node serve.js",
+    "test": "node test/headless.js"
+  }
+}
