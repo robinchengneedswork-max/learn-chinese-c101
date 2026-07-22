@@ -183,6 +183,11 @@ const Session = (function () {
           const id = this.lesson.id || '';
           if (id.indexOf('test-') === 0) State.addXp(CONFIG.XP_PER_TEST);
           else if (id !== 'review') State.addXp(CONFIG.XP_PER_LESSON);
+          // Path progression: clearing a node's session unlocks the next one.
+          if (id && id !== 'review') {
+            const acc = this.correctCount / (this.correctCount + this.missed || 1);
+            State.markPartCleared(id, acc);
+          }
           State.save();
         }
       }

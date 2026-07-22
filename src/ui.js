@@ -26,7 +26,81 @@ const UI = (function () {
     return b;
   }
 
-  // ---- Home -----------------------------------------------------------------
+  // ---- Home: the learning path ----------------------------------------------
+  // The home screen is a Duolingo-style winding trail. Each lesson "part" (Learn
+  // parts, the 📖 Reading drill, and the chapter Test) is a bubble node. Nodes
+  // unlock in order: the next one opens once the current is cleared (its session
+  // finished — see Session.answer → State.markPartCleared). Watercolor set
+  // dressing from the Course 101 book scatters along the trail.
+
+  // Each section of the chapter carries its own watercolor illustrations from the
+  // Course 101 book, echoing that section's theme (Ch.1's "big questions", the
+  // creation account, etc.). They float alongside the trail in a soft halo so they
+  // stay legible; line-art pieces (invert:true) are flipped to glow white on the
+  // dark band. Pieces are spread across the section's nodes at render time.
+  const SECTION_ART = {
+    'ch01-l1': [ { img: 'star.png',      side: 'right', size: 'lg' } ],  // Nature of Man — shooting star
+    'ch01-l2': [ { img: 'book-tree.png', side: 'right', size: 'lg' } ]   // The Creation Account — tree
+    // ch01-l3 (In the Beginning), ch01-l4 (Anticipating Parent), ch01-l5 (A Fork
+    // in the Road): awaiting hand-picked assets. Drop files in assets/, add them
+    // here and to sw.js's ASSETS list.
+  };
+
+  let trailNodeEls = []; // {btn, node} cached each render for (re)drawing the path
+
+  // Build the render model: chapters → sections (each a background band) → nodes,
+  // plus a capstone chapter-test node. Assigns each node a linear seq (for the
+  // serpentine + gating) and its section's illustrations.
+  function buildModel() {
+    const chapters = [];
+    const allNodes = [];
+    let seq = 0;
+    C101.chapters().forEach((ch) => {
+      const cm = { title: ch.title, zh: ch.zh, sections: [], test: null };
+      ch.lessons.forEach((lesson, li) => {
+        const art = SECTION_ART[lesson.id] || [];
+        const parts = C101.parts(lesson);
+        const sm = { id: lesson.id, title: lesson.title, zh: lesson.zh,
+                     band: (li % 5) + 1, nodes: [] };
+        parts.forEach((part, pi) => {
+          const node = makeNode(part, part.kind, seq++);
+          node.decor = art.filter((_, ai) => artRow(ai, art.length, parts.length) === pi);
+          sm.nodes.push(node); allNodes.push(node);
+        });
+        cm.sections.push(sm);
+      });
+      if ((ch.sentences || []).length) {
+        const test = { id: `test-${ch.id}`, chapterId: ch.id, kind: 'test',
+          label: 'Chapter Test', count: ch.sentences.length };
+        cm.test = makeNode(test, 'test', seq++);
+        allNodes.push(cm.test);
+      }
+      chapters.push(cm);
+    });
+    // Gating: unlocked if first or previous cleared; current = first open+uncleared.
+    let prevCleared = true, currentTaken = false;
+    for (const n of allNodes) {
+      n.unlocked = prevCleared;
+      if (n.unlocked && !n.cleared && !currentTaken) { n.current = true; currentTaken = true; }
+      prevCleared = n.cleared;
+    }
+    return { chapters, allNodes };
+  }
+
+  function makeNode(part, kind, seq) {
+    return {
+      part, kind, seq, id: part.id,
+      cleared: State.partCleared(part.id),
+      bestAcc: State.partBestAcc(part.id),
+      unlocked: false, current: false, decor: []
+    };
+  }
+
+  // Which node (0..nodes-1) an art piece ai (of count) lands on — evenly spread.
+  function artRow(ai, count, nodes) {
+    if (count <= 1) return Math.min(1, nodes - 1);
+    return Math.round(ai * (nodes - 1) / (count - 1));
+  }
 
   function renderHome() {
     const s = State.get();
@@ -38,59 +112,187 @@ const UI = (function () {
     reviewBtn.textContent = due ? `Review · ${due} due` : 'Review · all caught up';
     reviewBtn.disabled = due === 0;
 
-    const list = $('#chapter-list');
-    list.innerHTML = '';
-    for (const ch of C101.chapters()) {
-      list.appendChild(el('h2', 'chapter-title', ch.title));
-      list.appendChild(el('div', 'chapter-zh', ch.zh));
-      for (const lesson of ch.lessons) {
-        // Section header, then its bite-size parts (learn parts + Reading part).
-        const sec = el('div', 'section-head');
-        sec.appendChild(el('span', 'section-name', lesson.title));
-        sec.appendChild(el('span', 'section-zh', lesson.zh));
-        list.appendChild(sec);
-        const row = el('div', 'part-row');
-        for (const part of C101.parts(lesson)) row.appendChild(partCard(part));
-        list.appendChild(row);
+    const scene = $('#chapter-list');
+    scene.className = 'path-scene';
+    scene.innerHTML = '';
+    trailNodeEls = [];
+
+    const model = buildModel();
+    let rowIdx = 0;
+    for (const ch of model.chapters) {
+      scene.appendChild(chapterHeader(ch));
+      for (const sec of ch.sections) {
+        const band = el('div', 'band b' + sec.band);
+        band.appendChild(sectionBanner(sec));
+        for (const node of sec.nodes) band.appendChild(nodeRow(node, rowIdx++));
+        scene.appendChild(band);
       }
-      if ((ch.sentences || []).length) list.appendChild(testCard(ch));
+      if (ch.test) {
+        const band = el('div', 'band capstone');
+        band.appendChild(nodeRow(ch.test, rowIdx++));
+        scene.appendChild(band);
+      }
     }
+    // Draw the bending, filling trail once layout has settled.
+    requestAnimationFrame(() => drawTrail(scene));
   }
 
-  function partCard(part) {
-    const card = el('button', 'part-card');
-    if (part.kind === 'reading') card.classList.add('reading');
-    const mastery = SRS.lessonMastery(part);
-    if (mastery >= 1) card.classList.add('mastered');
+  // Night-sky strip that opens the chapter. (The shooting star now sits with the
+  // Nature of Man section below, so the header stays clean.)
+  function chapterHeader(ch) {
+    const h = el('div', 'trail-chapter');
+    h.appendChild(el('div', 'trail-chapter-title', ch.title));
+    h.appendChild(el('div', 'trail-chapter-zh', ch.zh));
+    return h;
+  }
 
-    card.appendChild(el('span', 'part-label', part.label));
-    if (part.kind === 'reading') {
-      card.appendChild(el('span', 'part-meta', 'no pinyin'));
+  function sectionBanner(e) {
+    const b = el('div', 'trail-banner');
+    b.appendChild(el('span', 'trail-banner-name', e.title));
+    b.appendChild(el('span', 'trail-banner-zh', e.zh));
+    return b;
+  }
+
+  function decorImg(file, cls) {
+    const img = el('img', 'decor ' + (cls || ''));
+    img.src = 'assets/' + file;
+    img.alt = '';
+    img.setAttribute('aria-hidden', 'true');
+    img.setAttribute('loading', 'lazy');
+    return img;
+  }
+
+  // A section illustration floating at one edge of the trail, in a soft light halo
+  // so both silhouettes and (inverted) line-art read over the band.
+  function decorPiece(piece) {
+    const halo = el('div', 'decor-halo decor-' + piece.side + ' decor-' + piece.size);
+    halo.appendChild(decorImg(piece.img, 'decor-img' + (piece.invert ? ' inv' : '')));
+    return halo;
+  }
+
+  // One step of the winding trail: the node bubble, offset side-to-side, with its
+  // section's set-dressing floating alongside.
+  function nodeRow(node, rowIdx) {
+    const row = el('div', 'node-row');
+    const offset = Math.round(Math.sin(rowIdx * 0.9) * 76); // gentle serpentine
+    row.style.setProperty('--x', offset + 'px');
+
+    for (const piece of (node.decor || [])) row.appendChild(decorPiece(piece));
+
+    const wrap = nodeBubble(node);
+    row.appendChild(wrap);
+    trailNodeEls.push({ btn: wrap.querySelector('.node'), node });
+    return row;
+  }
+
+  // ---- The connecting trail (SVG) -------------------------------------------
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  function svgEl(tag, attrs) {
+    const n = document.createElementNS(SVGNS, tag);
+    for (const k in attrs) n.setAttribute(k, attrs[k]);
+    return n;
+  }
+
+  // Smooth curve through node centres (Catmull-Rom → cubic bezier) so the path
+  // bends around and links the bubbles.
+  function smoothPath(p) {
+    if (p.length < 2) return '';
+    let d = `M ${p[0].x} ${p[0].y}`;
+    for (let i = 0; i < p.length - 1; i++) {
+      const p0 = p[i - 1] || p[i], p1 = p[i], p2 = p[i + 1], p3 = p[i + 2] || p2;
+      const c1x = p1.x + (p2.x - p0.x) / 6, c1y = p1.y + (p2.y - p0.y) / 6;
+      const c2x = p2.x - (p3.x - p1.x) / 6, c2y = p2.y - (p3.y - p1.y) / 6;
+      d += ` C ${c1x} ${c1y} ${c2x} ${c2y} ${p2.x} ${p2.y}`;
+    }
+    return d;
+  }
+
+  // Measure the live node positions and draw the winding path behind them; its
+  // cleared prefix is lit gold and reaches halfway toward the current node.
+  function drawTrail(scene) {
+    if (!scene || !scene.clientHeight) return;            // not visible yet
+    const old = scene.querySelector('.trail-svg');
+    if (old) old.remove();
+    const els = trailNodeEls;
+    if (els.length < 2) return;
+
+    const sr = scene.getBoundingClientRect();
+    const w = scene.clientWidth, h = scene.scrollHeight;
+    const pts = els.map(({ btn }) => {
+      const r = btn.getBoundingClientRect();
+      return { x: r.left - sr.left + r.width / 2, y: r.top - sr.top + r.height / 2 };
+    });
+
+    const svg = svgEl('svg', { class: 'trail-svg', width: w, height: h, viewBox: `0 0 ${w} ${h}` });
+    svg.appendChild(svgEl('path', { class: 'trail-line', d: smoothPath(pts) }));
+
+    let done = 0; // contiguous cleared prefix = how far we've walked
+    for (const { node } of els) { if (node.cleared) done++; else break; }
+    if (done >= 1) {
+      const gold = pts.slice(0, done);
+      if (done < pts.length) {
+        gold.push({ x: (pts[done - 1].x + pts[done].x) / 2,
+                    y: (pts[done - 1].y + pts[done].y) / 2 });
+      }
+      if (gold.length >= 2) svg.appendChild(svgEl('path', { class: 'trail-line-fill', d: smoothPath(gold) }));
+    }
+    scene.insertBefore(svg, scene.firstChild);
+  }
+
+  function redrawTrail() {
+    if ($('#home').classList.contains('active')) drawTrail($('#chapter-list'));
+  }
+
+  function nodeBubble(node) {
+    const wrap = el('div', 'node-wrap');
+    if (node.current) {
+      const bubble = el('div', 'start-bubble', node.cleared ? 'REVIEW' : 'START');
+      wrap.appendChild(bubble);
+    }
+
+    const btn = el('button', 'node');
+    btn.classList.add('node-' + node.kind);
+    if (!node.unlocked) btn.classList.add('locked');
+    if (node.cleared) btn.classList.add('cleared');
+    if (node.current) btn.classList.add('current');
+
+    btn.appendChild(el('span', 'node-ico', nodeIcon(node)));
+    wrap.appendChild(btn);
+
+    // Stars earned (by best accuracy) sit under a cleared node.
+    if (node.cleared) wrap.appendChild(starRow(node.bestAcc));
+    wrap.appendChild(el('div', 'node-label', nodeLabel(node)));
+
+    if (node.unlocked) {
+      btn.addEventListener('click', () => {
+        node.kind === 'test' ? startTest(node.part.chapterId) : startPart(node.part);
+      });
     } else {
-      const learned = part.words.filter(w => !SRS.isNew(w.hanzi)).length;
-      card.appendChild(el('span', 'part-meta', `${learned}/${part.words.length}`));
+      btn.setAttribute('aria-disabled', 'true');
+      btn.title = 'Finish the previous step to unlock';
     }
-
-    const bar = el('div', 'bar part-bar');
-    const fill = el('div', 'bar-fill');
-    fill.style.width = (mastery * 100) + '%';
-    bar.appendChild(fill);
-    card.appendChild(bar);
-
-    card.addEventListener('click', () => startPart(part));
-    return card;
+    return wrap;
   }
 
-  function testCard(chapter) {
-    const card = el('button', 'test-card');
-    card.appendChild(el('span', 'test-ico', '📝'));
-    const body = el('div', 'test-body');
-    body.appendChild(el('span', 'test-name', 'Chapter Test'));
-    body.appendChild(el('span', 'test-meta',
-      `${chapter.sentences.length} fill-in-the-blank sentences`));
-    card.appendChild(body);
-    card.addEventListener('click', () => startTest(chapter.id));
-    return card;
+  function nodeIcon(node) {
+    if (!node.unlocked) return '🔒';
+    if (node.kind === 'test') return '🏆';
+    if (node.kind === 'reading') return '📖';
+    return '⭐';
+  }
+
+  function nodeLabel(node) {
+    if (node.kind === 'test') return 'Chapter Test';
+    return node.part.label;
+  }
+
+  function starRow(acc) {
+    const stars = acc >= 0.95 ? 3 : acc >= 0.75 ? 2 : 1;
+    const row = el('div', 'node-stars');
+    for (let i = 0; i < 3; i++) {
+      row.appendChild(el('span', 'star' + (i < stars ? ' on' : ''), '★'));
+    }
+    return row;
   }
 
   // ---- Session flow ---------------------------------------------------------
@@ -318,6 +520,10 @@ const UI = (function () {
     $('#review-btn').addEventListener('click', startReview);
     $('#session-exit').addEventListener('click', () => { session = null; renderHome(); showScreen('home'); });
     $('#results-done').addEventListener('click', () => { renderHome(); showScreen('home'); });
+    // Re-measure the connecting trail when the layout can shift.
+    let t = null;
+    window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(redrawTrail, 120); });
+    window.addEventListener('load', redrawTrail);
     renderHome();
     showScreen('home');
   }

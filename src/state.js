@@ -1,13 +1,15 @@
 // state.js — persistent progress. Pure-ish: reads/writes localStorage, no DOM.
 // Shape:
-//   { xp, streak, lastStudyDay, words: { [hanzi]: {box, due, seen, correct, wrong} } }
+//   { xp, streak, lastStudyDay,
+//     words: { [hanzi]: {box, due, seen, correct, wrong} },
+//     parts: { [partId]: {cleared, bestAcc} } }   // path progression / gating
 'use strict';
 
 const State = (function () {
   let data = null;
 
   function fresh() {
-    return { xp: 0, streak: 0, lastStudyDay: null, words: {} };
+    return { xp: 0, streak: 0, lastStudyDay: null, words: {}, parts: {} };
   }
 
   function load() {
@@ -17,6 +19,7 @@ const State = (function () {
     } catch (e) {
       data = fresh();
     }
+    if (!data.parts) data.parts = {}; // migrate progress saved before the path
     return data;
   }
 
@@ -49,12 +52,23 @@ const State = (function () {
 
   function addXp(n) { data.xp += n; }
 
+  // Path progression: mark a node cleared once its session is completed, keeping
+  // the best accuracy seen (0..1) for the star rating on the map.
+  function markPartCleared(id, acc) {
+    if (!id) return;
+    const prev = data.parts[id] || { cleared: false, bestAcc: 0 };
+    data.parts[id] = { cleared: true, bestAcc: Math.max(prev.bestAcc || 0, acc || 0) };
+  }
+  function partCleared(id) { return !!(data.parts[id] && data.parts[id].cleared); }
+  function partBestAcc(id) { return (data.parts[id] && data.parts[id].bestAcc) || 0; }
+
   return {
     load, save,
     get: () => data,
     wordProgress,
     touchStreak,
     addXp,
+    markPartCleared, partCleared, partBestAcc,
     reset: () => { data = fresh(); save(); }
   };
 })();

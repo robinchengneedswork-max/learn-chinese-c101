@@ -131,6 +131,22 @@ ok('box1 due ~4h out', Math.abs(State.get().words['生命'].due - (Date.now() + 
 SRS.grade('生命', false);
 ok('wrong demotes box', State.get().words['生命'].box === 0);
 
+// --- path progression: clearing a part's session marks it cleared (gating)
+store.clear(); State.reset(); State.load();
+const p1 = C101.parts(C101.lesson('ch01-l1'))[0];
+ok('part starts uncleared', !State.partCleared(p1.id));
+let ps = Session.forPart(p1);
+let pguard = 0;
+while (!ps.done && pguard++ < 2000) {
+  const item = ps.current();
+  ps.answer(item.kind === 'intro' ? null : item.correct);
+}
+ok('finishing a part clears it', State.partCleared(p1.id));
+ok('cleared part records best accuracy', State.partBestAcc(p1.id) > 0);
+ok('an untouched part stays locked (uncleared)',
+   !State.partCleared(C101.parts(C101.lesson('ch01-l2'))[0].id));
+ok('review sessions never clear a node', !State.partCleared('review'));
+
 // --- review session pulls due words
 store.clear(); State.reset(); State.load();
 // make one word due in the past
