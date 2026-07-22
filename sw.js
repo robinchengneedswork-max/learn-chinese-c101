@@ -1,8 +1,9 @@
 // sw.js — offline app shell cache. Bump CACHE when files change so clients update.
-const CACHE = 'c101-v6';
+const CACHE = 'c101-v7';
 const ASSETS = [
   '.', 'index.html', 'style.css', 'manifest.webmanifest',
-  'src/config.js', 'src/content.js', 'src/state.js', 'src/srs.js',
+  'src/config.js', 'src/content.js', 'src/lang-map.js', 'src/lang.js',
+  'src/state.js', 'src/srs.js',
   'src/session.js', 'src/audio.js', 'src/ui.js', 'src/main.js',
   'content/chapter-01.js',
   'icons/icon.svg', 'icons/icon-maskable.svg',

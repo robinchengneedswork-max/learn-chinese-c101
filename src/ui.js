@@ -26,6 +26,65 @@ const UI = (function () {
     return b;
   }
 
+  // ---- Language / script picker (top-left) ----------------------------------
+  // A small dropdown driven by Lang.langs(), so adding a language later needs no
+  // UI change here. Picking one re-renders everything through Lang.zh(...).
+  function buildLangSelect() {
+    const root = $('#lang-select');
+    if (!root) return;
+    root.innerHTML = '';
+
+    const btn = el('button', 'lang-btn');
+    btn.setAttribute('aria-haspopup', 'listbox');
+    btn.setAttribute('aria-expanded', 'false');
+    const cur = el('span', 'lang-cur', Lang.current().label);
+    btn.appendChild(cur);
+    btn.appendChild(el('span', 'lang-caret', '▾'));
+
+    const menu = el('ul', 'lang-menu');
+    menu.setAttribute('role', 'listbox');
+    menu.hidden = true;
+
+    Lang.langs().forEach((lng) => {
+      const li = el('li', 'lang-opt', lng.name);
+      li.setAttribute('role', 'option');
+      if (lng.id === Lang.current().id) li.classList.add('sel');
+      li.addEventListener('click', () => {
+        if (Lang.set(lng.id)) {
+          buildLangSelect();     // refresh label + selected mark
+          applyLang();           // re-render everything in the new script
+        }
+        closeLangMenu();
+      });
+      menu.appendChild(li);
+    });
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      menu.hidden ? (menu.hidden = false, btn.setAttribute('aria-expanded', 'true'))
+                  : closeLangMenu();
+    });
+
+    root.appendChild(btn);
+    root.appendChild(menu);
+  }
+
+  // Close the (single) open language menu. Bound once to document in init so
+  // rebuilding the picker doesn't stack listeners.
+  function closeLangMenu() {
+    const m = $('.lang-menu'), b = $('.lang-btn');
+    if (m && !m.hidden) { m.hidden = true; if (b) b.setAttribute('aria-expanded', 'false'); }
+  }
+
+  // Re-paint every screen's Chinese in the active script. Home is fully rebuilt;
+  // the static brand is refreshed too. (No session is on-screen when the picker
+  // is reachable, so re-rendering home is enough.)
+  function applyLang() {
+    const brand = document.querySelector('.brand');
+    if (brand) brand.textContent = Lang.zh('課程 101');
+    renderHome();
+  }
+
   // ---- Home: the learning path ----------------------------------------------
   // The home screen is a Duolingo-style winding trail. Each lesson "part" (Learn
   // parts, the 📖 Reading drill, and the chapter Test) is a bubble node. Nodes
@@ -142,14 +201,14 @@ const UI = (function () {
   function chapterHeader(ch) {
     const h = el('div', 'trail-chapter');
     h.appendChild(el('div', 'trail-chapter-title', ch.title));
-    h.appendChild(el('div', 'trail-chapter-zh', ch.zh));
+    h.appendChild(el('div', 'trail-chapter-zh', Lang.zh(ch.zh)));
     return h;
   }
 
   function sectionBanner(e) {
     const b = el('div', 'trail-banner');
     b.appendChild(el('span', 'trail-banner-name', e.title));
-    b.appendChild(el('span', 'trail-banner-zh', e.zh));
+    b.appendChild(el('span', 'trail-banner-zh', Lang.zh(e.zh)));
     return b;
   }
 
@@ -342,7 +401,7 @@ const UI = (function () {
     const w = item.word;
     stage.appendChild(el('div', 'prompt-label', 'New word'));
     const card = el('div', 'flashcard');
-    const hz = el('div', 'hanzi-lg', w.hanzi);
+    const hz = el('div', 'hanzi-lg', Lang.zh(w.hanzi));
     hz.appendChild(speakerBtn(w.hanzi));
     card.appendChild(hz);
     card.appendChild(el('div', 'pinyin-lg', w.pinyin));
@@ -363,7 +422,7 @@ const UI = (function () {
       stage.appendChild(el('div', 'prompt-label',
         reading ? 'Read this — what does it mean?' : 'What does this mean?'));
       const p = el('div', 'prompt-hanzi');
-      p.appendChild(el('span', 'hanzi-md', item.word.hanzi));
+      p.appendChild(el('span', 'hanzi-md', Lang.zh(item.word.hanzi)));
       p.appendChild(speakerBtn(item.word.hanzi));
       stage.appendChild(p);
       if (!reading) stage.appendChild(el('div', 'prompt-pinyin', item.word.pinyin));
@@ -386,10 +445,11 @@ const UI = (function () {
       if (item.kind === 'zh2en') {
         b.textContent = opt;
       } else {
-        b.appendChild(el('span', 'opt-hanzi', opt));
+        b.appendChild(el('span', 'opt-hanzi', Lang.zh(opt)));
         const w = C101.word(opt);
         if (w && !reading) b.appendChild(el('span', 'opt-pinyin', w.pinyin));
       }
+      b.dataset.val = opt; // canonical (Traditional) value — reveal/grade off this, not display text
       b.addEventListener('click', () => onChoose(item, opt, b, opts, foot));
       opts.appendChild(b);
     }
@@ -404,17 +464,18 @@ const UI = (function () {
     stage.appendChild(el('div', 'cloze-en', item.en));
 
     const zh = el('div', 'cloze-zh');
-    const parts = item.zh.split(item.correct);
+    const parts = item.zh.split(item.correct); // split on canonical text
     parts.forEach((seg, i) => {
       if (i > 0) zh.appendChild(el('span', 'cloze-gap', '____'));
-      if (seg) zh.appendChild(el('span', 'cloze-seg', seg));
+      if (seg) zh.appendChild(el('span', 'cloze-seg', Lang.zh(seg)));
     });
     stage.appendChild(zh);
 
     const opts = el('div', 'options cloze-options');
     for (const opt of item.options) {
       const b = el('button', 'option');
-      b.appendChild(el('span', 'opt-hanzi', opt));
+      b.appendChild(el('span', 'opt-hanzi', Lang.zh(opt)));
+      b.dataset.val = opt; // canonical value for reveal/grading
       b.addEventListener('click', () => onChoose(item, opt, b, opts, foot));
       opts.appendChild(b);
     }
@@ -465,10 +526,10 @@ const UI = (function () {
       .forEach(n => { n.disabled = true; });
     if (btn) btn.classList.add(ok ? 'correct' : 'wrong');
     if (!ok) {
-      // reveal the right one
+      // reveal the right one — compare the canonical value, not the (maybe
+      // script-converted) display text.
       optsEl.querySelectorAll('.option').forEach(o => {
-        const val = item.kind === 'zh2en' ? o.textContent
-          : o.querySelector('.opt-hanzi').textContent;
+        const val = o.dataset.val != null ? o.dataset.val : o.textContent;
         if (val === item.correct) o.classList.add('correct');
       });
     }
@@ -477,7 +538,7 @@ const UI = (function () {
 
     foot.classList.add(ok ? 'ok' : 'bad');
     const banner = el('div', 'feedback');
-    banner.textContent = ok ? 'Correct!' : `Answer: ${item.correct}` +
+    banner.textContent = ok ? 'Correct!' : `Answer: ${Lang.zh(item.correct)}` +
       (item.kind !== 'zh2en' && C101.word(item.correct) ? ` (${C101.word(item.correct).pinyin})` : '');
     foot.appendChild(banner);
 
@@ -517,6 +578,10 @@ const UI = (function () {
   // ---- Wiring ---------------------------------------------------------------
 
   function init() {
+    buildLangSelect();
+    document.addEventListener('click', closeLangMenu); // outside-click, bound once
+    const brand = document.querySelector('.brand');
+    if (brand) brand.textContent = Lang.zh('課程 101');
     $('#review-btn').addEventListener('click', startReview);
     $('#session-exit').addEventListener('click', () => { session = null; renderHome(); showScreen('home'); });
     $('#results-done').addEventListener('click', () => { renderHome(); showScreen('home'); });

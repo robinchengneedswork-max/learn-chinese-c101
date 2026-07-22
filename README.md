@@ -32,6 +32,8 @@ load order in `index.html` is dependency order.
 ```
 src/config.js    — tuning: SRS intervals, session size, XP, TTS language
 src/content.js   — window.C101 registry; chapter files register into it
+src/lang-map.js  — generated Traditional→Simplified char map (tools/build_langmap.py)
+src/lang.js      — display script picker; converts Chinese at render time only
 src/state.js     — progress in localStorage (xp, streak, per-word SRS record)
 src/srs.js       — Leitner spaced repetition (6 boxes, correct↑ / miss↓)
 src/session.js   — builds an exercise queue for a lesson or a review set
@@ -50,6 +52,13 @@ the on-ramp to reading unaided. (Tuning: `CONFIG.PART_SIZE`.)
 Chinese→English, English→Chinese, and listen→Chinese. In a Reading part, pinyin is
 suppressed everywhere. Missed words are re-queued and demoted a box; correct
 answers promote a word toward "mastered."
+
+**Traditional / Simplified.** The book — and therefore all content and saved
+progress — is **Traditional** Chinese. The picker in the top-left switches the
+*displayed* script to **Simplified** (`src/lang.js` converts Chinese at render time
+via the generated `src/lang-map.js`); grading, per-word progress, and the content
+files are untouched, so switching never resets anything. The picker is data-driven
+(`Lang.langs()`) so more languages/scripts can be added there later.
 
 **Chapter Test.** A cumulative fill-in-the-blank (sentence cloze): a real sentence
 with one word blanked plus its English translation. **Choose** the missing word, or
@@ -125,9 +134,19 @@ appears verbatim in its sentence.
 py tools/build_content.py        # → content/chapter-02.js
 ```
 
-**5. Wire it up:** add `<script src="content/chapter-02.js"></script>` to
+**5. Refresh the Simplified map** — new chapters introduce new characters, so
+regenerate the Traditional→Simplified map (it scans `content/*.js`):
+
+```bash
+py tools/build_langmap.py        # → src/lang-map.js
+```
+
+Eyeball the diff for any one-to-many Traditional characters (e.g. 著→着); pin the
+book's reading in `OVERRIDES` in `tools/build_langmap.py` if needed.
+
+**6. Wire it up:** add `<script src="content/chapter-02.js"></script>` to
 `index.html` (after `chapter-01.js`) and add the path to `ASSETS` in `sw.js`
-(and bump `CACHE` to `c101-v2` so clients refresh).
+(and bump `CACHE` to the next `c101-vN` so clients refresh).
 
 ## Deploy (Vercel)
 

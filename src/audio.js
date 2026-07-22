@@ -30,8 +30,11 @@ const Audio101 = (function () {
   function speak(text) {
     if (!window.speechSynthesis) return;
     speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = CONFIG.TTS_LANG;
+    // Speak in the active script/lang (Mandarin pronunciation is identical, but
+    // this suits Simplified-only voices). Falls back to config if Lang isn't up.
+    const say = window.Lang ? Lang.zh(text) : text;
+    const u = new SpeechSynthesisUtterance(say);
+    u.lang = window.Lang ? Lang.tts() : CONFIG.TTS_LANG;
     u.rate = CONFIG.TTS_RATE;
     if (zhVoice) u.voice = zhVoice;
     speechSynthesis.speak(u);
