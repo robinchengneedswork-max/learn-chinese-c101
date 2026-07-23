@@ -106,6 +106,7 @@ const UI = (function () {
   };
 
   let trailNodeEls = []; // {btn, node} cached each render for (re)drawing the path
+  let jumpTargets = { current: null, chapters: [] }; // scroll anchors for the Jump menu
 
   // Build the render model: chapters → sections (each a background band) → nodes,
   // plus a capstone chapter-test node. Assigns each node a linear seq (for the
@@ -175,15 +176,19 @@ const UI = (function () {
     scene.className = 'path-scene';
     scene.innerHTML = '';
     trailNodeEls = [];
+    jumpTargets = { current: null, chapters: [] };
 
     const model = buildModel();
     let rowIdx = 0;
     for (const ch of model.chapters) {
-      scene.appendChild(chapterHeader(ch));
+      const header = chapterHeader(ch);
+      jumpTargets.chapters.push({ title: ch.title, el: header });
+      scene.appendChild(header);
       for (const sec of ch.sections) {
         const band = el('div', 'band b' + sec.band);
         band.appendChild(sectionBanner(sec));
         for (const node of sec.nodes) band.appendChild(nodeRow(node, rowIdx++));
+        band.appendChild(sectionActions(C101.lesson(sec.id)));
         scene.appendChild(band);
       }
       if (ch.test) {
@@ -192,8 +197,30 @@ const UI = (function () {
         scene.appendChild(band);
       }
     }
+    // The current node's bubble is the "current lesson" jump anchor.
+    const cur = trailNodeEls.find(({ node }) => node.current);
+    jumpTargets.current = cur ? cur.btn : null;
+    buildJumpMenu();
     // Draw the bending, filling trail once layout has settled.
     requestAnimationFrame(() => drawTrail(scene));
+  }
+
+  // A section's two extra affordances, sitting just below its trail nodes:
+  // read the authentic C101 book passage, and browse the section's word list.
+  // Both open the shared modal. Available any time (they're study aids, not gated
+  // exercises). The 📖 Read button only appears if the section has a passage.
+  function sectionActions(lesson) {
+    const row = el('div', 'section-actions');
+    if (!lesson) return row;
+    if (lesson.reading && lesson.reading.zh) {
+      const read = el('button', 'sec-btn', '📖 Read the C101 text');
+      read.addEventListener('click', () => openModal((b) => buildReading(b, lesson)));
+      row.appendChild(read);
+    }
+    const vocab = el('button', 'sec-btn', '📋 Vocab list');
+    vocab.addEventListener('click', () => openModal((b) => buildVocab(b, lesson)));
+    row.appendChild(vocab);
+    return row;
   }
 
   // Night-sky strip that opens the chapter. (The shooting star now sits with the
@@ -352,6 +379,118 @@ const UI = (function () {
       row.appendChild(el('span', 'star' + (i < stars ? ' on' : ''), '★'));
     }
     return row;
+  }
+
+  // ---- Modal: reading passage & vocab list ----------------------------------
+  // A shared bottom-sheet overlay over the home path. `build` fills #modal-body.
+
+  function openModal(build) {
+    const body = $('#modal-body');
+    body.innerHTML = '';
+    build(body);
+    const m = $('#modal');
+    m.hidden = false;
+    m.querySelector('.modal-card').scrollTop = 0;
+    document.body.classList.add('modal-open');
+  }
+
+  function closeModal() {
+    const m = $('#modal');
+    if (!m || m.hidden) return;
+    m.hidden = true;
+    document.body.classList.remove('modal-open');
+    if (window.speechSynthesis) speechSynthesis.cancel(); // stop any passage playback
+  }
+
+  // Split a passage into paragraphs (blank-line separated, single newlines too).
+  function paragraphs(text) {
+    return String(text || '').split(/\n+/).map((s) => s.trim()).filter(Boolean);
+  }
+
+  function modalHead(body, kicker, lesson) {
+    body.appendChild(el('div', 'modal-kicker', kicker));
+    body.appendChild(el('div', 'modal-title', lesson.title));
+    body.appendChild(el('div', 'modal-sub', Lang.zh(lesson.zh)));
+  }
+
+  // The authentic book passage for a section: the real Chinese to read unaided,
+  // with a play button (TTS) and a reveal for the English (ground-truth) text.
+  function buildReading(body, lesson) {
+    modalHead(body, '📖 Read the C101 text', lesson);
+    const r = lesson.reading || {};
+
+    const controls = el('div', 'reading-controls');
+    const play = el('button', 'pill-btn', '🔊 Play');
+    play.addEventListener('click', () => Audio101.speak(r.zh || ''));
+    controls.appendChild(play);
+    const toggle = el('button', 'pill-btn', 'Show English');
+    controls.appendChild(toggle);
+    body.appendChild(controls);
+
+    const zhWrap = el('div', 'reading-zh');
+    paragraphs(r.zh).forEach((p) => zhWrap.appendChild(el('p', 'reading-p', Lang.zh(p))));
+    body.appendChild(zhWrap);
+
+    const en = el('div', 'reading-en');
+    paragraphs(r.en).forEach((p) => en.appendChild(el('p', 'reading-p', p)));
+    en.hidden = true;
+    body.appendChild(en);
+    toggle.addEventListener('click', () => {
+      en.hidden = !en.hidden;
+      toggle.textContent = en.hidden ? 'Show English' : 'Hide English';
+    });
+  }
+
+  // The section's word list — hanzi, pinyin, gloss, and a per-word play button.
+  function buildVocab(body, lesson) {
+    modalHead(body, '📋 Section vocab · ' + lesson.words.length + ' words', lesson);
+    const list = el('div', 'vocab-list');
+    for (const w of lesson.words) {
+      const rowEl = el('div', 'vocab-row');
+      const main = el('div', 'vocab-main');
+      main.appendChild(el('div', 'vocab-hz', Lang.zh(w.hanzi)));
+      main.appendChild(el('div', 'vocab-py', w.pinyin));
+      rowEl.appendChild(main);
+      rowEl.appendChild(el('div', 'vocab-en', w.en));
+      rowEl.appendChild(speakerBtn(w.hanzi));
+      list.appendChild(rowEl);
+    }
+    body.appendChild(list);
+  }
+
+  // ---- Jump menu ------------------------------------------------------------
+  // A floating control that scrolls the (long) path to the current lesson or to
+  // any chapter. Rebuilt each render from jumpTargets.
+
+  function buildJumpMenu() {
+    const menu = $('#jump-menu');
+    if (!menu) return;
+    menu.innerHTML = '';
+    const items = [];
+    if (jumpTargets.current) items.push({ label: '▸ Current lesson', el: jumpTargets.current, cur: true });
+    jumpTargets.chapters.forEach((c) => items.push({ label: c.title, el: c.el }));
+    for (const it of items) {
+      const li = el('li', 'jump-item' + (it.cur ? ' jump-cur' : ''), it.label);
+      li.setAttribute('role', 'menuitem');
+      li.addEventListener('click', () => { scrollToEl(it.el); closeJump(); });
+      menu.appendChild(li);
+    }
+  }
+
+  function scrollToEl(target) {
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function toggleJump(e) {
+    e.stopPropagation();
+    const menu = $('#jump-menu'), btn = $('#jump-btn');
+    if (menu.hidden) { menu.hidden = false; btn.setAttribute('aria-expanded', 'true'); }
+    else closeJump();
+  }
+
+  function closeJump() {
+    const menu = $('#jump-menu'), btn = $('#jump-btn');
+    if (menu && !menu.hidden) { menu.hidden = true; if (btn) btn.setAttribute('aria-expanded', 'false'); }
   }
 
   // ---- Session flow ---------------------------------------------------------
@@ -583,6 +722,14 @@ const UI = (function () {
     const brand = document.querySelector('.brand');
     if (brand) brand.textContent = Lang.zh('課程 101');
     $('#review-btn').addEventListener('click', startReview);
+
+    // Jump menu (scroll the path) + modal (reading / vocab) wiring.
+    $('#jump-btn').addEventListener('click', toggleJump);
+    document.addEventListener('click', closeJump); // outside-click, bound once
+    $('#modal-close').addEventListener('click', closeModal);
+    $('#modal').querySelector('.modal-backdrop').addEventListener('click', closeModal);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
     $('#session-exit').addEventListener('click', () => { session = null; renderHome(); showScreen('home'); });
     $('#results-done').addEventListener('click', () => { renderHome(); showScreen('home'); });
     // Re-measure the connecting trail when the layout can shift.

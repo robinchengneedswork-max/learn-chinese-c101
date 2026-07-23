@@ -79,7 +79,13 @@ window.C101.register({
     { id: "ch01-l1", title: "Nature of Man", zh: "人的本質", words: [
         { hanzi: "生命", pinyin: "shēng mìng", en: "life (of a living being)" },
         ...
-    ]}
+    ],
+      // Optional: the section's book passage — the curated "main body" prose.
+      // Powers the per-section "📖 Read the C101 text" button on the home path
+      // (Chinese to read unaided, with a play button + an English reveal).
+      // Paragraphs are blank-line separated. See "Adding a chapter".
+      reading: { zh: "人生多問。…\n\n道金斯和羅素…", en: "Man asks questions. …" }
+    }
   ],
   // Chapter Test cloze items. `blank` is a chapter word that appears verbatim in
   // `zh`; it's removed and the learner supplies it. Curated from the book text.
@@ -128,7 +134,14 @@ for the Chapter Test) — short sentences from the book's Chinese text, each bla
 one chapter word. The build validates that every `blank` is a chapter word and
 appears verbatim in its sentence.
 
-**4. Build** the content file (pinyin is pulled from CC-CEDICT automatically):
+**4. Build** the content file (pinyin is pulled from CC-CEDICT automatically).
+The build also attaches each section's book passage as the lesson's `reading`
+(powering the "📖 Read the C101 text" button). Prefer a **curated "main body"**
+passage in `READINGS` (the book's expository prose — verbatim runs with scripture
+block-quotes, long external quotations, discussion questions, footnotes, and
+page-header artifacts removed; paragraphs as a list). If a lesson isn't in
+`READINGS`, the build falls back to the raw `## Chinese` / `## English (ground
+truth)` blocks from the review file (aligned to lessons in order).
 
 ```bash
 py tools/build_content.py        # → content/chapter-02.js

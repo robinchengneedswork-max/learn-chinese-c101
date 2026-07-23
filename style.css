@@ -268,3 +268,91 @@ body {
 .chip-val { font-size: 26px; font-weight: 800; color: var(--brand); }
 .chip-lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
 .results-main .continue { max-width: 320px; }
+
+/* ---- Per-section study aids (read the text / vocab list) ---- */
+.section-actions {
+  position: relative; z-index: 3;
+  display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+  margin-top: 12px; padding: 0 16px;
+}
+.sec-btn {
+  padding: 9px 15px; border: 1px solid rgba(255,255,255,.2); border-radius: 999px;
+  background: rgba(6,10,26,.55); color: #e2e8f0; font-weight: 700; font-size: 13px;
+  cursor: pointer;
+}
+.sec-btn:active { transform: translateY(1px); }
+
+/* ---- Jump control (scroll the path) ---- */
+.jump-btn {
+  position: fixed; right: 16px; bottom: calc(16px + var(--safe-b)); z-index: 30;
+  display: flex; align-items: center; gap: 6px;
+  padding: 12px 16px; border: none; border-radius: 999px;
+  background: var(--brand); color: #04240f; font-weight: 800; font-size: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.45); cursor: pointer;
+}
+.jump-btn:active { transform: translateY(1px); }
+.jump-ico { font-size: 16px; }
+.jump-menu {
+  position: fixed; right: 16px; bottom: calc(66px + var(--safe-b)); z-index: 30;
+  margin: 0; padding: 6px; list-style: none; min-width: 210px; max-width: 74vw;
+  background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.55);
+}
+.jump-menu[hidden] { display: none; }
+.jump-item {
+  padding: 11px 12px; border-radius: 8px; cursor: pointer;
+  font-size: 14px; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.jump-item:hover { background: var(--line); }
+.jump-item.jump-cur { color: var(--brand); font-weight: 800; }
+
+/* ---- Modal (reading passage / vocab list) ---- */
+body.modal-open { overflow: hidden; }
+.modal { position: fixed; inset: 0; z-index: 50; display: flex; align-items: flex-end; justify-content: center; }
+.modal[hidden] { display: none; }
+.modal-backdrop { position: absolute; inset: 0; background: rgba(2,6,16,.72); }
+.modal-card {
+  position: relative; z-index: 1; width: 100%; max-width: 640px; max-height: 92vh;
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
+  background: var(--bg); border: 1px solid var(--line);
+  border-radius: 20px 20px 0 0;
+  padding: 20px 20px calc(28px + var(--safe-b));
+  box-shadow: 0 -8px 30px rgba(0,0,0,.5);
+}
+@media (min-width: 680px) {
+  .modal { align-items: center; }
+  .modal-card { border-radius: 20px; }
+}
+.modal-close {
+  position: sticky; top: 0; float: right; margin: -4px -4px 0 8px;
+  background: none; border: none; color: var(--muted); font-size: 24px; cursor: pointer;
+}
+.modal-kicker { color: var(--accent); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+.modal-title { font-size: 22px; font-weight: 800; margin-top: 4px; }
+.modal-sub { color: var(--muted); font-size: 15px; margin-top: 2px; }
+
+.reading-controls { display: flex; gap: 10px; margin: 16px 0 14px; }
+.pill-btn {
+  padding: 9px 15px; border: 1px solid var(--line); border-radius: 999px;
+  background: var(--bg-2); color: var(--text); font-weight: 700; font-size: 14px; cursor: pointer;
+}
+.pill-btn:active { transform: translateY(1px); }
+.reading-zh { font-size: 22px; line-height: 2; letter-spacing: .5px; }
+.reading-zh .reading-p { margin: 0 0 16px; }
+.reading-zh .reading-p:last-child { margin-bottom: 0; }
+.reading-en {
+  margin-top: 20px; padding-top: 16px; border-top: 1px dashed var(--line);
+  color: var(--muted); font-size: 15px; line-height: 1.7;
+}
+.reading-en[hidden] { display: none; }
+.reading-en .reading-p { margin: 0 0 12px; }
+.reading-en .reading-p:last-child { margin-bottom: 0; }
+
+.vocab-list { margin-top: 16px; }
+.vocab-row { display: flex; align-items: center; gap: 12px; padding: 12px 2px; border-bottom: 1px solid var(--line); }
+.vocab-main { min-width: 92px; }
+.vocab-hz { font-size: 24px; font-weight: 700; line-height: 1.2; }
+.vocab-py { font-size: 13px; color: var(--accent); }
+.vocab-en { flex: 1; font-size: 15px; }
+.vocab-row .speaker { font-size: 16px; padding: 6px 11px; }

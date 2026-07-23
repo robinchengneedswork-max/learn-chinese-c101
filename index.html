@@ -29,7 +29,22 @@
       <div id="chapter-list" class="chapter-list"></div>
       <p class="tagline">Vocabulary from <em>Course 101: Christian Foundations</em>.</p>
     </main>
+
+    <!-- Jump-to control: scroll the path to the current lesson or a chapter -->
+    <button id="jump-btn" class="jump-btn" aria-haspopup="true" aria-expanded="false">
+      <span class="jump-ico">🧭</span><span>Jump</span>
+    </button>
+    <ul id="jump-menu" class="jump-menu" role="menu" hidden></ul>
   </section>
+
+  <!-- MODAL: reading passage / section vocab list (opens over the home path) -->
+  <div id="modal" class="modal" hidden>
+    <div class="modal-backdrop"></div>
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <button id="modal-close" class="modal-close" aria-label="Close">✕</button>
+      <div id="modal-body" class="modal-body"></div>
+    </div>
+  </div>
 
   <!-- SESSION -->
   <section id="session" class="screen">
