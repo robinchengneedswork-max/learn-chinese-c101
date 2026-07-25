@@ -7,8 +7,8 @@ assembled later. This is the human-readable companion to `content/gnr-chapter-01
 (the app's data form). Canonical script = Traditional; the app's picker renders
 Simplified again at display time.
 
-Transcribed so far: **Lessons 1–11.** (Lesson 0 "Introduction to Radicals" is a
-reference table, not yet included; lessons 12–25 + appendices + glossary pending.)
+Transcribed so far: **Lessons 1–15.** (Lesson 0 "Introduction to Radicals" is a
+reference table, not yet included; lessons 16–25 + appendices + glossary pending.)
 
 ---
 
@@ -468,3 +468,192 @@ God cares about you and knows you. Your ideals and your worries — He knows the
 | 20 | 作出決定 | zuò chū jué dìng | to make a decision |
 | 21 | 決定 | jué dìng | decision; to decide |
 | 22 | 由 | yóu | up to (someone); from |
+
+---
+
+## Lesson 12 — Man's Freedom, Man's Responsibility  第十二課　人的自由，人的責任
+
+### Chinese (Traditional)
+
+上帝給人自由。我們不是機器人。人有自由，或者聽從上帝，或者走自己的路。但是上帝說：「我是你生命的源頭，也是愛的源頭。你需要愛，你需要我，因為我就是愛。你如果聽我的命令，你就會幸福。但如果你不聽，你這一輩子永遠也得不到真正的滿足、找不到人生的意義。你的心會感到空虛。最後，你的靈魂就會滅亡，因為在我以外，沒有生命，沒有愛。」
+
+可是，最初的人類不聽，他們選擇離開上帝，走自己的路。從那個時候開始，人類的痛苦、人生成了一個很大的悲劇。這是人的選擇，也是人的錯：因為，有了自由，也就有了責任。
+
+### English
+
+God gives man freedom. We are not robots. People are free, either to obey God or to go their own way. But God says: "I am the source of your life, and also the source of love. You need love, you need Me, because I am love itself. If you obey My command, you will be happy. But if you do not obey, all your life you will never find real satisfaction, nor find the meaning of life. Your heart will feel empty. In the end, your soul will perish, because outside of Me there is no life and no love."
+
+But the first humans did not listen; they chose to leave God and go their own way. From that time on, mankind's suffering and life itself became a great tragedy. This is man's choice, and man's fault too: because with freedom comes responsibility.
+
+### Vocabulary
+
+| # | 詞 | pinyin | English |
+|---|-----|--------|---------|
+| 1 | 自由 | zì yóu | freedom; free |
+| 2 | 責任 | zé rèn | responsibility |
+| 3 | 機器人 | jī qì rén | robot |
+| 4 | 聽從 | tīng cóng | to obey; to listen to |
+| 5 | 走自己的路 | zǒu zì jǐ de lù | to go one's own way |
+| 6 | 需要 | xū yào | to need; need |
+| 7 | 命令 | mìng lìng | order; command; to order |
+| 8 | 幸福 | xìng fú | happiness; happy |
+| 9 | 一輩子 | yí bèi zi | a lifetime; all one's life |
+| 10 | 真正 | zhēn zhèng | real; true; genuine |
+| 11 | 滿足 | mǎn zú | satisfaction; satisfied; to satisfy |
+| 12 | 找 | zhǎo | to look for; to seek |
+| 13 | 找不到 | zhǎo bu dào | to be unable to find |
+| 14 | 意義 | yì yì | meaning; significance |
+| 15 | 感到 | gǎn dào | to feel |
+| 16 | 最後 | zuì hòu | in the end; finally |
+| 17 | 最初 | zuì chū | at the very beginning |
+| 18 | 離開 | lí kāi | to leave; to go away from |
+| 19 | 條 | tiáo | (measure word for long/narrow things) |
+| 20 | 開始 | kāi shǐ | to begin; to start (從…開始) |
+| 21 | 罪 | zuì | sin; crime |
+| 22 | 奴隸 | nú lì | slave |
+| 23 | 悲劇 | bēi jù | tragedy |
+| 24 | 選擇 | xuǎn zé | to choose; choice |
+| 25 | 錯 | cuò | fault; wrong; mistake |
+
+---
+
+## Lesson 13 — God Abhors Sin  第十三課　上帝痛恨罪惡
+
+### Chinese (Traditional)
+
+上帝是聖潔的。他愛罪人，但是他痛恨罪惡。上帝不能容忍罪惡，他必須懲罰罪人。上帝的懲罰是完全公正的。上帝在《聖經》裡說：世界上的人都犯了罪，都是罪人。
+
+可是你說：「我不是罪人，我從來沒有殺過人！」你可能沒有殺過人，我也沒有！但是我們常常自私、驕傲、虛偽，恨別人、罵別人，等等……人只看外表，但是上帝看內心。在他眼裡，沒有一個「嚴重的罪」和「不嚴重的罪」：罪就是罪。犯罪就應該受懲罰，這是公正的。而且……在上帝那兒，沒有人能走後門。
+
+### English
+
+God is holy. He loves the sinner, but He abhors sin. God cannot tolerate sin; He must punish sinners. God's punishment is completely just. God says in the Bible: everyone in the world has sinned; all are sinners.
+
+But you say, "I am not a sinner; I have never killed anyone!" You may never have killed anyone — neither have I! But we are often selfish, proud, and hypocritical; we hate others and curse others, and so on… People look only at the outward appearance, but God looks at the inner heart. In His eyes there is no "serious sin" and "not-serious sin": sin is sin. To sin deserves punishment, and this is just. What's more… at God's place, no one can slip in through the back door.
+
+### Vocabulary
+
+| # | 詞 | pinyin | English |
+|---|-----|--------|---------|
+| 1 | 痛恨 | tòng hèn | to abhor; to detest |
+| 2 | 恨 | hèn | to hate |
+| 3 | 罪惡 | zuì è | sin; evil |
+| 4 | 聖潔 | shèng jié | holy; holiness |
+| 5 | 罪人 | zuì rén | sinner |
+| 6 | 容忍 | róng rěn | to tolerate; to endure |
+| 7 | 懲罰 | chéng fá | to punish; punishment |
+| 8 | 公正 | gōng zhèng | fair; just |
+| 9 | 犯 | fàn | to commit (a crime/sin) |
+| 10 | 犯罪 | fàn zuì | to sin; to commit a crime |
+| 11 | 從來 | cóng lái | ever; (with negative) never |
+| 12 | 殺 | shā | to kill |
+| 13 | 自私 | zì sī | selfish; selfishness |
+| 14 | 驕傲 | jiāo ào | proud; pride |
+| 15 | 虛偽 | xū wěi | hypocritical; hypocrisy |
+| 16 | 別人 | bié rén | others; other people |
+| 17 | 等等 | děng děng | etc.; and so on |
+| 18 | 外表 | wài biǎo | outer appearance |
+| 19 | 內心 | nèi xīn | the inner heart |
+| 20 | 嚴重 | yán zhòng | serious; grave |
+| 21 | 受懲罰 | shòu chéng fá | to be punished |
+| 22 | 而且 | ér qiě | moreover; and |
+| 23 | 那兒 | nàr | there; (someone's) place (在…那兒) |
+| 24 | 走後門 | zǒu hòu mén | to go through the back door; pull strings |
+
+---
+
+## Lesson 14 — The Bible  第十四課　《聖經》
+
+### Chinese (Traditional)
+
+《聖經》是上帝的話。《聖經》是由六十六本小書組成的，每一本小書，我們叫作「卷」，每一卷都分成很多章，每一章再分成很多節。《聖經》有兩個部分：舊約和新約。你第一次看《聖經》，先看新約，再看舊約，比較好。你可以從約翰福音開始。
+
+《聖經》的信息是超文化的：不是西方的，也不是東方的；是全世界的。基督教不是「洋教」！《聖經》的真理是超時代的、永遠不改變的。《聖經》是上帝給全人類的「情書」！《聖經》是我們靈魂的糧食，「我們腳前的燈，我們路上的光。」（詩篇一百一十九篇，一百零五節）
+
+### English
+
+The Bible is the word of God. The Bible is made up of sixty-six small books; each small book we call a "volume," each volume is divided into many chapters, and each chapter is further divided into many verses. The Bible has two parts: the Old Testament and the New Testament. The first time you read the Bible, it is better to read the New Testament first and then the Old. You can start with the Gospel of John.
+
+The Bible's message transcends culture: it is neither Western nor Eastern; it belongs to the whole world. Christianity is not a "foreign religion"! The truth of the Bible transcends every age and never changes. The Bible is God's "love letter" to all mankind! The Bible is food for our souls — "a lamp to our feet and a light on our path." (Psalm 119:105)
+
+### Vocabulary
+
+| # | 詞 | pinyin | English |
+|---|-----|--------|---------|
+| 1 | 上帝的話 | shàng dì de huà | God's word |
+| 2 | 組成 | zǔ chéng | to make up; to compose (由…組成) |
+| 3 | 叫作 | jiào zuò | to be called; to call |
+| 4 | 卷 | juàn | a volume; a book (of a series) |
+| 5 | 分成 | fēn chéng | to divide into |
+| 6 | 章 | zhāng | chapter |
+| 7 | 節 | jié | verse; section |
+| 8 | 約 | yuē | covenant |
+| 9 | 舊約 | jiù yuē | the Old Testament |
+| 10 | 新約 | xīn yuē | the New Testament |
+| 11 | 再 | zài | then; again (先…再…) |
+| 12 | 約翰 | yuē hàn | John |
+| 13 | 福音 | fú yīn | gospel; glad tidings |
+| 14 | 比較 | bǐ jiào | rather; comparatively; to compare |
+| 15 | 信息 | xìn xī | message |
+| 16 | 超 | chāo | to surpass; to transcend |
+| 17 | 超文化 | chāo wén huà | transcending every culture |
+| 18 | 文化 | wén huà | culture |
+| 19 | 西方 | xī fāng | the West |
+| 20 | 東方 | dōng fāng | the East |
+| 21 | 基督教 | jī dū jiào | Christianity |
+| 22 | 洋教 | yáng jiào | a foreign religion |
+| 23 | 超時代 | chāo shí dài | transcending every age |
+| 24 | 時代 | shí dài | age; era |
+| 25 | 情書 | qíng shū | love letter |
+| 26 | 糧食 | liáng shí | food; grain |
+| 27 | 腳 | jiǎo | foot |
+| 28 | 前 | qián | front; before; in front of |
+| 29 | 燈 | dēng | lamp; light |
+| 30 | 光 | guāng | light |
+| 31 | 詩篇 | shī piān | the Psalms; a psalm |
+
+---
+
+## Lesson 15 — God's Plan  第十五課　上帝的計劃
+
+### Chinese (Traditional)
+
+四千年以前，上帝揀選了一個人——亞伯拉罕。亞伯拉罕是一個很正直的人，他又敬畏上帝，又不去崇拜偶像和假神。因為人類犯了罪，離開了上帝，自取滅亡，所以就應該受上帝公正的懲罰、下地獄。但是上帝愛人類，所以他還要給我們一個機會。他對亞伯拉罕說：「我要通過你的後代拯救全世界的人。」亞伯拉罕的後代就是猶太人（也說「以色列人」）。
+
+上帝決定先把他的話啟示給他們，然後差遣一位救世主到他們中間。上帝把十條全人類必須遵守的命令啟示給一個叫摩西的猶太人（這十條命令，我們叫作「十誡」）。但是世界上沒有一個人能夠完全遵守這些命令，所以我們根本不可能通過自己的努力來滿足上帝的標準、逃避他的懲罰。
+
+### English
+
+Four thousand years ago, God chose a man — Abraham. Abraham was a very upright man; he both revered God and refused to worship idols and false gods. Because mankind had sinned and left God, bringing destruction on themselves, they deserved God's just punishment and to go to hell. But God loves mankind, so He still wanted to give us a chance. He said to Abraham: "Through your descendants I will save the people of the whole world." Abraham's descendants are the Jews (also called the "Israelites").
+
+God decided first to reveal His words to them, and then to send a Savior into their midst. God revealed to a Jew named Moses ten commands that all mankind must obey (these ten commands we call the "Ten Commandments"). But no one in the world is able to fully obey these commands, so it is fundamentally impossible for us to satisfy God's standard or escape His punishment through our own effort.
+
+### Vocabulary
+
+| # | 詞 | pinyin | English |
+|---|-----|--------|---------|
+| 1 | 計劃 | jì huà | plan; to plan |
+| 2 | 揀選 | jiǎn xuǎn | to choose; to select (someone) |
+| 3 | 亞伯拉罕 | yà bó lā hǎn | Abraham |
+| 4 | 正直 | zhèng zhí | upright; honest |
+| 5 | 偶像 | ǒu xiàng | idol |
+| 6 | 假神 | jiǎ shén | false god |
+| 7 | 自取滅亡 | zì qǔ miè wáng | to bring destruction on oneself |
+| 8 | 地獄 | dì yù | hell |
+| 9 | 下地獄 | xià dì yù | to go to hell |
+| 10 | 機會 | jī huì | chance; opportunity |
+| 11 | 通過 | tōng guò | through; by means of |
+| 12 | 後代 | hòu dài | descendants |
+| 13 | 猶太人 | yóu tài rén | Jew(s) |
+| 14 | 以色列 | yǐ sè liè | Israel |
+| 15 | 以色列人 | yǐ sè liè rén | Israelite(s) |
+| 16 | 啟示 | qǐ shì | to reveal; revelation |
+| 17 | 然後 | rán hòu | then; afterwards |
+| 18 | 差遣 | chāi qiǎn | to send (someone); to dispatch |
+| 19 | 遵守 | zūn shǒu | to observe; to obey (a law) |
+| 20 | 摩西 | mó xī | Moses |
+| 21 | 十誡 | shí jiè | the Ten Commandments |
+| 22 | 能夠 | néng gòu | to be able to; can |
+| 23 | 努力 | nǔ lì | effort; to work hard |
+| 24 | 標準 | biāo zhǔn | standard |
+| 25 | 逃避 | táo bì | to escape; to evade |
