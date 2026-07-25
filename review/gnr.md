@@ -7,8 +7,10 @@ assembled later. This is the human-readable companion to `content/gnr-chapter-01
 (the app's data form). Canonical script = Traditional; the app's picker renders
 Simplified again at display time.
 
-Transcribed so far: **Lessons 1–23.** (Lesson 0 "Introduction to Radicals" is a
-reference table, not yet included; lessons 24–25 + appendices + glossary pending.)
+Transcribed so far: **Lessons 1–25 — ALL 25 lessons complete.** (Lesson 0
+"Introduction to Radicals" is a reference table, not yet included; the closing
+"信主" altar-call prayer, 4 appendices, and the Chinese–English glossary are the
+only remaining source material.)
 
 ---
 
@@ -1032,3 +1034,123 @@ After we become Christians, a new life begins. We need to grow, so that our rela
 | 42 | 發光 | fā guāng | to shine |
 | 43 | 讓 | ràng | so that; to let |
 | 44 | 歸向… | guī xiàng | to turn to (= 回向) |
+
+## Lesson 24 — The Theory of Evolution  第二十四課　進化論
+
+### Chinese (Traditional)
+
+進化論是十九世紀英國生物學家達爾文的一個學說。進化論者一般不相信上帝的存在，他們說，宇宙和大自然只不過是「物質＋時間＋偶然性」的產物。進化論認為，第一個生命細胞是三十億年前在地球上偶然出現的。後來，世界上所有的動物和植物都是慢慢地從這個細胞進化而來的。這個學說很有意思，但是今天，西方有不少科學家不再相信進化論了。澳大利亞生物學家登頓就是其中之一，（他並不是基督徒）。他認為現代科學正在證明，進化論這個學說是不合乎事實的。他舉了一個例子：如果說鳥類真是從爬行動物進化而來的，那麼古生物學家就應該能夠找到它們之間的過渡化石。可是，一百年以來，一直沒有找到那樣的化石。難道幾千萬年前，一條恐龍突然生了一隻鳥嗎？！鱗片又怎麼會突然成為羽毛呢？登頓還說，一個生命細胞是一個非常複雜的「工廠」，它完全不可能是偶然產生的。相信它是偶然產生的，好比相信一隻猴子用英文打字機能夠給我們打出來一本達爾文的《物種起源》一樣！對不信上帝的人來說，生命的起源真是一個謎！
+
+### English
+
+The theory of evolution is a doctrine of the 19th-century British biologist Darwin. Evolutionists generally do not believe in the existence of God; they say that the universe and nature are nothing more than the product of "matter + time + chance." Evolution holds that the first living cell appeared by chance on the earth three billion years ago. Later, all the animals and plants in the world gradually evolved from this cell. This theory is very interesting, but today quite a few scientists in the West no longer believe in evolution. The Australian biologist Denton is one of them (he is not a Christian). He believes that modern science is proving that the theory of evolution does not accord with the facts. He gave an example: if birds really evolved from reptiles, then paleontologists ought to be able to find the transitional fossils between them. But for a hundred years now, no such fossils have ever been found. Could it be that tens of millions of years ago a dinosaur suddenly gave birth to a bird?! And how could scales suddenly become feathers? Denton also says that a single living cell is an extremely complex "factory," and it is utterly impossible for it to have come into being by chance. To believe that it arose by chance is like believing that a monkey, using an English typewriter, could type out for us a copy of Darwin's "The Origin of Species"! To those who do not believe in God, the origin of life is truly a riddle!
+
+### Vocabulary
+
+| # | 詞 | pinyin | English |
+|---|-----|--------|---------|
+| 1 | 進化論 | jìn huà lùn | the theory of evolution |
+| 2 | 生物學 | shēng wù xué | biology |
+| 3 | 生物學家 | shēng wù xué jiā | biologist |
+| 4 | 達爾文 | dá ěr wén | Darwin |
+| 5 | 學說 | xué shuō | theory; doctrine |
+| 6 | 進化論者 | jìn huà lùn zhě | evolutionist |
+| 7 | 一般 | yì bān | generally; general |
+| 8 | 只不過 | zhǐ bú guò | merely; nothing more than |
+| 9 | 物質 | wù zhì | matter; material |
+| 10 | 加上 | jiā shàng | plus; to add on |
+| 11 | 細胞 | xì bāo | cell |
+| 12 | 億 | yì | a hundred million (= 一萬萬) |
+| 13 | 地球 | dì qiú | the Earth |
+| 14 | 植物 | zhí wù | plants |
+| 15 | 進化 | jìn huà | to evolve; evolution |
+| 16 | 從…進化而來 | cóng … jìn huà ér lái | to evolve from… |
+| 17 | 澳大利亞 | ào dà lì yà | Australia |
+| 18 | 登頓 | dēng dùn | (Michael) Denton |
+| 19 | 現代 | xiàn dài | contemporary; nowadays |
+| 20 | 合乎 | hé hū | to accord with (= 合) |
+| 21 | 舉例子 | jǔ lì zi | to give an example |
+| 22 | 鳥類 | niǎo lèi | birds (as a class) |
+| 23 | 爬行動物 | pá xíng dòng wù | reptile(s) |
+| 24 | 古生物學家 | gǔ shēng wù xué jiā | paleontologist |
+| 25 | 過渡 | guò dù | transition; transitional |
+| 26 | 化石 | huà shí | fossil |
+| 27 | …以來 | … yǐ lái | in the last…; since… |
+| 28 | 一直 | yì zhí | continuously; all along |
+| 29 | 一直沒有… | yì zhí méi yǒu | have never … (up to now) |
+| 30 | 恐龍 | kǒng lóng | dinosaur |
+| 31 | 突然 | tū rán | suddenly |
+| 32 | 隻 | zhī | (measure word for small animals) |
+| 33 | 鱗片 | lín piàn | scale (of fish, etc.) |
+| 34 | 羽毛 | yǔ máo | feather |
+| 35 | 工廠 | gōng chǎng | factory |
+| 36 | 產生 | chǎn shēng | to come into being; to produce |
+| 37 | 好比… | hǎo bǐ | it's just like… |
+| 38 | 猴子 | hóu zi | monkey |
+| 39 | 打字機 | dǎ zì jī | typewriter |
+| 40 | 打 | dǎ | to type; to strike |
+| 41 | 物種起源 | wù zhǒng qǐ yuán | The Origin of Species |
+| 42 | 起源 | qǐ yuán | origin |
+| 43 | 謎 | mí | riddle |
+
+## Lesson 25 — Atheism Is Also a Faith  第二十五課　無神論也是一種信仰
+
+### Chinese (Traditional)
+
+你們無神論者總是以為，「信教」就是逃避現實。你們老認為，你們的立場是完全客觀的，因為你們「什麼都不信」。其實，世界上沒有一個人「什麼都不信」。每一個人都有一套世界觀，而這個世界觀建立在幾個大前提之上。無神論的大前提之一是：「沒有任何超自然的東西，沒有上帝。如果說上帝存在，那麼只是說他是存在於某些人精神裡面的一個幻想而已」；科學主義的大前提是：「只有科學能夠證明的東西，才可以算是可信的和重要的」。不過，這些大前提本身，都是根本無法證明的。這是社會給我們的「信仰」。我們從小就盲目接受它，當作真理，很少有人去懷疑它。你用無神論和科學主義的偏見看基督教和《聖經》，難怪你覺得不可信。基督教的信仰完全合乎邏輯，只不過它不合乎「無神論的邏輯」！你應該先「假設」上帝存在，用基督教的世界觀看人生和現實，那時候你就開始想通了！你會發現基督教合乎生活（包括理性、感情、經驗、事實）。如果你只是在找一個「精神寄托」，而你不敢「實事求是」並面對現實，你就永遠不會認識創造宇宙的上帝。這位上帝在《聖經》裡對人類說：「你們尋求我，如果是全心尋求的話，你們就會尋見。」在《聖經》中，「心」這個字，既包括感情，又包括理性。你是知識分子：上帝給了你一個聰明的腦袋，讓你用它去尋求真理。但別忘了，只靠理性是不夠的，還得用信心接受他進入你的心。
+
+### English
+
+You atheists always think that "believing in religion" is escaping from reality. You keep insisting that your position is completely objective, because you "believe in nothing." But in fact, there is no one in the world who "believes in nothing." Everyone has a worldview, and that worldview is built on a few major premises. One of the major premises of atheism is: "There is nothing supernatural; there is no God. If one says God exists, that only means He is an illusion existing in certain people's minds — nothing more." The major premise of scientism is: "Only what science can prove may count as believable and important." Yet these premises themselves are fundamentally impossible to prove. This is the "faith" that society gives us. From childhood we blindly accept it, take it as truth, and few people ever question it. When you look at Christianity and the Bible through the prejudice of atheism and scientism, no wonder you find it unbelievable. The Christian faith is completely logical — it just does not accord with "atheist logic"! You should first "suppose" that God exists, and look at life and reality through a Christian worldview; then you will begin to see it through! You will discover that Christianity accords with life (including reason, feelings, experience, and facts). If you are only looking for something to "cling to spiritually," and you dare not "seek truth from facts" and face reality, you will never come to know the God who created the universe. This God says to mankind in the Bible: "You will seek Me, and if you seek Me with all your heart, you will find Me." In the Bible, the word "heart" includes both feelings and reason. You are an intellectual: God has given you an intelligent mind, so that you may use it to seek the truth. But don't forget — reason alone is not enough; you must also, by faith, accept Him into your heart.
+
+### Vocabulary
+
+| # | 詞 | pinyin | English |
+|---|-----|--------|---------|
+| 1 | 無神論 | wú shén lùn | atheism (≠ 有神論) |
+| 2 | 無神論者 | wú shén lùn zhě | atheist |
+| 3 | 現實 | xiàn shí | reality; realistic |
+| 4 | 老 | lǎo | always (colloquial) (= 總是) |
+| 5 | 立場 | lì chǎng | standpoint; position |
+| 6 | 一套 | yí tào | a set (measure word for theories) |
+| 7 | 世界觀 | shì jiè guān | worldview |
+| 8 | 建立 | jiàn lì | to establish; to build |
+| 9 | 前提 | qián tí | premise; presupposition |
+| 10 | 大前提 | dà qián tí | major premise |
+| 11 | …之上 | … zhī shàng | on; upon (= …上面) |
+| 12 | 任何 | rèn hé | any |
+| 13 | 某些… | mǒu xiē | some; certain |
+| 14 | 精神 | jīng shén | mind; spirit |
+| 15 | 幻想 | huàn xiǎng | illusion; fantasy |
+| 16 | 只是…而已 | zhǐ shì … ér yǐ | just … and that's all |
+| 17 | 科學主義 | kē xué zhǔ yì | scientism |
+| 18 | 算 | suàn | to count as |
+| 19 | 可信 | kě xìn | believable; credible |
+| 20 | 重要 | zhòng yào | important |
+| 21 | 不過 | bú guò | however |
+| 22 | 從小 | cóng xiǎo | from childhood |
+| 23 | 盲目 | máng mù | blindly |
+| 24 | 當作 | dàng zuò | to take as; to regard as |
+| 25 | 懷疑 | huái yí | to doubt; doubt |
+| 26 | 偏見 | piān jiàn | prejudice |
+| 27 | 難怪…！ | nán guài | no wonder …! |
+| 28 | 邏輯 | luó jí | logic; logical |
+| 29 | 假設 | jiǎ shè | to suppose; hypothesis |
+| 30 | 想通 | xiǎng tōng | to come around; to think through |
+| 31 | 發現 | fā xiàn | to discover; discovery |
+| 32 | 理性 | lǐ xìng | reason; rationality |
+| 33 | 感情 | gǎn qíng | feelings; emotion |
+| 34 | 經驗 | jīng yàn | experience |
+| 35 | 精神寄托 | jīng shén jì tuō | something to cling to spiritually |
+| 36 | 而 | ér | (connects two contrasting statements) |
+| 37 | 敢 | gǎn | to dare |
+| 38 | 實事求是 | shí shì qiú shì | to seek truth from facts; to be practical |
+| 39 | 面對 | miàn duì | to face (≠ 逃避) |
+| 40 | 尋見 | xún jiàn | to find (be able to find) |
+| 41 | 既…又… | jì … yòu … | both … and … |
+| 42 | 知識分子 | zhī shí fèn zǐ | intellectual |
+| 43 | 知識 | zhī shí | knowledge |
+| 44 | 腦袋 | nǎo dài | head (colloquial) |
+| 45 | 別＋v.！ | bié | don't (+ verb) (= 不要) |
+| 46 | 夠 | gòu | enough |
+| 47 | 信心 | xìn xīn | faith; confidence |
