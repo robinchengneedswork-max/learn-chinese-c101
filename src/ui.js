@@ -85,6 +85,45 @@ const UI = (function () {
     renderHome();
   }
 
+  // ---- Book (module) picker -------------------------------------------------
+  // The app can hold several selectable books (Course 101, Good News Reader…).
+  // Each is its own learning path; the picker swaps which one the home shows.
+  // The choice persists across sessions. Word progress is shared (keyed by
+  // hanzi), so switching books never resets anything.
+  const BOOK_KEY = 'c101.book.v1';
+
+  function savedBookId() { try { return localStorage.getItem(BOOK_KEY); } catch (e) { return null; } }
+  function restoreBook() {
+    const id = savedBookId();
+    if (id) C101.setBook(id); // no-op if the id isn't registered
+  }
+  function chooseBook(id) {
+    if (!C101.setBook(id)) return;
+    try { localStorage.setItem(BOOK_KEY, id); } catch (e) { /* best-effort */ }
+    renderHome();
+  }
+
+  // A row of book tabs, rebuilt each render so the active one stays highlighted.
+  // Hidden entirely when there's only one book (nothing to switch between).
+  function buildBookTabs() {
+    const root = $('#book-tabs');
+    if (!root) return;
+    root.innerHTML = '';
+    const list = C101.books();
+    if (list.length < 2) { root.hidden = true; return; }
+    root.hidden = false;
+    const curId = (C101.currentBook() || {}).id;
+    for (const bk of list) {
+      const tab = el('button', 'book-tab' + (bk.id === curId ? ' active' : ''));
+      tab.setAttribute('role', 'tab');
+      tab.setAttribute('aria-selected', bk.id === curId ? 'true' : 'false');
+      tab.appendChild(el('span', 'book-tab-name', bk.title));
+      tab.appendChild(el('span', 'book-tab-zh', Lang.zh(bk.zh)));
+      tab.addEventListener('click', () => { if (bk.id !== curId) chooseBook(bk.id); });
+      root.appendChild(tab);
+    }
+  }
+
   // ---- Home: the learning path ----------------------------------------------
   // The home screen is a Duolingo-style winding trail. Each lesson "part" (Learn
   // parts, the 📖 Reading drill, and the chapter Test) is a bubble node. Nodes
@@ -167,6 +206,15 @@ const UI = (function () {
     $('#stat-streak').textContent = s.streak;
     $('#stat-xp').textContent = s.xp;
 
+    buildBookTabs();
+    const book = C101.currentBook();
+    const tag = document.querySelector('.tagline');
+    if (tag && book) {
+      tag.textContent = 'Vocabulary from ';
+      tag.appendChild(el('em', null, book.tagline));
+      tag.appendChild(document.createTextNode('.'));
+    }
+
     const due = SRS.dueWords().length;
     const reviewBtn = $('#review-btn');
     reviewBtn.textContent = due ? `Review · ${due} due` : 'Review · all caught up';
@@ -213,7 +261,7 @@ const UI = (function () {
     const row = el('div', 'section-actions');
     if (!lesson) return row;
     if (lesson.reading && lesson.reading.zh) {
-      const read = el('button', 'sec-btn', '📖 Read the C101 text');
+      const read = el('button', 'sec-btn', '📖 Read the text');
       read.addEventListener('click', () => openModal((b) => buildReading(b, lesson)));
       row.appendChild(read);
     }
@@ -416,7 +464,7 @@ const UI = (function () {
   // The authentic book passage for a section: the real Chinese to read unaided,
   // with a play button (TTS) and a reveal for the English (ground-truth) text.
   function buildReading(body, lesson) {
-    modalHead(body, '📖 Read the C101 text', lesson);
+    modalHead(body, '📖 Read the text', lesson);
     const r = lesson.reading || {};
 
     const controls = el('div', 'reading-controls');
@@ -717,6 +765,7 @@ const UI = (function () {
   // ---- Wiring ---------------------------------------------------------------
 
   function init() {
+    restoreBook();       // re-select the last-used book before first render
     buildLangSelect();
     document.addEventListener('click', closeLangMenu); // outside-click, bound once
     const brand = document.querySelector('.brand');

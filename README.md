@@ -43,6 +43,15 @@ src/main.js      — boot + service-worker registration
 content/*.js     — the vocabulary data (one file per chapter)
 ```
 
+**Books (modules).** The app can hold more than one book. Each registered
+chapter may carry book metadata (`bookId` / `bookTitle` / `bookZh` /
+`bookTagline`); chapters with none belong to the default **Course 101** book.
+The home screen shows a **book picker** (top of the path, hidden when only one
+book exists) that swaps which book's learning path you see — the choice persists.
+Word progress is keyed by `hanzi` and **shared across books**, so a word learned
+in one counts in another. A second book, **Good News Reader** (`content/gnr-chapter-01.js`,
+lessons 1–3), ships as an optional module.
+
 **Sections → parts.** Each book section (~12 words) is split at runtime into
 bite-size **parts** so a sitting is finishable: two ~6-word **learn** parts, then
 one **📖 Reading** part that re-drills the whole section with the pinyin hidden —
@@ -103,6 +112,13 @@ chapter shares its learning history.
 
 The source is `C101 Chinese Traditional Book 2021-08-12.pdf`. The tooling lives
 in `tools/` (Python 3 + `pymupdf`; CC-CEDICT is downloaded to `cedict.txt`).
+
+> **Scanned-image books are hand-transcribed.** The pipeline below reads a
+> *text-layer* PDF. Some books (e.g. Good News Reader) are scans with no text
+> layer, so `build_content.py` can't read them. For those, transcribe the book's
+> own numbered vocab list (hanzi · pinyin · gloss) and passages by hand, convert
+> Simplified → Traditional (canonical), and write the `content/*.js` file
+> directly. Still finish with steps 5–6 (refresh the lang-map, wire up sw/index).
 
 **1. Find the chapter's section headings + page range.** Section titles are the
 ALL-CAPS English lines in the PDF (and their Chinese counterparts).

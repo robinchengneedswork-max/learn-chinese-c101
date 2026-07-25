@@ -66,6 +66,22 @@ body {
 .stat-ico { font-size: 18px; }
 
 .home-main { padding: 18px 16px calc(28px + var(--safe-b)); max-width: 640px; margin: 0 auto; width: 100%; }
+
+/* Book (module) picker — a segmented row of selectable books above the path. */
+.book-tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+.book-tabs[hidden] { display: none; }
+.book-tab {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 9px 10px; cursor: pointer;
+  background: var(--bg-2); color: var(--muted);
+  border: 1px solid var(--line); border-radius: 12px;
+  transition: border-color .15s ease, color .15s ease;
+}
+.book-tab:active { transform: translateY(1px); }
+.book-tab.active { color: var(--text); border-color: var(--brand); background: #14261c; }
+.book-tab-name { font-size: 14px; font-weight: 800; }
+.book-tab-zh { font-size: 12px; opacity: .8; }
+
 .review-btn {
   width: 100%; padding: 15px; margin-bottom: 22px;
   background: var(--accent);
