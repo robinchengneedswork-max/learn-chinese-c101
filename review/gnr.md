@@ -7,8 +7,8 @@ assembled later. This is the human-readable companion to `content/gnr-chapter-01
 (the app's data form). Canonical script = Traditional; the app's picker renders
 Simplified again at display time.
 
-Transcribed so far: **Lessons 1–15.** (Lesson 0 "Introduction to Radicals" is a
-reference table, not yet included; lessons 16–25 + appendices + glossary pending.)
+Transcribed so far: **Lessons 1–19.** (Lesson 0 "Introduction to Radicals" is a
+reference table, not yet included; lessons 20–25 + appendices + glossary pending.)
 
 ---
 
@@ -657,3 +657,172 @@ God decided first to reveal His words to them, and then to send a Savior into th
 | 23 | 努力 | nǔ lì | effort; to work hard |
 | 24 | 標準 | biāo zhǔn | standard |
 | 25 | 逃避 | táo bì | to escape; to evade |
+
+## Lesson 16 — Parable of the Judge  第十六課　法官的比喻
+
+### Chinese (Traditional)
+
+一個小伙子殺了人，要受審判。那個國家的法律規定，殺人就應該被判死刑。那個城市只有一位法官，而且那位法官就是小伙子的父親。父親必須審判自己的兒子，心裡感到很痛苦，因為他又疼愛又可憐他的兒子。可是，法官應該完全公正，他也不能說：「你是我的兒子，我給你特殊待遇，不判你死刑」，因為在法律面前人人平等，給特殊待遇是不公正的。所以那個法官就判了兒子死刑；但是判了之後，他就下台，脫了法衣，對兒子說：「我替你去死，這樣法律就滿足了，你也就自由了。」父親為兒子犧牲自己的生命，人間的愛沒有比這個更偉大的了！
+
+### English
+
+A young man had killed someone and had to stand trial. In that country the law stipulated that a murderer should be sentenced to death. That city had only one judge, and that judge happened to be the young man's own father. The father had to judge his own son, and his heart was in great anguish, because he both dearly loved and pitied his son. But a judge must be completely just; he could not say, "You are my son, I'll give you special treatment and not sentence you to death," because before the law everyone is equal, and giving special treatment would be unjust. So that judge sentenced his son to death; but after passing the sentence, he stepped down from the bench, took off his robes, and said to his son, "I will die in your place; this way the law is satisfied, and you are set free." The father sacrificed his own life for his son — among men there is no love greater than this!
+
+### Vocabulary
+
+| # | 詞 | pinyin | English |
+|---|-----|--------|---------|
+| 1 | 法官 | fǎ guān | judge (a legal official) |
+| 2 | 比喻 | bǐ yù | parable; analogy; to compare |
+| 3 | 小伙子 | xiǎo huǒ zi | young guy; young fellow |
+| 4 | 審判 | shěn pàn | to judge; judgement |
+| 5 | 受審判 | shòu shěn pàn | to be judged; to stand trial |
+| 6 | 國家 | guó jiā | country; nation |
+| 7 | 法律 | fǎ lǜ | law |
+| 8 | 規定 | guī dìng | to stipulate; stipulation |
+| 9 | 被 | bèi | (marks the passive voice) |
+| 10 | 判…死刑 | pàn … sǐ xíng | to sentence sb to death |
+| 11 | 城市 | chéng shì | town; city |
+| 12 | 痛苦 | tòng kǔ | painful; pain |
+| 13 | 疼愛 | téng ài | to love dearly; to dote on |
+| 14 | 可憐 | kě lián | to have pity on; pitiful |
+| 15 | 特殊 | tè shū | special |
+| 16 | 待遇 | dài yù | treatment |
+| 17 | 在…面前 | zài … miàn qián | in front of; before |
+| 18 | 人人 | rén rén | everyone; all people (= 所有的人) |
+| 19 | 平等 | píng děng | equal; equality |
+| 20 | …之後 | … zhī hòu | after (= 以後) |
+| 21 | 之 | zhī | (classical auxiliary equivalent to 的) |
+| 22 | 下台 | xià tái | to step down (from the platform/bench) |
+| 23 | 脫 | tuō | to take off (clothing) |
+| 24 | 法衣 | fǎ yī | judge's robes |
+| 25 | 替 | tì | instead of; in place of; for |
+| 26 | 犧牲 | xī shēng | to sacrifice; sacrifice |
+| 27 | 人間 | rén jiān | in this world; among men |
+
+## Lesson 17 — Jesus Paid Sin's Price for Us  第十七課　耶穌替我們付了罪的代價
+
+### Chinese (Traditional)
+
+人不能贖自己的罪，也不能擺脫罪的鎖鏈；不能救自己，更不能逃避上帝的審判和懲罰。他本來應該毀滅我們，因為罪的代價就是死亡。但是聖潔的上帝也是充滿慈愛的。他愛他所創造的人類，當他看到我們選擇了滅亡之路，他的心破碎了。像那個法官那樣，他決定「下台」，降生在人間，替我們付罪的代價，為我們犧牲他的生命，把我們從罪的鎖鏈中釋放出來，給我們新生命——永恆的生命。雖然耶穌沒有犯過罪，但是當時的人判了他死刑，把他釘死在一個十字架上面；他們還取笑他、向他吐唾沫。耶穌那天流血，是為了你和我。只有那血才能洗淨我們的心、拯救我們的靈魂。這麼偉大的愛，你能拒絕嗎？
+
+### English
+
+Man cannot atone for his own sin, nor free himself from the chains of sin; he cannot save himself, and still less can he escape God's judgement and punishment. By rights God should have destroyed us, for the price of sin is death. But the holy God is also full of loving-kindness. He loves the mankind He created, and when He saw that we had chosen the road to destruction, His heart was broken. Like that judge, He decided to "step down": He came down and was born among men, paid the price of sin in our place, sacrificed His life for us, released us from the chains of sin, and gave us a new life — eternal life. Although Jesus had never sinned, the people of that time sentenced Him to death and nailed Him to death on a cross; they even mocked Him and spat at Him. Jesus shed His blood that day for you and me. Only that blood can wash our hearts clean and save our souls. Such a great love — can you refuse it?
+
+### Vocabulary
+
+| # | 詞 | pinyin | English |
+|---|-----|--------|---------|
+| 1 | 付 | fù | to pay |
+| 2 | 代價 | dài jià | price; cost |
+| 3 | 贖（…）罪 | shú … zuì | to atone for sin(s); to redeem |
+| 4 | 擺脫 | bǎi tuō | to free oneself from; to shake off |
+| 5 | 鎖鏈 | suǒ liàn | chain(s) |
+| 6 | 本來 | běn lái | originally; by rights |
+| 7 | 毀滅 | huǐ miè | to destroy; destruction |
+| 8 | 死亡 | sǐ wáng | death (= 死) |
+| 9 | 充滿 | chōng mǎn | to be full of; filled with |
+| 10 | 慈愛 | cí ài | loving-kindness |
+| 11 | 當…（的時候） | dāng … de shí hou | when… |
+| 12 | 破碎 | pò suì | broken; to shatter |
+| 13 | 像…那樣 | xiàng … nà yàng | just like… |
+| 14 | 降生 | jiàng shēng | to come down and be born |
+| 15 | 釋放 | shì fàng | to release; to set free; to deliver |
+| 16 | 雖然…但是… | suī rán … dàn shì … | although…, still… |
+| 17 | 當時 | dāng shí | at that time |
+| 18 | 釘 | dìng | to nail |
+| 19 | 釘死 | dìng sǐ | to nail to death; to crucify |
+| 20 | 取笑（…） | qǔ xiào | to laugh at; to mock |
+| 21 | 向…吐唾沫 | xiàng … tù tuò mo | to spit at |
+| 22 | 流血 | liú xuè | to bleed; to shed blood |
+| 23 | 血 | xuè / xiě | blood |
+| 24 | 洗淨 | xǐ jìng | to wash clean |
+
+## Lesson 18 — Is Jesus a Historical Figure?  第十八課　耶穌是歷史人物嗎？
+
+### Chinese (Traditional)
+
+馬克思說過，歷史上根本沒有耶穌這個人。但是考古學已經證明了耶穌的存在，他是歷史人物。耶穌生於公元前五年，在巴勒斯坦的一個小城市——伯利恆。他的家後來住在拿撒勒，他的父親是木匠，生活很窮，很苦。耶穌三十歲的時候，就開始傳道。他有超自然的能力，行了很多神跡，也治了很多人的病。他說他是救世主、是創造宇宙的上帝本身。有人信他，但是也有人反對他。最後，在公元三十年，他在耶路撒冷被釘在十字架上，死了。可是三天以後他復活了。復活後，他的門徒第一次看見他，都被嚇壞了，以為是一個鬼！死人怎麼能復活呢？！……耶穌的復活證明了他是生命的主，死亡也不能戰勝他。
+
+### English
+
+Marx once said that in history there was no such person as Jesus at all. But archaeology has already proven Jesus' existence — He is a historical figure. Jesus was born in 5 B.C., in a small town in Palestine — Bethlehem. His family later lived in Nazareth; his father was a carpenter, and life was very poor and hard. When Jesus was thirty, He began to preach. He had supernatural power, performed many miracles, and healed many people's illnesses. He said that He was the Savior — God Himself, the Creator of the universe. Some believed in Him, but others opposed Him. Finally, in A.D. 30, He was nailed to a cross in Jerusalem and died. But three days later He rose again. After His resurrection, when His disciples first saw Him, they were all scared out of their wits, thinking He was a ghost! How could a dead man come back to life?!… Jesus' resurrection proved that He is the Lord of life, and even death cannot defeat Him.
+
+### Vocabulary
+
+| # | 詞 | pinyin | English |
+|---|-----|--------|---------|
+| 1 | 歷史 | lì shǐ | history |
+| 2 | 歷史人物 | lì shǐ rén wù | historical figure |
+| 3 | 歷史上 | lì shǐ shang | in history |
+| 4 | 考古學 | kǎo gǔ xué | archaeology |
+| 5 | 於 | yú | in; at (= 在) |
+| 6 | 公元 | gōng yuán | the Christian era; A.D. |
+| 7 | 公元…年 | gōng yuán … nián | … A.D. |
+| 8 | 公元前…年 | gōng yuán qián … nián | … B.C. |
+| 9 | 巴勒斯坦 | bā lè sī tǎn | Palestine |
+| 10 | 伯利恆 | bó lì héng | Bethlehem |
+| 11 | 後來 | hòu lái | and then; afterwards (= 然後) |
+| 12 | 拿撒勒 | ná sā lè | Nazareth |
+| 13 | 木匠 | mù jiàng | carpenter |
+| 14 | 窮 | qióng | poor |
+| 15 | 苦 | kǔ | hard; bitter |
+| 16 | 傳道 | chuán dào | to preach (the Word) |
+| 17 | 超自然 | chāo zì rán | supernatural |
+| 18 | 能力 | néng lì | power; ability |
+| 19 | 神跡 | shén jī | miracle |
+| 20 | 行…神跡 | xíng … shén jī | to perform miracles |
+| 21 | 治病 | zhì bìng | to heal (illnesses) |
+| 22 | 反對 | fǎn duì | to oppose |
+| 23 | 耶路撒冷 | yē lù sā lěng | Jerusalem |
+| 24 | 復活 | fù huó | to rise again; resurrection |
+| 25 | 門徒 | mén tú | disciple |
+| 26 | 嚇壞 | xià huài | scared to death |
+| 27 | 死人 | sǐ rén | dead person |
+| 28 | 戰勝 | zhàn shèng | to defeat; to triumph over |
+
+## Lesson 19 — Light in the Darkness  第十九課　黑暗中的光
+
+### Chinese (Traditional)
+
+二十世紀的人崇拜金錢、科學和教育。可是，金錢是買不到幸福的。有錢的人也常常覺得生活沒有意義，甚至有些人願意自殺。科學又不能回答人生的大問題。如果你心裡有很多煩惱，科學也只能給你安眠藥，它無法給你內心的平安或解決你的煩惱。那麼，教育呢？教育並不能使人變好，不能改變人的心。納粹主義這個野蠻的思想是六十多年前在德國出現的。可是當時，德國是世界上最「文明」的國家之一。教育水平很高，科學和哲學也都很「發達」。我們的世界又黑暗又混亂，哪兒才能找到光、真理和平安呢？兩千年前，在巴勒斯坦有一個人曾經說了一些驚人的話，他說：「我是世界的光，相信我的人不會在黑暗裡面摸索；我是真理，你如果接受這個真理，你的心就會自由，我會把我的平安賜給你。」這個人的話，會不會是真的呢？
+
+### English
+
+People of the 20th century worship money, science, and education. But money cannot buy happiness. Even the rich often feel that life has no meaning; some are even willing to kill themselves. Science, moreover, cannot answer the big questions of life. If your heart is full of worries, science can only give you sleeping pills; it cannot give you inner peace or solve your troubles. What about education, then? Education cannot make people good, cannot change the human heart. Nazism — that barbaric ideology — appeared in Germany just over sixty years ago. Yet at that time Germany was one of the most "civilized" countries in the world: its level of education was very high, and its science and philosophy were both very "developed." Our world is both dark and chaotic; where can we find light, truth, and peace? Two thousand years ago, in Palestine, there was a man who once said some astonishing words. He said: "I am the light of the world; whoever believes in Me will not grope about in the darkness. I am the truth; if you accept this truth, your heart will be free, and I will give you My peace." Could this man's words be true?
+
+### Vocabulary
+
+| # | 詞 | pinyin | English |
+|---|-----|--------|---------|
+| 1 | 黑暗 | hēi àn | darkness; dark |
+| 2 | …中 | … zhōng | in; amid (= 裡) |
+| 3 | 世紀 | shì jì | century |
+| 4 | 金錢 | jīn qián | money |
+| 5 | 教育 | jiào yù | education |
+| 6 | 買不到 | mǎi bu dào | to be unable to buy |
+| 7 | 有錢的人 | yǒu qián de rén | a rich person |
+| 8 | 覺得… | jué de | to feel; to find (that)… |
+| 9 | 甚至 | shèn zhì | even; to the point that |
+| 10 | 願意 | yuàn yì | to be willing to |
+| 11 | 自殺 | zì shā | to commit suicide; suicide |
+| 12 | 回答 | huí dá | to answer; answer |
+| 13 | 安眠藥 | ān mián yào | sleeping pills |
+| 14 | 解決 | jiě jué | to resolve; to solve |
+| 15 | 使 | shǐ | to make; to cause (so that) (= 讓, 叫) |
+| 16 | 變好 | biàn hǎo | to become good; to improve |
+| 17 | 納粹主義 | nà cuì zhǔ yì | Nazism |
+| 18 | 野蠻 | yě mán | barbaric; savage |
+| 19 | 思想 | sī xiǎng | ideology; thought |
+| 20 | 德國 | dé guó | Germany |
+| 21 | 出現 | chū xiàn | to appear; appearance |
+| 22 | 文明 | wén míng | civilized; civilization |
+| 23 | …之一 | … zhī yī | one of the… |
+| 24 | 水平 | shuǐ píng | level; standard |
+| 25 | 發達 | fā dá | developed; advanced |
+| 26 | 混亂 | hùn luàn | chaos; chaotic |
+| 27 | 驚人 | jīng rén | astonishing; startling |
+| 28 | 摸索 | mō suǒ | to grope; to feel one's way |
+| 29 | 接受 | jiē shòu | to accept (≠ 拒絕) |
+| 30 | 把…賜給… | bǎ … cì gěi … | to bestow … on …; to give … to … |
