@@ -7,8 +7,8 @@ assembled later. This is the human-readable companion to `content/gnr-chapter-01
 (the app's data form). Canonical script = Traditional; the app's picker renders
 Simplified again at display time.
 
-Transcribed so far: **Lessons 1–19.** (Lesson 0 "Introduction to Radicals" is a
-reference table, not yet included; lessons 20–25 + appendices + glossary pending.)
+Transcribed so far: **Lessons 1–23.** (Lesson 0 "Introduction to Radicals" is a
+reference table, not yet included; lessons 24–25 + appendices + glossary pending.)
 
 ---
 
@@ -826,3 +826,209 @@ People of the 20th century worship money, science, and education. But money cann
 | 28 | 摸索 | mō suǒ | to grope; to feel one's way |
 | 29 | 接受 | jiē shòu | to accept (≠ 拒絕) |
 | 30 | 把…賜給… | bǎ … cì gěi … | to bestow … on …; to give … to … |
+
+## Lesson 20 — The Price to Follow Jesus  第二十課　跟從耶穌的代價
+
+### Chinese (Traditional)
+
+一個人相信耶穌，就會得到永恆的生命和充實的人生。但是，上帝從來沒有許諾過，我們信他之後，生活就沒有問題，萬事如意。他反而告訴我們：「如果一個人要跟從我，他就應該放棄他的主權，服從我，把自己的一切都獻上給我，並且背起十字架，來跟從我。」背起十字架的意思，就是願意為上帝受苦，甚至犧牲生命。耶穌要我們公開地承認我們是他的門徒，也要我們勇敢地為他和為正義挺身而出。但是我們這樣作，一定會有人取笑我們，或者反對我們。在很多國家，基督徒就常常受到政府的迫害。要作一個正直的人，並不容易。有時候會吃虧和受傷害。可是，上帝總不離棄我們；雖然我們常常軟弱，但是他增添我們的力量，每天給我們平安和喜樂；他幫助我們為他奮鬥，幫助我們去愛別人，包括愛我們的敵人。
+
+### English
+
+When a person believes in Jesus, he receives eternal life and a fulfilling life. But God has never promised that once we believe in Him, life will have no problems and everything will go as we wish. On the contrary, He tells us: "If anyone wants to follow Me, he must give up his own sovereignty, obey Me, offer up all that he has to Me, and take up his cross to follow Me." To "take up the cross" means to be willing to suffer for God, even to sacrifice one's life. Jesus wants us to confess openly that we are His disciples, and He wants us to stand up bravely for Him and for justice. But when we do this, there will surely be people who mock us or oppose us. In many countries Christians are often persecuted by the government. To be an upright person is not easy. Sometimes we will lose out and get hurt. Yet God never abandons us; though we are often weak, He increases our strength and gives us peace and joy each day; He helps us to fight for Him, and helps us to love others — including loving our enemies.
+
+### Vocabulary
+
+| # | 詞 | pinyin | English |
+|---|-----|--------|---------|
+| 1 | 跟從 | gēn cóng | to follow |
+| 2 | 充實 | chōng shí | fulfilling; enriched (≠ 空虛) |
+| 3 | 許諾 | xǔ nuò | to promise; promise |
+| 4 | 萬事如意 | wàn shì rú yì | may all your wishes come true |
+| 5 | 反而 | fǎn ér | on the contrary |
+| 6 | 放棄 | fàng qì | to give up |
+| 7 | 主權 | zhǔ quán | sovereignty; rights |
+| 8 | 服從 | fú cóng | to obey (a person); obedience |
+| 9 | 獻上（給…） | xiàn shàng gěi … | to offer up (to) |
+| 10 | 並且 | bìng qiě | and; moreover (= 而且) |
+| 11 | 背起 | bēi qǐ | to take up (on one's back) |
+| 12 | 受苦 | shòu kǔ | to suffer |
+| 13 | 公開 | gōng kāi | open(ly); public |
+| 14 | 承認 | chéng rèn | to admit; to acknowledge |
+| 15 | 勇敢 | yǒng gǎn | brave |
+| 16 | 正義 | zhèng yì | justice |
+| 17 | 為…挺身而出 | wèi … tǐng shēn ér chū | to stand up for… |
+| 18 | 受（到）迫害 | shòu dào pò hài | to be persecuted |
+| 19 | 迫害 | pò hài | to persecute; persecution |
+| 20 | 政府 | zhèng fǔ | government |
+| 21 | 作一個…的人 | zuò yí ge … de rén | to be a … kind of person |
+| 22 | 吃虧 | chī kuī | to lose out; to get the worst of it |
+| 23 | 受傷害 | shòu shāng hài | to get hurt; to be wounded |
+| 24 | 總 | zǒng | always |
+| 25 | 總不 | zǒng bù | never (always not) |
+| 26 | 離棄 | lí qì | to abandon; to forsake |
+| 27 | 軟弱 | ruǎn ruò | weak; weakness |
+| 28 | 增添 | zēng tiān | to increase; to add to |
+| 29 | 奮鬥 | fèn dòu | to fight; to struggle |
+| 30 | 包括 | bāo kuò | to include; including |
+| 31 | 敵人 | dí rén | enemy (≠ 朋友) |
+
+## Lesson 21 — One Revolutionary Change  第二十一課　一個革命性的改變
+
+### Chinese (Traditional)
+
+成為基督徒，不需要通過什麼「宗教儀式」。上帝並不是要我們去信一個「教」（基督教），他只要我們信他（基督），並接受他的愛，一生跟從他。如果你相信上帝真的存在，也相信耶穌那天在十字架上受苦、流血，是為了洗淨你的罪；如果你承認你是罪人，而且願意悔改、放棄罪惡和過去的生活、並成為上帝的僕人，那麼，你可以在宇宙的主宰面前跪下來，向他禱告，求他饒恕你的罪、進入你的心、成為你的主。這樣禱告，只要是全心全意的，你就成為一個新的人了，過去的錯誤都被救世主的血洗掉了。上帝把永恆的生命白白地賜給你。而且從那時候開始，聖靈就來住在你裡面。聖靈是上帝的靈，也就是上帝本身。聖靈每天會照亮你的心，他會引導你、改變你、安慰你、並教導你怎樣過聖潔的生活、怎樣做人、怎樣榮耀上帝。還有一件事；一接受上帝成為你的主，你也就進入了他的大家庭。世界上所有真正的基督徒，不管是什麼國籍、膚色、或教育水平，就都是你的兄弟姐妹。
+
+### English
+
+Becoming a Christian does not require passing through any "religious ritual." God does not want us to believe in a "religion" (Christianity); He only wants us to believe in Him (Christ), to accept His love, and to follow Him all our life. If you believe that God truly exists, and also believe that Jesus suffered and shed His blood on the cross that day to wash away your sin; if you admit that you are a sinner, and are willing to repent, to give up sin and your past life, and to become God's servant — then you can kneel down before the Master of the universe, pray to Him, and ask Him to forgive your sin, enter your heart, and become your Lord. If such a prayer is wholehearted, you become a new person; your past mistakes are all washed away by the Savior's blood. God freely gives you eternal life. And from that time on, the Holy Spirit comes to live within you. The Holy Spirit is the Spirit of God — He is God Himself. Every day the Holy Spirit lights up your heart; He guides you, changes you, comforts you, and teaches you how to live a holy life, how to conduct yourself, and how to glorify God. There is one more thing: the moment you accept God as your Lord, you also enter His great family. All the true Christians in the world — no matter their nationality, skin color, or level of education — are your brothers and sisters.
+
+### Vocabulary
+
+| # | 詞 | pinyin | English |
+|---|-----|--------|---------|
+| 1 | 革命性 | gé mìng xìng | revolutionary |
+| 2 | 革命 | gé mìng | revolution; to carry out a revolution |
+| 3 | 儀式 | yí shì | rite; ceremony |
+| 4 | 信教 | xìn jiào | to believe in a religion |
+| 5 | 悔改 | huǐ gǎi | to repent; repentance |
+| 6 | 過去 | guò qù | the past; in the past |
+| 7 | 僕人 | pú rén | servant |
+| 8 | 主宰 | zhǔ zǎi | master; to dominate |
+| 9 | 跪 | guì | to kneel |
+| 10 | 向…禱告 | xiàng … dǎo gào | to pray to… |
+| 11 | 進入 | jìn rù | to enter |
+| 12 | 全心全意 | quán xīn quán yì | wholeheartedly |
+| 13 | 洗掉 | xǐ diào | to wash away |
+| 14 | ～掉 | ～ diào | …completely (away) |
+| 15 | 白白（地） | bái bái de | freely; for nothing |
+| 16 | 聖靈 | shèng líng | the Holy Spirit |
+| 17 | 靈 | líng | spirit |
+| 18 | 照亮 | zhào liàng | to light up; to illuminate |
+| 19 | 引導 | yǐn dǎo | to lead; to guide |
+| 20 | 安慰 | ān wèi | to comfort; comfort |
+| 21 | 教導 | jiào dǎo | to teach; teaching |
+| 22 | 過…的生活 | guò … de shēng huó | to lead a … life |
+| 23 | 做人 | zuò rén | to conduct oneself; to behave |
+| 24 | 榮耀 | róng yào | to glorify; glory |
+| 25 | 件 | jiàn | (measure word for 事 / matters) |
+| 26 | 家庭 | jiā tíng | family |
+| 27 | 不管… | bù guǎn | regardless of; no matter… |
+| 28 | 國籍 | guó jí | nationality |
+| 29 | 膚色 | fū sè | skin color |
+| 30 | 兄弟 | xiōng dì | brother(s) |
+| 31 | 姐妹 | jiě mèi | sister(s) |
+
+## Lesson 22 — Will the World Be Filled with Love?  第二十二課　世界將會充滿愛嗎？
+
+### Chinese (Traditional)
+
+一百多年前，馬克思認為，要想改變這個腐敗的社會，必須通過暴力革命換一個完全新的制度，這樣才能創造一種人人平等的新社會。共產主義的理想很高尚，但是你用暴力和仇恨，怎麼能實現愛與和平呢？有人說社會主義好，有人說資本主義好。其實，社會所以腐敗，是因為你和我的心腐敗。需要改變的，主要並不是制度，而是我們自私的心。在中國，毛澤東以為，通過強迫人們接受很多教條，可以改變人的本性，創造出一種像雷鋒那樣「毫不利己，專門利人」的共產主義「新人」。可是後來，文化大革命卻導致了混亂與落後。人是罪人。我們改變不了自己的本性。但是現在，世界局勢的緩和與生活水平的提高，使人們又開始迷信未來：「戰爭和專制將會成為歷史了！」「人類有能力解決所有的問題」，「世界將會充滿愛！」還有一些人相信，大家如果通過練氣功「誘發自己的潛力」，人類就會達到更高的境界了。但是上帝卻告訴我們：「有些道路，人以為是對的，可是走到最後，就會滅亡」。只有上帝才能改變我們的心，才能拯救我們的靈魂，給我們愛、生命和希望。
+
+### English
+
+Over a hundred years ago, Marx believed that to change this corrupt society, one had to exchange it — through violent revolution — for a completely new system, and only then could a new society where everyone is equal be created. The communist ideal is very noble, but how can you achieve love and peace by using violence and hatred? Some say socialism is good; others say capitalism is good. Actually, the reason society is corrupt is that your heart and mine are corrupt. What needs to change is mainly not the system, but our selfish hearts. In China, Mao Zedong thought that by forcing people to accept many dogmas he could change human nature and create a communist "new man" who, like Lei Feng, is "utterly devoted to others without any thought for oneself." But later the Cultural Revolution led only to chaos and backwardness. Man is a sinner. We cannot change our own nature. Yet now, the easing of the world situation and the rise in living standards have made people once again put blind faith in the future: "War and dictatorship will become history!" "Mankind has the ability to solve all problems," "The world will be filled with love!" Some even believe that if everyone, by practicing qigong, "draws out their own hidden potential," humanity will reach a higher realm. But God tells us: "There are some roads that people think are right, yet in the end they lead to destruction." Only God can change our hearts; only He can save our souls and give us love, life, and hope.
+
+### Vocabulary
+
+| # | 詞 | pinyin | English |
+|---|-----|--------|---------|
+| 1 | 將會 | jiāng huì | will (marks the future) (= 會) |
+| 2 | 腐敗 | fǔ bài | corrupt; corruption |
+| 3 | 社會 | shè huì | society |
+| 4 | 暴力 | bào lì | violent; violence |
+| 5 | 換 | huàn | to exchange |
+| 6 | 制度 | zhì dù | system (political/social) |
+| 7 | 種 | zhǒng | kind; sort |
+| 8 | 共產主義 | gòng chǎn zhǔ yì | communism |
+| 9 | 高尚 | gāo shàng | noble; lofty |
+| 10 | 仇恨 | chóu hèn | hatred (= 恨) |
+| 11 | 實現 | shí xiàn | to achieve; to realize |
+| 12 | 與 | yǔ | and (literary) (= 和) |
+| 13 | 和平 | hé píng | peace; peaceful |
+| 14 | 社會主義 | shè huì zhǔ yì | socialism |
+| 15 | 資本主義 | zī běn zhǔ yì | capitalism |
+| 16 | 其實 | qí shí | actually |
+| 17 | A所以B是因為C | A suǒ yǐ B shì yīn wèi C | the reason A is B is that C |
+| 18 | 毛澤東 | máo zé dōng | Mao Zedong |
+| 19 | 以為 | yǐ wéi | to think (mistakenly) |
+| 20 | 強迫 | qiǎng pò | to force; to compel |
+| 21 | 教條 | jiào tiáo | dogma |
+| 22 | 本性 | běn xìng | (inborn) nature |
+| 23 | 雷鋒 | léi fēng | Lei Feng |
+| 24 | 毫不利己，專門利人 | háo bù lì jǐ, zhuān mén lì rén | utterly devoted to others, with no thought for oneself |
+| 25 | 文化大革命 | wén huà dà gé mìng | the Cultural Revolution |
+| 26 | 卻 | què | yet; however |
+| 27 | 導致 | dǎo zhì | to result in; to lead to |
+| 28 | 落後 | luò hòu | backward; backwardness (≠ 發達) |
+| 29 | 局勢 | jú shì | situation |
+| 30 | 緩和 | huǎn hé | to ease; détente |
+| 31 | 提高 | tí gāo | to raise; a rise |
+| 32 | 未來 | wèi lái | the future (≠ 過去) |
+| 33 | 戰爭 | zhàn zhēng | war |
+| 34 | 專制 | zhuān zhì | dictatorship; dictatorial |
+| 35 | 練氣功 | liàn qì gōng | to practice qigong |
+| 36 | 氣功 | qì gōng | qigong |
+| 37 | 誘發 | yòu fā | to draw out; to induce |
+| 38 | 潛力 | qián lì | potential (latent power) |
+| 39 | 達到 | dá dào | to attain; to reach |
+| 40 | 境界 | jìng jiè | realm |
+
+## Lesson 23 — A Christian's Daily Life  第二十三課　基督徒的生活
+
+### Chinese (Traditional)
+
+我們成為了基督徒以後，一個新的生活就開始了。我們需要成長，使我們和主的關係一天比一天親密，使我們的信仰一天比一天堅定。讀聖經、禱告、傳福音、與別的基督徒聚會等，都能幫助我們成長。我們每天找一個安靜的地方，單獨與上帝交談、讀他的話、聽他的聲音、尋求他的旨意、祈求和讚美他，是一天當中最重要最寶貴的時間！非基督徒有時候問我們：「是不是信教就得每星期天上教堂作禮拜？」啊！如果他們知道主內兄弟姐妹一起讚美上帝有多麼快樂就好了！傳福音也是那樣。並不是一個麻煩的義務：你真的找到了人生的意義，難道你還不想告訴別人嗎？我們是基督的戰士，基督的僕人，也是人類的僕人。我們要謙虛地為上帝和人類服務。當我們依靠上帝的時候，他慢慢地改變我們自私的心，把他那顆愛人類的心給我們，教導我們無條件地愛別人。我們不再聽人的標準和肉體的慾望，不再漫無目的地隨波逐流。靠著上帝給我們的力量，可以積極地去影響這個腐敗的社會，在黑暗中發光；讓更多的人，看到我們生活上的改變，開始尋求真理，歸向上帝。信上帝也是一種革命，是愛的革命！
+
+### English
+
+After we become Christians, a new life begins. We need to grow, so that our relationship with the Lord grows closer day by day, and our faith grows firmer day by day. Reading the Bible, praying, spreading the gospel, meeting with other Christians, and so on — all of these help us grow. Each day we find a quiet place to talk with God alone, to read His word, listen to His voice, seek His will, and plead with and praise Him — it is the most important and most precious time of the whole day! Non-Christians sometimes ask us: "Does believing mean you have to go to church to worship every Sunday?" Ah, if only they knew how joyful it is for brothers and sisters in the Lord to praise God together! Spreading the gospel is the same. It is not a troublesome obligation: if you have truly found the meaning of life, how could you not want to tell others? We are Christ's soldiers, Christ's servants, and also servants of mankind. We must humbly serve God and people. When we rely on God, He gradually changes our selfish hearts, gives us His own heart that loves mankind, and teaches us to love others unconditionally. We no longer heed human standards or the desires of the flesh, no longer drift aimlessly with the current. Relying on the strength God gives us, we can actively influence this corrupt society and shine in the darkness — so that more people, seeing the change in our lives, begin to seek the truth and turn to God. To believe in God is also a revolution — a revolution of love!
+
+### Vocabulary
+
+| # | 詞 | pinyin | English |
+|---|-----|--------|---------|
+| 1 | 成長 | chéng zhǎng | to grow; growth |
+| 2 | 親密 | qīn mì | intimate; close |
+| 3 | 堅定 | jiān dìng | firm; steadfast |
+| 4 | 讀 | dú | to read |
+| 5 | 傳福音 | chuán fú yīn | to spread the gospel; to evangelize |
+| 6 | 聚會 | jù huì | to gather; a meeting |
+| 7 | 安靜 | ān jìng | quiet |
+| 8 | 單獨 | dān dú | alone |
+| 9 | 與…交談 | yǔ … jiāo tán | to talk with… |
+| 10 | 聲音 | shēng yīn | voice; sound |
+| 11 | 尋求 | xún qiú | to seek |
+| 12 | 旨意 | zhǐ yì | (God's) will |
+| 13 | 祈求 | qí qiú | to plead; a plea |
+| 14 | …當中 | … dāng zhōng | in the midst of; among |
+| 15 | 非基督徒 | fēi jī dū tú | non-Christian (≠ 基督徒) |
+| 16 | 得 | děi | must (= 必須) |
+| 17 | 教堂 | jiào táng | church (building) |
+| 18 | 上教堂 | shàng jiào táng | to go to church |
+| 19 | 作禮拜 | zuò lǐ bài | to attend a worship service; worship |
+| 20 | 禮拜 | lǐ bài | to worship (archaic) |
+| 21 | 如果…就好了！ | rú guǒ … jiù hǎo le | if only …! |
+| 22 | 主內 | zhǔ nèi | in the Lord |
+| 23 | 多麼＋adj. | duō me | so; how (+ adjective) |
+| 24 | 快樂 | kuài lè | joyful; happy |
+| 25 | 麻煩 | má fán | troublesome; to trouble; trouble |
+| 26 | 義務 | yì wù | duty; obligation |
+| 27 | 戰士 | zhàn shì | soldier |
+| 28 | 謙虛 | qiān xū | humble; modest; humility |
+| 29 | 為…服務 | wèi … fú wù | to serve… |
+| 30 | 依靠 | yī kào | to depend on; to rely on |
+| 31 | 慢慢地 | màn màn de | gradually; slowly |
+| 32 | 顆 | kē | (measure word for round things; here: heart) |
+| 33 | 無條件地 | wú tiáo jiàn de | unconditionally |
+| 34 | 肉體 | ròu tǐ | the flesh; the body |
+| 35 | 慾望 | yù wàng | desire |
+| 36 | 漫無目的（地） | màn wú mù dì de | aimlessly |
+| 37 | 目的 | mù dì | purpose; aim |
+| 38 | 隨波逐流 | suí bō zhú liú | to drift with the current |
+| 39 | 靠（著）… | kào zhe … | relying on… |
+| 40 | 積極（地） | jī jí de | actively |
+| 41 | 影響 | yǐng xiǎng | to influence; influence |
+| 42 | 發光 | fā guāng | to shine |
+| 43 | 讓 | ràng | so that; to let |
+| 44 | 歸向… | guī xiàng | to turn to (= 回向) |
