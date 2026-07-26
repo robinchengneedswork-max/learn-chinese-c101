@@ -7,10 +7,12 @@ assembled later. This is the human-readable companion to `content/gnr-chapter-01
 (the app's data form). Canonical script = Traditional; the app's picker renders
 Simplified again at display time.
 
-Transcribed so far: **Lessons 1–25 — ALL 25 lessons complete.** (Lesson 0
-"Introduction to Radicals" is a reference table, not yet included; the closing
-"信主" altar-call prayer, 4 appendices, and the Chinese–English glossary are the
-only remaining source material.)
+Transcribed so far: **Lessons 1–25 — ALL 25 lessons complete**, plus the
+**reference material** at the end of this file (radicals table, Books of the
+Bible, the closing "信主" prayer, and the two-worldviews appendix). Appendices 1
+(a booklist) and 3 (thoughts on justice) are English-only in the source and are
+not reproduced; the book's 31-page Chinese–English glossary is superseded by the
+app's generated glossary (every word taught, sorted by pinyin).
 
 ---
 
@@ -1154,3 +1156,300 @@ You atheists always think that "believing in religion" is escaping from reality.
 | 45 | 別＋v.！ | bié | don't (+ verb) (= 不要) |
 | 46 | 夠 | gòu | enough |
 | 47 | 信心 | xìn xīn | faith; confidence |
+
+---
+
+# Reference material
+
+The book's back-matter, transcribed to Traditional. In the app these live in the
+Good News Reader **Reference (附錄)** area as browsable docs (not graded lessons).
+
+## Lesson 0 — Radicals & parts of characters  部首與字形
+
+The book opens with a table of radicals / character parts. Reproduced here are the
+standard, unambiguous entries (real characters with genuine readings or meanings);
+the book's purely-mnemonic pseudo-glyphs ("crooked TEN", "punkhead", "half a
+cover") are omitted. When a name is in CAPITALS, nearly every character containing
+that part relates to it (e.g. 扌 HAND → 打 hit, 推 push, 拉 pull).
+
+### People & body  人與身體
+
+| part | name / meaning |
+|---|---|
+| 人 | PERSON (rén) |
+| 亻 | person (人 at the side) |
+| 大 | BIG (dà) |
+| 夫 | MAN / "double big" (fū) |
+| 女 | WOMAN (nǚ) |
+| 子 | CHILD (zǐ) |
+| 心 | HEART (xīn) |
+| 忄 | HEART (心 at the side) |
+| 扌 | HAND (shǒu) |
+| 手 | HAND (shǒu) |
+| 又 | AGAIN / a hand (yòu) |
+| 口 | MOUTH (kǒu) |
+| 目 | EYE (mù) |
+| 自 | ONESELF (zì) |
+| 耳 | EAR (ěr) |
+| 足 | FOOT (zú) |
+| 身 | BODY (shēn) |
+| 頁 | PAGE / head (yè) |
+| 毛 | FUR (máo) |
+| 父 | FATHER (fù) |
+| 母 | MOTHER (mǔ) |
+
+### Nature & the elements  自然
+
+| part | name / meaning |
+|---|---|
+| 日 | SUN (rì) |
+| 月 | MOON / FLESH (yuè) |
+| 火 | FIRE (huǒ) |
+| 灬 | four flames of FIRE |
+| 水 | WATER (shuǐ) |
+| 氵 | 3 drops of WATER |
+| 冫 | ICE (2 drops) |
+| 山 | MOUNTAIN (shān) |
+| 川 | STREAM (chuān) |
+| 土 | EARTH (tǔ) |
+| 石 | STONE (shí) |
+| 田 | FIELD (tián) |
+| 雨 | RAIN (yǔ) |
+| 風 | WIND (fēng) |
+| 西 | WEST (xī) |
+
+### Plants  植物
+
+| part | name / meaning |
+|---|---|
+| 木 | WOOD, TREE (mù) |
+| 禾 | CEREAL (hé) |
+| 米 | RICE (mǐ) |
+| 竹 | BAMBOO (zhú) |
+| 艹 | GRASS |
+
+### Animals  動物
+
+| part | name / meaning |
+|---|---|
+| 犬 | ANIMAL / DOG (quǎn) |
+| 犭 | animal (犬 at the side) |
+| 牛 | OX, cow (niú) |
+| 豕 | PIG (shǐ) |
+| 馬 | HORSE (mǎ) |
+| 羊 | SHEEP (yáng) |
+| 鳥 | BIRD (niǎo) |
+| 隹 | little BIRD (zhuī) |
+| 魚 | FISH (yú) |
+| 虫 | BUG (chóng) |
+| 龍 | DRAGON (lóng) |
+| 羽 | FEATHER (yǔ) |
+
+### Faith, words & money  信仰・言・財
+
+| part | name / meaning |
+|---|---|
+| 示 | DEITY (shì) |
+| 礻 | DEITY (示 at the side) |
+| 衣 | CLOTHING (yī) |
+| 衤 | CLOTHING (衣 at the side) |
+| 言 | WORDS (yán) |
+| 貝 | MONEY, seashell (bèi) |
+| 見 | TO SEE (jiàn) |
+| 鬼 | DEVIL, ghost (guǐ) |
+
+### Tools & things  器物
+
+| part | name / meaning |
+|---|---|
+| 力 | STRENGTH (lì) |
+| 刀 | KNIFE (dāo) |
+| 刂 | long KNIFE |
+| 工 | WORK (gōng) |
+| 王 | PRECIOUS / KING (wáng) |
+| 士 | SCHOLAR (shì) |
+| 門 | DOOR (mén) |
+| 戶 | HOUSEHOLD (hù) |
+| 尸 | CORPSE, "dirty thing" (shī) |
+| 車 | VEHICLE (chē) |
+| 舟 | BOAT (zhōu) |
+| 弓 | BOW (gōng) |
+| 戈 | SPEAR (gē) |
+| 巾 | CLOTH (jīn) |
+| 糸 | SILK (sī) |
+| 網 | NET (wǎng) |
+| 皿 | UTENSIL (mǐn) |
+| 用 | USE (yòng) |
+| 角 | HORN (jiǎo) |
+| 皮 | SKIN (pí) |
+| 金 | METAL, GOLD (jīn) |
+
+### Actions, states & colours  動作・狀態・顏色
+
+| part | name / meaning |
+|---|---|
+| 立 | TO STAND (lì) |
+| 走 | to WALK (zǒu) |
+| 辶 | small WALK (movement) |
+| 止 | TO STOP (zhǐ) |
+| 文 | ACADEMIC, writing (wén) |
+| 欠 | to OWE / yawn (qiàn) |
+| 食 | FOOD (shí) |
+| 舌 | TONGUE (shé) |
+| 白 | WHITE (bái) |
+| 黑 | BLACK (hēi) |
+| 赤 | RED (chì) |
+| 光 | LIGHT (guāng) |
+| 革 | LEATHER (gé) |
+
+---
+
+## Appendix 2 — The Books of the Bible  聖經各卷
+
+### 舊約 The Old Testament
+
+**律法書 The Law**
+
+| 卷 | pinyin | abbr. | English |
+|---|--------|-------|---------|
+| 創世記 | Chuàngshì Jì | 創 | Genesis |
+| 出埃及記 | Chū-Āijí Jì | 出 | Exodus |
+| 利未記 | Lìwèi Jì | 利 | Leviticus |
+| 民數記 | Mínshù Jì | 民 | Numbers |
+| 申命記 | Shēnmìng Jì | 申 | Deuteronomy |
+
+**歷史書 The Historical Books**
+
+| 卷 | pinyin | abbr. | English |
+|---|--------|-------|---------|
+| 約書亞記 | Yuēshūyà Jì | 書 | Joshua |
+| 士師記 | Shìshī Jì | 士 | Judges |
+| 路得記 | Lùdé Jì | 得 | Ruth |
+| 撒母耳記上 | Sāmǔ'ěr Jì Shàng | 撒上 | 1 Samuel |
+| 撒母耳記下 | Sāmǔ'ěr Jì Xià | 撒下 | 2 Samuel |
+| 列王記上 | Lièwáng Jì Shàng | 王上 | 1 Kings |
+| 列王記下 | Lièwáng Jì Xià | 王下 | 2 Kings |
+| 歷代志上 | Lìdài Zhì Shàng | 代上 | 1 Chronicles |
+| 歷代志下 | Lìdài Zhì Xià | 代下 | 2 Chronicles |
+| 以斯拉記 | Yǐsīlā Jì | 拉 | Ezra |
+| 尼希米記 | Níxīmǐ Jì | 尼 | Nehemiah |
+| 以斯帖記 | Yǐsītiē Jì | 斯 | Esther |
+
+**詩文書 The Literary Books**
+
+| 卷 | pinyin | abbr. | English |
+|---|--------|-------|---------|
+| 約伯記 | Yuēbó Jì | 伯 | Job |
+| 詩篇 | Shīpiān | 詩 | Psalms |
+| 箴言 | Zhēnyán | 箴 | Proverbs |
+| 傳道書 | Chuándào Shū | 傳 | Ecclesiastes |
+| 雅歌 | Yǎ Gē | 歌 | Song of Songs |
+
+**預言書 The Prophets**
+
+| 卷 | pinyin | abbr. | English |
+|---|--------|-------|---------|
+| 以賽亞書 | Yǐsàiyà Shū | 賽 | Isaiah |
+| 耶利米書 | Yēlìmǐ Shū | 耶 | Jeremiah |
+| 耶利米哀歌 | Yēlìmǐ Āigē | 哀 | Lamentations |
+| 以西結書 | Yǐxījié Shū | 結 | Ezekiel |
+| 但以理書 | Dànyǐlǐ Shū | 但 | Daniel |
+| 何西阿書 | Héxī'ā Shū | 何 | Hosea |
+| 約珥書 | Yuē'ěr Shū | 珥 | Joel |
+| 阿摩司書 | Āmósī Shū | 摩 | Amos |
+| 俄巴底亞書 | Ébādǐyà Shū | 俄 | Obadiah |
+| 約拿書 | Yuēná Shū | 拿 | Jonah |
+| 彌迦書 | Míjiā Shū | 彌 | Micah |
+| 那鴻書 | Nàhóng Shū | 鴻 | Nahum |
+| 哈巴谷書 | Hābāgǔ Shū | 哈 | Habakkuk |
+| 西番雅書 | Xīfānyǎ Shū | 番 | Zephaniah |
+| 哈該書 | Hāgāi Shū | 該 | Haggai |
+| 撒迦利亞書 | Sājiālìyà Shū | 亞 | Zechariah |
+| 瑪拉基書 | Mǎlājī Shū | 瑪 | Malachi |
+
+### 新約 The New Testament
+
+**福音書 The Gospels**
+
+| 卷 | pinyin | abbr. | English |
+|---|--------|-------|---------|
+| 馬太福音 | Mǎtài Fúyīn | 太 | Matthew |
+| 馬可福音 | Mǎkě Fúyīn | 可 | Mark |
+| 路加福音 | Lùjiā Fúyīn | 路 | Luke |
+| 約翰福音 | Yuēhàn Fúyīn | 約 | John |
+| 使徒行傳 | Shǐtú Xíngzhuàn | 徒 | Acts |
+
+**書信 The Epistles**
+
+| 卷 | pinyin | abbr. | English |
+|---|--------|-------|---------|
+| 羅馬書 | Luómǎ Shū | 羅 | Romans |
+| 哥林多前書 | Gēlínduō Qiánshū | 林前 | 1 Corinthians |
+| 哥林多後書 | Gēlínduō Hòushū | 林後 | 2 Corinthians |
+| 加拉太書 | Jiālātài Shū | 加 | Galatians |
+| 以弗所書 | Yǐfúsuǒ Shū | 弗 | Ephesians |
+| 腓立比書 | Féilìbǐ Shū | 腓 | Philippians |
+| 歌羅西書 | Gēluóxī Shū | 西 | Colossians |
+| 帖撒羅尼迦前書 | Tiēsāluóníjiā Qiánshū | 帖前 | 1 Thessalonians |
+| 帖撒羅尼迦後書 | Tiēsāluóníjiā Hòushū | 帖後 | 2 Thessalonians |
+| 提摩太前書 | Tímótài Qiánshū | 提前 | 1 Timothy |
+| 提摩太後書 | Tímótài Hòushū | 提後 | 2 Timothy |
+| 提多書 | Tíduō Shū | 多 | Titus |
+| 腓利門書 | Féilìmén Shū | 門 | Philemon |
+| 希伯來書 | Xībólái Shū | 來 | Hebrews |
+| 雅各書 | Yǎgè Shū | 雅 | James |
+| 彼得前書 | Bǐdé Qiánshū | 彼前 | 1 Peter |
+| 彼得後書 | Bǐdé Hòushū | 彼後 | 2 Peter |
+| 約翰一書 | Yuēhàn Yīshū | 約壹 | 1 John |
+| 約翰二書 | Yuēhàn Èrshū | 約貳 | 2 John |
+| 約翰三書 | Yuēhàn Sānshū | 約叁 | 3 John |
+| 猶大書 | Yóudà Shū | 猶 | Jude |
+
+**啟示 Revelation**
+
+| 卷 | pinyin | abbr. | English |
+|---|--------|-------|---------|
+| 啟示錄 | Qǐshì Lù | 啟 | Revelation |
+
+---
+
+## Closing passage — 信主 (Believing in the Lord)
+
+The altar-call passage after Lesson 25 (book pp.162–163). Chinese-only in the
+source; English translation supplied.
+
+### Chinese (Traditional)
+
+神愛你，他愛世上每一個人，並且為你的生命安排了一個奇妙的計劃。但是，人因有罪而與神隔絕，不能知道也不能經驗神的愛和神為他生命的計劃。這是多麼悲慘啊！耶穌基督是神為人的罪所預備的唯一救法。他在十字架上為人的罪受苦而死，並復活。他的寶血洗淨了人類一切的罪惡。基督成為神與人中間的橋樑，溝通了兩者之間的深淵。但是，如果我們不親自接受耶穌基督，接受他為我們的救主和生命的主，我們仍無法與神重新和好，仍無法經驗到神的大愛和神對我們生命的計劃。因此，我們應該首先為罪自責，承認自己是一個罪人，並且願意悔改，藉著信心，相信基督能赦免我們的罪，接受他進入我們的心，請他掌管我們的一生，永遠稱他為主。這樣，我們就與過去的罪一刀兩斷，在耶穌基督裡重生，因而稱義，成為一個新人，成為神的兒女，開始神為我們生命的計劃。
+
+你能想到人生中有什麼比接受基督更奇妙呢？神知道你的心，他看重你內心的態度，過於你外在的言語。你可向創造宇宙、萬能的神禱告：「神啊，我需要你。我願意打開心門接受耶穌作我的救主和生命的主。感謝你赦免我的罪。求你管理我的一生，使我成為你所喜悅的人。奉主耶穌的名禱告，阿們。」基督就會照著他的應許，進入你的生命，並且將永生賜給你，永不離開你。因為，他絕不會欺騙你。
+
+### English
+
+God loves you; He loves every person in the world, and He has arranged a wonderful plan for your life. But because of sin, people are cut off from God, unable to know or experience God's love and His plan for their lives. How tragic this is! Jesus Christ is the only way of salvation God has prepared for the sin of mankind. On the cross He suffered and died for the sins of men, and rose again. His precious blood has washed away all the sins of mankind. Christ became the bridge between God and man, spanning the chasm between them. But if we do not personally receive Jesus Christ — receive Him as our Savior and the Lord of our life — we still cannot be reconciled with God, nor experience His great love and His plan for our lives. Therefore we should first take the blame for our sin, admit that we are sinners, and be willing to repent; through faith, believe that Christ can forgive our sins, receive Him into our hearts, ask Him to take charge of our whole life, and forever call Him Lord. In this way we make a clean break with our past sin, are born again in Jesus Christ, and so are justified, become a new person, become a child of God, and begin the plan God has for our lives.
+
+Can you think of anything in life more wonderful than receiving Christ? God knows your heart; He values the attitude of your inner heart more than your outward words. You may pray to the almighty God who created the universe: "God, I need You. I am willing to open the door of my heart and receive Jesus as my Savior and the Lord of my life. Thank You for forgiving my sins. I ask You to take charge of my whole life and make me a person who pleases You. In the name of the Lord Jesus I pray, Amen." Christ will then, according to His promise, enter your life, give you eternal life, and never leave you — for He will never deceive you.
+
+---
+
+## Appendix 4 — The Christian and Materialist worldviews  兩種世界觀
+
+Two diagrams in the book (pp.174–175); their Chinese labels and notes are given
+here as prose (the Venn layout can't survive as plain text).
+
+### Chinese (Traditional)
+
+**唯物主義的世界觀：** 只有一個「物質世界」，它是客觀存在的；物質以外沒有任何實際存在的東西。人在物質世界之中。所謂的「精神世界」，只是大腦中各種化學反映的產物，是主觀的世界、想像的世界，並不實際存在。
+
+**基督教的世界觀：** 有一個更大的「靈的世界」，就是物質以外的客觀世界——客觀存在的、看不見的、超自然的、不能用科學解釋或描寫。其中包含著一個「物質世界」，它是客觀存在的、肉眼可看見的、自然的。人同時屬於這兩者，而人的「精神世界」是主觀的。
+
+註一：人是大自然中唯一具有靈魂的被造之物。靈魂和精神不是一回事。人既屬物質界（身體），又屬靈界（靈魂）。
+註二：物質世界及靈的世界都是有限的，都由無限的上帝所創造。
+
+### English
+
+**The materialist worldview:** there is only one "material world," which exists objectively; outside of matter nothing actually exists. Man is inside the material world. The so-called "mental world" is merely the product of various chemical reactions in the brain — a subjective, imagined world that does not really exist.
+
+**The Christian worldview:** there is a larger "spiritual world" — the objective world beyond matter: objectively real, invisible, supernatural, and impossible to explain or describe by science. Within it lies a "material world," which is objectively real, visible to the naked eye, and natural. Man belongs to both at once, while man's "mental world" is subjective.
+
+Note 1: Man is the only created being in nature that has a soul. The soul and the mind are not the same thing. Man belongs both to the material realm (the body) and to the spiritual realm (the soul). Note 2: Both the material world and the spiritual world are finite, and both were created by the infinite God.
