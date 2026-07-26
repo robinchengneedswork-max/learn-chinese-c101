@@ -416,6 +416,7 @@ const UI = (function () {
     if (!node.unlocked) return '🔒';
     if (node.kind === 'test') return '🏆';
     if (node.kind === 'reading') return '📖';
+    if (node.kind === 'cloze') return '✍️';
     return '⭐';
   }
 
@@ -732,7 +733,167 @@ const UI = (function () {
 
     if (item.kind === 'intro') renderIntro(stage, foot, item);
     else if (item.kind === 'cloze') renderCloze(stage, foot, item);
+    else if (item.kind === 'build' || item.kind === 'dictate') renderBuild(stage, foot, item);
+    else if (item.kind === 'type') renderType(stage, foot, item);
+    else if (item.kind === 'pairs') renderPairs(stage, foot, item);
     else renderMC(stage, foot, item);
+  }
+
+  // Sentence building: tap word tiles in order to assemble the Chinese. The
+  // answer tray is the working area; tapping a placed tile sends it back.
+  // 'dictate' hides the English and plays the sentence instead.
+  function renderBuild(stage, foot, item) {
+    const listen = item.kind === 'dictate';
+    stage.appendChild(el('div', 'prompt-label',
+      listen ? 'Listen, then build the sentence' : 'Build the sentence'));
+
+    if (listen) {
+      const big = speakerBtn(item.zh);
+      big.className = 'speaker speaker-big';
+      big.textContent = '🔊';
+      stage.appendChild(big);
+      Audio101.speak(item.zh);
+    } else {
+      stage.appendChild(el('div', 'build-en', item.en));
+    }
+
+    const tray = el('div', 'build-tray');
+    const bank = el('div', 'build-bank');
+    stage.appendChild(tray);
+    stage.appendChild(bank);
+
+    const chosen = [];   // canonical tokens, in tap order
+    const check = el('button', 'continue', 'Check');
+    check.disabled = true;
+
+    function sync() {
+      check.disabled = chosen.length === 0;
+    }
+    function placeInTray(tok, bankBtn) {
+      const t = el('button', 'tile tile-placed', Lang.zh(tok));
+      t.dataset.val = tok;
+      t.addEventListener('click', () => {
+        if (answered) return;
+        const i = chosen.indexOf(tok);
+        // remove this exact placement (first match is fine — tiles are 1:1)
+        if (i >= 0) chosen.splice(i, 1);
+        tray.removeChild(t);
+        bankBtn.disabled = false;
+        bankBtn.classList.remove('tile-used');
+        sync();
+      });
+      tray.appendChild(t);
+    }
+    for (const tok of item.tiles) {
+      const b = el('button', 'tile', Lang.zh(tok));
+      b.dataset.val = tok;
+      b.addEventListener('click', () => {
+        if (answered || b.disabled) return;
+        chosen.push(tok);
+        b.disabled = true;
+        b.classList.add('tile-used');
+        placeInTray(tok, b);
+        sync();
+      });
+      bank.appendChild(b);
+    }
+
+    check.addEventListener('click', () => {
+      if (answered) return;
+      answered = true;
+      const guess = chosen.join('');
+      const ok = guess === item.correct;
+      bank.querySelectorAll('.tile').forEach(t => { t.disabled = true; });
+      tray.querySelectorAll('.tile').forEach(t => { t.disabled = true; });
+      tray.classList.add(ok ? 'ok' : 'bad');
+      foot.innerHTML = '';
+      showFeedback(item, guess, ok, foot);
+    });
+    foot.appendChild(check);
+  }
+
+  // Typed recall: English gloss in, hanzi or tone-tolerant pinyin out. No options.
+  function renderType(stage, foot, item) {
+    stage.appendChild(el('div', 'prompt-label', 'Type it — no options'));
+    stage.appendChild(el('div', 'prompt-en', item.word.en));
+
+    const form = el('div', 'type-form type-solo');
+    const input = el('input', 'type-input');
+    input.setAttribute('type', 'text');
+    input.setAttribute('placeholder', 'pinyin, e.g. shengming');
+    input.setAttribute('autocapitalize', 'off');
+    input.setAttribute('autocomplete', 'off');
+    form.appendChild(input);
+    stage.appendChild(form);
+    setTimeout(() => input.focus(), 0);
+
+    const check = el('button', 'continue', 'Check');
+    const grade = () => {
+      if (answered) return;
+      const val = input.value.trim();
+      if (!val) return;
+      answered = true;
+      const ok = Session.pinyinMatches(val, item.word);
+      input.disabled = true;
+      input.classList.add(ok ? 'correct' : 'wrong');
+      foot.innerHTML = '';
+      showFeedback(item, val, ok, foot);
+    };
+    check.addEventListener('click', grade);
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') grade(); });
+    foot.appendChild(check);
+  }
+
+  // Matching board: tap a hanzi then its English (or vice versa) until clear.
+  // Completing the board is the "answer"; a perfect clear counts as correct.
+  function renderPairs(stage, foot, item) {
+    stage.appendChild(el('div', 'prompt-label', 'Tap the pairs'));
+
+    const cells = [];
+    item.words.forEach((w) => {
+      cells.push({ key: w.hanzi, face: Lang.zh(w.hanzi), zh: true, hanzi: w.hanzi });
+      cells.push({ key: w.hanzi, face: w.en, zh: false, hanzi: w.hanzi });
+    });
+    for (let i = cells.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [cells[i], cells[j]] = [cells[j], cells[i]];
+    }
+
+    const board = el('div', 'pairs-board');
+    let sel = null, left = item.words.length, misses = 0, busy = false;
+
+    cells.forEach((c) => {
+      const b = el('button', 'pair-cell' + (c.zh ? ' pair-zh' : ''), c.face);
+      b.dataset.key = c.key;
+      b.addEventListener('click', () => {
+        if (answered || busy || b.classList.contains('matched') || b === sel) return;
+        if (!sel) { sel = b; b.classList.add('sel'); return; }
+        const a = sel;
+        if (a.dataset.key === b.dataset.key) {
+          a.classList.remove('sel');
+          a.classList.add('matched'); b.classList.add('matched');
+          a.disabled = b.disabled = true;
+          sel = null;
+          Audio101.speak(c.hanzi);
+          if (--left === 0) {
+            answered = true;
+            foot.innerHTML = '';
+            showFeedback(item, true, misses === 0, foot);
+          }
+        } else {
+          misses += 1;
+          busy = true;
+          b.classList.add('miss'); a.classList.add('miss');
+          Audio101.SFX.wrong();
+          setTimeout(() => {
+            a.classList.remove('sel', 'miss'); b.classList.remove('miss');
+            sel = null; busy = false;
+          }, 420);
+        }
+      });
+      board.appendChild(b);
+    });
+    stage.appendChild(board);
   }
 
   function renderIntro(stage, foot, item) {
@@ -798,8 +959,11 @@ const UI = (function () {
   // target word shown as a gap. Choose the word, or toggle "type it" and enter
   // tone-tolerant pinyin. Grading (via session.answer) accepts either.
   function renderCloze(stage, foot, item) {
-    stage.appendChild(el('div', 'prompt-label', 'Fill in the blank'));
-    stage.appendChild(el('div', 'cloze-en', item.en));
+    // Passage clozes come straight from the book text and carry no translation —
+    // the surrounding Chinese is the only context, which is the point.
+    stage.appendChild(el('div', 'prompt-label',
+      item.en ? 'Fill in the blank' : 'From the reading — fill in the blank'));
+    if (item.en) stage.appendChild(el('div', 'cloze-en', item.en));
 
     const zh = el('div', 'cloze-zh');
     const parts = item.zh.split(item.correct); // split on canonical text
@@ -872,12 +1036,27 @@ const UI = (function () {
       });
     }
 
+    showFeedback(item, choice, ok, foot);
+  }
+
+  // Shared end-of-item feedback: sound, banner with the right answer, Continue.
+  // Every exercise kind funnels through here so grading stays in one place.
+  function showFeedback(item, choice, ok, foot) {
     ok ? Audio101.SFX.correct() : Audio101.SFX.wrong();
 
     foot.classList.add(ok ? 'ok' : 'bad');
     const banner = el('div', 'feedback');
-    banner.textContent = ok ? 'Correct!' : `Answer: ${Lang.zh(item.correct)}` +
-      (item.kind !== 'zh2en' && C101.word(item.correct) ? ` (${C101.word(item.correct).pinyin})` : '');
+    if (ok) {
+      banner.textContent = 'Correct!';
+    } else if (item.kind === 'build' || item.kind === 'dictate') {
+      banner.textContent = `Answer: ${Lang.zh(item.zh)}`;
+    } else if (item.kind === 'type') {
+      banner.textContent = `Answer: ${Lang.zh(item.word.hanzi)} (${item.word.pinyin})`;
+    } else {
+      banner.textContent = `Answer: ${Lang.zh(item.correct)}` +
+        (item.kind !== 'zh2en' && C101.word(item.correct)
+          ? ` (${C101.word(item.correct).pinyin})` : '');
+    }
     foot.appendChild(banner);
 
     const cont = el('button', 'continue', 'Continue');

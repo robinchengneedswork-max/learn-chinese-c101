@@ -47,6 +47,35 @@ const Session = (function () {
     };
   }
 
+  // Sentence building: assemble the Chinese from word tiles. Trains word ORDER,
+  // which no multiple-choice item touches. `dictate` is the same drill cued by
+  // audio instead of the English translation (listening + word order).
+  function buildItem(sentence, kind) {
+    const toks = (sentence.tokens || []).slice();
+    const pool = C101.allWords().map(w => w.hanzi).filter(h => toks.indexOf(h) < 0);
+    return {
+      kind: kind === 'dictate' ? 'dictate' : 'build', mode: 'learn',
+      hanzi: sentence.blank, word: C101.word(sentence.blank), sentence,
+      zh: sentence.zh, en: sentence.en,
+      tiles: shuffle(toks.concat(pick(pool, 2))),  // 2 decoys so it isn't just unscrambling
+      correct: toks.join('')
+    };
+  }
+
+  // Typed recall: no options at all — produce the word from its English gloss.
+  // Graded tone-tolerantly on pinyin (or the hanzi itself).
+  function typeItem(word) {
+    return { kind: 'type', mode: 'learn', hanzi: word.hanzi, word, correct: word.hanzi };
+  }
+
+  // Matching board: clear a handful of hanzi against their English. A warm-up —
+  // deliberately does NOT feed SRS (matching with elimination is too weak a
+  // signal to promote a word toward "mastered"); it only earns XP.
+  function pairsItem(words) {
+    return { kind: 'pairs', mode: 'learn', hanzi: words[0].hanzi,
+             words: words.slice(), correct: true };
+  }
+
   // Strip tone marks/spacing/punctuation so typed pinyin matches leniently.
   function normPinyin(s) {
     return String(s || '')
@@ -77,12 +106,37 @@ const Session = (function () {
   // new words then drills recall (with pinyin); a 'reading' part re-drills the
   // whole section with pinyin hidden.
   function forPart(part) {
+    // Sentence practice: the section's words back in real sentences. Skips any
+    // sentence whose blank isn't a known word (so content edits can't break it).
+    if (part.kind === 'cloze') {
+      const sents = (part.sentences || []).filter(s => C101.word(s.blank));
+      const quiz = [];
+      sents.forEach((s, i) => {
+        quiz.push(clozeItem(s));
+        // Every other sentence also gets built from tiles, so the node mixes
+        // recognition (fill the gap) with production (produce the whole line).
+        if ((s.tokens || []).length >= 3 && i % 2 === 0) quiz.push(buildItem(s, 'build'));
+      });
+      // Close with one dictation: hear a sentence, rebuild it.
+      const d = sents.find(s => (s.tokens || []).length >= 3);
+      const quizzes = shuffle(quiz);
+      if (d) quizzes.push(buildItem(d, 'dictate'));
+      return makeSession(part, quizzes, 'cloze');
+    }
+
     if (part.kind === 'reading') {
       const quiz = [];
       for (const w of part.words) {
         const full = C101.word(w.hanzi);
         quiz.push(mcItem(full, 'zh2en', 'reading'));
         quiz.push(mcItem(full, 'en2zh', 'reading'));
+      }
+      // Then the book's own sentences with a word missing — reading in context.
+      const lesson = C101.lesson(part.lessonId);
+      if (lesson) {
+        C101.passageClozes(lesson, 3)
+            .filter(s => C101.word(s.blank))
+            .forEach(s => quiz.push(clozeItem(s)));
       }
       return makeSession(part, shuffle(quiz), 'reading');
     }
@@ -94,6 +148,10 @@ const Session = (function () {
     words.filter(w => SRS.isNew(w.hanzi))
          .forEach(w => queue.push({ kind: 'intro', hanzi: w.hanzi, word: C101.word(w.hanzi) }));
 
+    // Warm-up: match this part's words to their meanings before drilling them.
+    const board = words.map(w => C101.word(w.hanzi)).filter(Boolean).slice(0, 5);
+    if (board.length >= 4) queue.push(pairsItem(board));
+
     // Two recall directions per word + a listening item, shuffled together.
     const quiz = [];
     for (const w of words) {
@@ -101,6 +159,8 @@ const Session = (function () {
       quiz.push(mcItem(full, 'zh2en'));
       quiz.push(mcItem(full, 'en2zh'));
       quiz.push(mcItem(full, 'listen'));
+      // Once a word isn't brand-new, ask for it with no options at all.
+      if (!SRS.isNew(full.hanzi)) quiz.push(typeItem(full));
     }
     shuffle(quiz).forEach(q => queue.push(q));
 
@@ -157,8 +217,11 @@ const Session = (function () {
 
         const ok = item.kind === 'cloze'
           ? (choice === item.correct || pinyinMatches(choice, item.word))
-          : (choice === item.correct);
-        SRS.grade(item.hanzi, ok);
+          : item.kind === 'type'
+            ? pinyinMatches(choice, item.word)
+            : (choice === item.correct);
+        // The matching board is a warm-up, not evidence of recall — no SRS.
+        if (item.kind !== 'pairs') SRS.grade(item.hanzi, ok);
         State.touchStreak();
         if (ok) {
           this.correctCount += 1;
@@ -166,10 +229,13 @@ const Session = (function () {
         } else {
           this.missed += 1;
           // requeue a fresh attempt of this item toward the end
-          this.queue.push(item.kind === 'cloze'
-            ? clozeItem(item.sentence)
-            : mcItem(item.word, item.kind, item.mode));
-          this.total = this.queue.length;
+          const again =
+            item.kind === 'cloze' ? clozeItem(item.sentence) :
+            (item.kind === 'build' || item.kind === 'dictate') ? buildItem(item.sentence, item.kind) :
+            item.kind === 'type' ? typeItem(item.word) :
+            item.kind === 'pairs' ? null :
+            mcItem(item.word, item.kind, item.mode);
+          if (again) { this.queue.push(again); this.total = this.queue.length; }
         }
         State.save();
         this.advance();

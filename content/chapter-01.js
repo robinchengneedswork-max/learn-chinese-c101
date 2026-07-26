@@ -7,9 +7,9 @@ window.C101.register(
   "zh": "第一章：生命的意義",
   "lessons": [
     {
-      "id": "ch01-l1",
-      "title": "Nature of Man",
-      "zh": "人的本質",
+      "id": "ch01-l1a",
+      "title": "The Big Questions",
+      "zh": "人生的大問題",
       "words": [
         {
           "hanzi": "生命",
@@ -42,9 +42,9 @@ window.C101.register(
           "en": "soul"
         },
         {
-          "hanzi": "肉體",
-          "pinyin": "ròu tǐ",
-          "en": "physical body; flesh"
+          "hanzi": "靈性",
+          "pinyin": "líng xìng",
+          "en": "spiritual nature; spirituality"
         },
         {
           "hanzi": "問題",
@@ -57,30 +57,678 @@ window.C101.register(
           "en": "answer"
         },
         {
-          "hanzi": "如果",
-          "pinyin": "rú guǒ",
-          "en": "if"
+          "hanzi": "目的",
+          "pinyin": "mù dì",
+          "en": "purpose; aim; goal"
         },
         {
-          "hanzi": "因為",
-          "pinyin": "yīn wèi",
-          "en": "because"
+          "hanzi": "追求",
+          "pinyin": "zhuī qiú",
+          "en": "to pursue; to seek after"
+        },
+        {
+          "hanzi": "探討",
+          "pinyin": "tàn tǎo",
+          "en": "to explore; to investigate"
+        },
+        {
+          "hanzi": "討論",
+          "pinyin": "tǎo lùn",
+          "en": "to discuss"
+        },
+        {
+          "hanzi": "影響",
+          "pinyin": "yǐng xiǎng",
+          "en": "influence; to affect"
+        },
+        {
+          "hanzi": "複雜",
+          "pinyin": "fù zá",
+          "en": "complicated; complex"
+        },
+        {
+          "hanzi": "機器",
+          "pinyin": "jī qì",
+          "en": "machine"
+        },
+        {
+          "hanzi": "學術",
+          "pinyin": "xué shù",
+          "en": "academic; scholarly"
+        },
+        {
+          "hanzi": "困擾",
+          "pinyin": "kùn rǎo",
+          "en": "to trouble; to perplex"
+        },
+        {
+          "hanzi": "價值觀",
+          "pinyin": "jià zhí guān",
+          "en": "values; value system"
         },
         {
           "hanzi": "什麼",
           "pinyin": "shén me",
           "en": "what"
+        },
+        {
+          "hanzi": "因為",
+          "pinyin": "yīn wèi",
+          "en": "because"
         }
       ],
       "reading": {
-        "zh": "人生多問。一個人可以衣食無憂，卻依然為人生更大的問題所困擾：我是誰？我在這裏做什麼？我從哪裏來？我的人生目的是什麼?這些不僅僅是學術問題。因為這些問題的答案會深深影響你的人生觀、價值觀以及對人生意義的追求。探討人生的問題離不開討論人性的本質。我僅僅是一個複雜的生物機器，還是一個有靈魂、有靈性的生命？\n\n道金斯和羅素所持的觀點(也是眾多人所持的觀點)又被稱為「自然論」，其主旨便是世上之物皆由物質組成。這種看法也被稱為「科學論」，因為它往往會用科學來聲張科學本身無法驗證的真理。如果世上之物都由物質組成，由此推論，我們僅是一團會動的肉體罷了。那麼一切超越肉體的自我意識便都是幻想。根據自然論，「我們」就只有肉體。這是真的？\n\n上述故事裡的富翁認為他的「靈魂」應該飽足於「食物」上，或許人生最大樂趣莫過於大吃大喝、痛苦最少、快樂最多。那麼，肉身之外還有更多，滿足食慾之上更有真實、超然的價值，難道這種想法不切實際嗎？的確，如果我們僅有肉身，那麼身外的東西自然都是幻覺。但敍述此故事的耶穌說：人的生命並不在於家道豐富。如果不在物質的豐富，那生命在於什麼呢？\n\n顯然，這種看待人類的觀點很荒唐。但是，在無神、純自然的世界觀裡，又很難找到更好的答案。這種觀點其實非常的武斷，聲稱科學真理以外便無真理，將這個不理性的觀點強加於現今社會。這種暗淡的觀點不僅剝奪了生命中所有的色彩，它更在毫無憑據的基礎上建立了一個巨大的主張。自然論阻止了深層的思考，它也在我們回答人生最基本的問題上限制了我們的思維。從宏觀角度來看，若要探尋人性的本質、價值及其意義，就要從人類的起源開始。",
-        "en": "Man asks questions. A person can have all the creature comforts met, and yet find himself disturbed by the larger questions of life: Who am I? What am I here for? Where did I come from, and what is my ultimate destiny? These are not just academic issues. A lot hinges on your answers to these questions—how you choose to live, what you value, and what purposes drive you. At the core of the question of life is the issue of the nature of man. Am I a complex biological machine and no more, or am I a spiritual being with a soul?\n\nThe view espoused by Dawkins and Russell (and generally embraced in our world), also known as “naturalism,” says that all of reality is composed of the physical. This view is also called “scientism” because it tends to claim truths for science that are not themselves verifiable by science. If all of reality is physical, then it follows that we are no more than animated flesh. Any sense of self we may have that transcends our bodies is illusory. Quite literally, “we” are just our bodies, according to naturalism. Is this right?\n\nThe rich man in the story thought his “soul” fed on “grain,” as if the highest good for man were to feed the appetites, to minimize pain and maximize pleasure. So, is the notion that we are more than our bodies, that there are real, transcendent values beyond satisfying our appetites, just unreal fluff? It must be, if who we are is just bodies. But Jesus says that “one’s life does not consist in the abundance of his possessions.” If not possessions, then what is life about?\n\nObviously, this is an absurd view of man. Yet, better answers seem hard to find under an atheistic, naturalistic worldview. This view is entirely arbitrary, claiming there is no truth other than scientific truth. In addition to being a bleak view that strips life of all its color, it makes a huge claim that is simply asserted without evidence. Naturalism stifles deeper thinking in that it artificially reduces what we are allowed to consider in answering the most fundamental of questions. For a grander perspective, we need to start with the question of origin."
-      }
+        "zh": "人生多問。一個人可以衣食無憂，卻依然為人生更大的問題所困擾：我是誰？我在這裏做什麼？我從哪裏來？我的人生目的是什麼?這些不僅僅是學術問題。因為這些問題的答案會深深影響你的人生觀、價值觀以及對人生意義的追求。探討人生的問題離不開討論人性的本質。我僅僅是一個複雜的生物機器，還是一個有靈魂、有靈性的生命？",
+        "en": "Man asks questions. A person can have all the creature comforts met, and yet find himself disturbed by the larger questions of life: Who am I? What am I here for? Where did I come from, and what is my ultimate destiny? These are not just academic issues. A lot hinges on your answers to these questions—how you choose to live, what you value, and what purposes drive you. At the core of the question of life is the issue of the nature of man. Am I a complex biological machine and no more, or am I a spiritual being with a soul?"
+      },
+      "sentences": [
+        {
+          "zh": "這些問題困擾著很多人。",
+          "en": "These questions trouble many people.",
+          "blank": "困擾",
+          "tokens": [
+            "這些",
+            "問題",
+            "困擾",
+            "著",
+            "很",
+            "多",
+            "人"
+          ]
+        },
+        {
+          "zh": "我們要探討人性的本質。",
+          "en": "We must explore the nature of man.",
+          "blank": "探討",
+          "tokens": [
+            "我們",
+            "要",
+            "探討",
+            "人性",
+            "的",
+            "本質"
+          ]
+        },
+        {
+          "zh": "人是一個複雜的生物。",
+          "en": "Man is a complex living creature.",
+          "blank": "複雜",
+          "tokens": [
+            "人",
+            "是",
+            "一個",
+            "複雜",
+            "的",
+            "生物"
+          ]
+        },
+        {
+          "zh": "我的人生目的是什麼？",
+          "en": "What is the purpose of my life?",
+          "blank": "目的",
+          "tokens": [
+            "我",
+            "的",
+            "人生",
+            "目的",
+            "是",
+            "什麼"
+          ]
+        }
+      ]
     },
     {
-      "id": "ch01-l2",
-      "title": "The Creation Account",
-      "zh": "創世記",
+      "id": "ch01-l1b",
+      "title": "Naturalism",
+      "zh": "自然論",
+      "words": [
+        {
+          "hanzi": "肉體",
+          "pinyin": "ròu tǐ",
+          "en": "physical body; flesh"
+        },
+        {
+          "hanzi": "觀點",
+          "pinyin": "guān diǎn",
+          "en": "point of view; viewpoint"
+        },
+        {
+          "hanzi": "稱為",
+          "pinyin": "chēng wéi",
+          "en": "to be called; to be known as"
+        },
+        {
+          "hanzi": "自然",
+          "pinyin": "zì rán",
+          "en": "nature; the natural world"
+        },
+        {
+          "hanzi": "物質",
+          "pinyin": "wù zhì",
+          "en": "matter; substance; physical"
+        },
+        {
+          "hanzi": "組成",
+          "pinyin": "zǔ chéng",
+          "en": "to compose; to make up"
+        },
+        {
+          "hanzi": "科學",
+          "pinyin": "kē xué",
+          "en": "science; scientific"
+        },
+        {
+          "hanzi": "真理",
+          "pinyin": "zhēn lǐ",
+          "en": "truth"
+        },
+        {
+          "hanzi": "幻想",
+          "pinyin": "huàn xiǎng",
+          "en": "illusion; fantasy; to fantasize"
+        },
+        {
+          "hanzi": "根據",
+          "pinyin": "gēn jù",
+          "en": "according to; based on; basis"
+        },
+        {
+          "hanzi": "看法",
+          "pinyin": "kàn fǎ",
+          "en": "view; opinion"
+        },
+        {
+          "hanzi": "驗證",
+          "pinyin": "yàn zhèng",
+          "en": "to verify; verification"
+        },
+        {
+          "hanzi": "推論",
+          "pinyin": "tuī lùn",
+          "en": "to infer; inference"
+        },
+        {
+          "hanzi": "自我意識",
+          "pinyin": "zì wǒ yì shí",
+          "en": "self-awareness; sense of self"
+        },
+        {
+          "hanzi": "如果",
+          "pinyin": "rú guǒ",
+          "en": "if"
+        }
+      ],
+      "reading": {
+        "zh": "道金斯和羅素所持的觀點(也是眾多人所持的觀點)又被稱為「自然論」，其主旨便是世上之物皆由物質組成。這種看法也被稱為「科學論」，因為它往往會用科學來聲張科學本身無法驗證的真理。如果世上之物都由物質組成，由此推論，我們僅是一團會動的肉體罷了。那麼一切超越肉體的自我意識便都是幻想。根據自然論，「我們」就只有肉體。這是真的？",
+        "en": "The view espoused by Dawkins and Russell (and generally embraced in our world), also known as “naturalism,” says that all of reality is composed of the physical. This view is also called “scientism” because it tends to claim truths for science that are not themselves verifiable by science. If all of reality is physical, then it follows that we are no more than animated flesh. Any sense of self we may have that transcends our bodies is illusory. Quite literally, “we” are just our bodies, according to naturalism. Is this right?"
+      },
+      "sentences": [
+        {
+          "zh": "這種觀點被稱為自然論。",
+          "en": "This view is called naturalism.",
+          "blank": "稱為",
+          "tokens": [
+            "這種",
+            "觀點",
+            "被",
+            "稱為",
+            "自然",
+            "論"
+          ]
+        },
+        {
+          "zh": "世上之物都由物質組成。",
+          "en": "Everything in the world is composed of matter.",
+          "blank": "組成",
+          "tokens": [
+            "世上",
+            "之",
+            "物",
+            "都",
+            "由",
+            "物質",
+            "組成"
+          ]
+        },
+        {
+          "zh": "科學無法驗證這個真理。",
+          "en": "Science cannot verify this truth.",
+          "blank": "驗證",
+          "tokens": [
+            "科學",
+            "無法",
+            "驗證",
+            "這個",
+            "真理"
+          ]
+        },
+        {
+          "zh": "這只是一個幻想。",
+          "en": "This is only an illusion.",
+          "blank": "幻想",
+          "tokens": [
+            "這",
+            "只是",
+            "一個",
+            "幻想"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch01-l1c",
+      "title": "The Rich Man",
+      "zh": "富翁的比喻",
+      "words": [
+        {
+          "hanzi": "富翁",
+          "pinyin": "fù wēng",
+          "en": "rich man; wealthy person"
+        },
+        {
+          "hanzi": "故事",
+          "pinyin": "gù shì",
+          "en": "story; tale"
+        },
+        {
+          "hanzi": "食物",
+          "pinyin": "shí wù",
+          "en": "food"
+        },
+        {
+          "hanzi": "食慾",
+          "pinyin": "shí yù",
+          "en": "appetite"
+        },
+        {
+          "hanzi": "飽足",
+          "pinyin": "bǎo zú",
+          "en": "to be full; satiated"
+        },
+        {
+          "hanzi": "快樂",
+          "pinyin": "kuài lè",
+          "en": "happy; joyful; joy"
+        },
+        {
+          "hanzi": "樂趣",
+          "pinyin": "lè qù",
+          "en": "delight; pleasure"
+        },
+        {
+          "hanzi": "痛苦",
+          "pinyin": "tòng kǔ",
+          "en": "pain; suffering; painful"
+        },
+        {
+          "hanzi": "豐富",
+          "pinyin": "fēng fù",
+          "en": "abundant; rich"
+        },
+        {
+          "hanzi": "真實",
+          "pinyin": "zhēn shí",
+          "en": "true; real"
+        },
+        {
+          "hanzi": "超然",
+          "pinyin": "chāo rán",
+          "en": "transcendent; aloof"
+        },
+        {
+          "hanzi": "想法",
+          "pinyin": "xiǎng fǎ",
+          "en": "idea; notion"
+        },
+        {
+          "hanzi": "不切實際",
+          "pinyin": "bù qiè shí jì",
+          "en": "unrealistic; impractical"
+        },
+        {
+          "hanzi": "的確",
+          "pinyin": "dí què",
+          "en": "indeed; really"
+        },
+        {
+          "hanzi": "幻覺",
+          "pinyin": "huàn jué",
+          "en": "illusion; hallucination"
+        },
+        {
+          "hanzi": "認為",
+          "pinyin": "rèn wéi",
+          "en": "to think; to consider"
+        },
+        {
+          "hanzi": "耶穌",
+          "pinyin": "Yē sū",
+          "en": "Jesus"
+        }
+      ],
+      "reading": {
+        "zh": "上述故事裡的富翁認為他的「靈魂」應該飽足於「食物」上，或許人生最大樂趣莫過於大吃大喝、痛苦最少、快樂最多。那麼，肉身之外還有更多，滿足食慾之上更有真實、超然的價值，難道這種想法不切實際嗎？的確，如果我們僅有肉身，那麼身外的東西自然都是幻覺。但敍述此故事的耶穌說：人的生命並不在於家道豐富。如果不在物質的豐富，那生命在於什麼呢？",
+        "en": "The rich man in the story thought his “soul” fed on “grain,” as if the highest good for man were to feed the appetites, to minimize pain and maximize pleasure. So, is the notion that we are more than our bodies, that there are real, transcendent values beyond satisfying our appetites, just unreal fluff? It must be, if who we are is just bodies. But Jesus says that “one’s life does not consist in the abundance of his possessions.” If not possessions, then what is life about?"
+      },
+      "sentences": [
+        {
+          "zh": "這個故事裡有一個富翁。",
+          "en": "There is a rich man in this story.",
+          "blank": "富翁",
+          "tokens": [
+            "這個",
+            "故事",
+            "裡",
+            "有",
+            "一個",
+            "富翁"
+          ]
+        },
+        {
+          "zh": "他認為快樂最重要。",
+          "en": "He thinks happiness matters most.",
+          "blank": "認為",
+          "tokens": [
+            "他",
+            "認為",
+            "快樂",
+            "最",
+            "重要"
+          ]
+        },
+        {
+          "zh": "人的生命不在於家道豐富。",
+          "en": "One's life does not consist in abundant possessions.",
+          "blank": "豐富",
+          "tokens": [
+            "人",
+            "的",
+            "生命",
+            "不在",
+            "於",
+            "家道",
+            "豐富"
+          ]
+        },
+        {
+          "zh": "耶穌講了這個故事。",
+          "en": "Jesus told this story.",
+          "blank": "耶穌",
+          "tokens": [
+            "耶穌",
+            "講",
+            "了",
+            "這個",
+            "故事"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch01-l1d",
+      "title": "An Absurd View",
+      "zh": "荒唐的觀點",
+      "words": [
+        {
+          "hanzi": "顯然",
+          "pinyin": "xiǎn rán",
+          "en": "obviously; evidently"
+        },
+        {
+          "hanzi": "荒唐",
+          "pinyin": "huāng táng",
+          "en": "absurd; preposterous"
+        },
+        {
+          "hanzi": "人類",
+          "pinyin": "rén lèi",
+          "en": "humanity; mankind"
+        },
+        {
+          "hanzi": "世界觀",
+          "pinyin": "shì jiè guān",
+          "en": "worldview"
+        },
+        {
+          "hanzi": "武斷",
+          "pinyin": "wǔ duàn",
+          "en": "arbitrary; dogmatic"
+        },
+        {
+          "hanzi": "社會",
+          "pinyin": "shè huì",
+          "en": "society"
+        },
+        {
+          "hanzi": "聲稱",
+          "pinyin": "shēng chēng",
+          "en": "to claim; to assert"
+        },
+        {
+          "hanzi": "強加",
+          "pinyin": "qiáng jiā",
+          "en": "to impose; to force upon"
+        },
+        {
+          "hanzi": "現今",
+          "pinyin": "xiàn jīn",
+          "en": "nowadays; the present"
+        },
+        {
+          "hanzi": "找到",
+          "pinyin": "zhǎo dào",
+          "en": "to find"
+        },
+        {
+          "hanzi": "看待",
+          "pinyin": "kàn dài",
+          "en": "to regard; to look upon"
+        },
+        {
+          "hanzi": "神",
+          "pinyin": "Shén",
+          "en": "God; deity"
+        }
+      ],
+      "reading": {
+        "zh": "顯然，這種看待人類的觀點很荒唐。但是，在無神、純自然的世界觀裡，又很難找到更好的答案。這種觀點其實非常的武斷，聲稱科學真理以外便無真理，將這個不理性的觀點強加於現今社會。",
+        "en": "Obviously, this is an absurd view of man. Yet, better answers seem hard to find under an atheistic, naturalistic worldview. This view is entirely arbitrary, claiming there is no truth other than scientific truth, imposed on modern society."
+      },
+      "sentences": [
+        {
+          "zh": "這種看待人類的觀點很荒唐。",
+          "en": "This way of viewing mankind is absurd.",
+          "blank": "荒唐",
+          "tokens": [
+            "這種",
+            "看待",
+            "人類",
+            "的",
+            "觀點",
+            "很",
+            "荒唐"
+          ]
+        },
+        {
+          "zh": "我們很難找到更好的答案。",
+          "en": "It is hard for us to find a better answer.",
+          "blank": "找到",
+          "tokens": [
+            "我們",
+            "很",
+            "難",
+            "找到",
+            "更",
+            "好",
+            "的",
+            "答案"
+          ]
+        },
+        {
+          "zh": "這個觀點非常武斷。",
+          "en": "This view is extremely arbitrary.",
+          "blank": "武斷",
+          "tokens": [
+            "這個",
+            "觀點",
+            "非常",
+            "武斷"
+          ]
+        },
+        {
+          "zh": "這是一種無神的世界觀。",
+          "en": "This is a godless worldview.",
+          "blank": "世界觀",
+          "tokens": [
+            "這",
+            "是",
+            "一種",
+            "無",
+            "神",
+            "的",
+            "世界觀"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch01-l1e",
+      "title": "A Bleak Worldview",
+      "zh": "暗淡的世界觀",
+      "words": [
+        {
+          "hanzi": "暗淡",
+          "pinyin": "àn dàn",
+          "en": "bleak; dim; gloomy"
+        },
+        {
+          "hanzi": "剝奪",
+          "pinyin": "bō duó",
+          "en": "to deprive; to strip away"
+        },
+        {
+          "hanzi": "色彩",
+          "pinyin": "sè cǎi",
+          "en": "color; hue"
+        },
+        {
+          "hanzi": "憑據",
+          "pinyin": "píng jù",
+          "en": "evidence; proof"
+        },
+        {
+          "hanzi": "基礎",
+          "pinyin": "jī chǔ",
+          "en": "foundation; basis"
+        },
+        {
+          "hanzi": "建立",
+          "pinyin": "jiàn lì",
+          "en": "to establish; to build"
+        },
+        {
+          "hanzi": "巨大",
+          "pinyin": "jù dà",
+          "en": "huge; enormous"
+        },
+        {
+          "hanzi": "主張",
+          "pinyin": "zhǔ zhāng",
+          "en": "to assert; a claim; view"
+        },
+        {
+          "hanzi": "阻止",
+          "pinyin": "zǔ zhǐ",
+          "en": "to prevent; to block"
+        },
+        {
+          "hanzi": "回答",
+          "pinyin": "huí dá",
+          "en": "to answer; to reply"
+        },
+        {
+          "hanzi": "角度",
+          "pinyin": "jiǎo dù",
+          "en": "angle; perspective"
+        },
+        {
+          "hanzi": "思考",
+          "pinyin": "sī kǎo",
+          "en": "to think; to ponder"
+        },
+        {
+          "hanzi": "其實",
+          "pinyin": "qí shí",
+          "en": "actually; in fact"
+        }
+      ],
+      "reading": {
+        "zh": "這種暗淡的觀點不僅剝奪了生命中所有的色彩，它更在毫無憑據的基礎上建立了一個巨大的主張。自然論阻止了深層的思考，它也在我們回答人生最基本的問題上限制了我們的思維。從宏觀角度來看，若要探尋人性的本質、價值及其意義，就要從人類的起源開始。",
+        "en": "In addition to being a bleak view that strips life of all its color, it makes a huge claim that is simply asserted without evidence. Naturalism stifles deeper thinking in that it artificially reduces what we are allowed to consider in answering the most fundamental of questions. For a grander perspective, we need to start with the question of origin."
+      },
+      "sentences": [
+        {
+          "zh": "這種暗淡的觀點剝奪了生命的色彩。",
+          "en": "This bleak view strips life of its color.",
+          "blank": "剝奪",
+          "tokens": [
+            "這種",
+            "暗淡",
+            "的",
+            "觀點",
+            "剝奪",
+            "了",
+            "生命",
+            "的",
+            "色彩"
+          ]
+        },
+        {
+          "zh": "這個主張毫無憑據。",
+          "en": "This claim has no evidence at all.",
+          "blank": "憑據",
+          "tokens": [
+            "這個",
+            "主張",
+            "毫無",
+            "憑據"
+          ]
+        },
+        {
+          "zh": "自然論阻止了深層的思考。",
+          "en": "Naturalism stifles deeper thinking.",
+          "blank": "阻止",
+          "tokens": [
+            "自然",
+            "論",
+            "阻止",
+            "了",
+            "深層",
+            "的",
+            "思考"
+          ]
+        },
+        {
+          "zh": "我們要從宏觀的角度來看。",
+          "en": "We need to look at it from a grander perspective.",
+          "blank": "角度",
+          "tokens": [
+            "我們",
+            "要",
+            "從",
+            "宏觀",
+            "的",
+            "角度",
+            "來",
+            "看"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch01-l2a",
+      "title": "Spiritual Longing",
+      "zh": "靈魂的飢渴",
       "words": [
         {
           "hanzi": "創造",
@@ -88,34 +736,34 @@ window.C101.register(
           "en": "to create"
         },
         {
-          "hanzi": "創造者",
-          "pinyin": "chuàng zào zhě",
-          "en": "creator"
+          "hanzi": "定位",
+          "pinyin": "dìng wèi",
+          "en": "to locate; to position"
         },
         {
-          "hanzi": "宇宙",
-          "pinyin": "yǔ zhòu",
-          "en": "universe; cosmos"
+          "hanzi": "必定",
+          "pinyin": "bì dìng",
+          "en": "certainly; bound to"
         },
         {
-          "hanzi": "起源",
-          "pinyin": "qǐ yuán",
-          "en": "origin"
+          "hanzi": "結果",
+          "pinyin": "jiē guǒ",
+          "en": "result; outcome"
         },
         {
-          "hanzi": "聖經",
-          "pinyin": "Shèng jīng",
-          "en": "the Bible; scripture"
+          "hanzi": "此外",
+          "pinyin": "cǐ wài",
+          "en": "besides; in addition"
         },
         {
-          "hanzi": "永恆",
-          "pinyin": "yǒng héng",
-          "en": "eternal; eternity"
+          "hanzi": "飢渴",
+          "pinyin": "jī kě",
+          "en": "hunger and thirst; craving"
         },
         {
-          "hanzi": "渴望",
-          "pinyin": "kě wàng",
-          "en": "to long for; longing"
+          "hanzi": "享樂",
+          "pinyin": "xiǎng lè",
+          "en": "pleasure; to indulge"
         },
         {
           "hanzi": "滿足",
@@ -123,19 +771,149 @@ window.C101.register(
           "en": "to satisfy; satisfied"
         },
         {
+          "hanzi": "渴望",
+          "pinyin": "kě wàng",
+          "en": "to long for; longing"
+        }
+      ],
+      "reading": {
+        "zh": "如果我們是神創造的，那麼以創世記的故事之外來定位自己必定是毫無結果的。此外，如果神有靈性，那麼他在創造我們肉體的同時，也會附上「靈魂的飢渴」，而這種饑渴無法用食物或享樂來滿足。",
+        "en": "If we have been created by God, it would follow that our attempt to locate ourselves apart from the larger story of creation is bound to be unfruitful. Further, if God, himself a spiritual being, made us to be more than our bodies, then it follows that we would have such a thing as “spiritual longings” which no amount of food or pleasures can satisfy."
+      },
+      "sentences": [
+        {
+          "zh": "我們是神創造的。",
+          "en": "We were created by God.",
+          "blank": "創造",
+          "tokens": [
+            "我們",
+            "是",
+            "神",
+            "創造",
+            "的"
+          ]
+        },
+        {
+          "zh": "食物無法滿足靈魂的飢渴。",
+          "en": "Food cannot satisfy the soul's hunger.",
+          "blank": "飢渴",
+          "tokens": [
+            "食物",
+            "無法",
+            "滿足",
+            "靈魂",
+            "的",
+            "飢渴"
+          ]
+        },
+        {
+          "zh": "這樣做必定沒有結果。",
+          "en": "Doing so is bound to be fruitless.",
+          "blank": "必定",
+          "tokens": [
+            "這樣",
+            "做",
+            "必定",
+            "沒有",
+            "結果"
+          ]
+        },
+        {
+          "zh": "人心渴望永恆。",
+          "en": "The human heart longs for eternity.",
+          "blank": "渴望",
+          "tokens": [
+            "人心",
+            "渴望",
+            "永恆"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch01-l2b",
+      "title": "Eternity in the Heart",
+      "zh": "永恆在人心",
+      "words": [
+        {
+          "hanzi": "聖經",
+          "pinyin": "Shèng jīng",
+          "en": "the Bible; scripture"
+        },
+        {
+          "hanzi": "告訴",
+          "pinyin": "gào sù",
+          "en": "to tell"
+        },
+        {
+          "hanzi": "永恆",
+          "pinyin": "yǒng héng",
+          "en": "eternal; eternity"
+        },
+        {
+          "hanzi": "意識",
+          "pinyin": "yì shí",
+          "en": "consciousness; awareness"
+        },
+        {
+          "hanzi": "心裡",
+          "pinyin": "xīn li",
+          "en": "in one's heart; at heart"
+        },
+        {
+          "hanzi": "換句話說",
+          "pinyin": "huàn jù huà shuō",
+          "en": "in other words"
+        },
+        {
+          "hanzi": "宣稱",
+          "pinyin": "xuān chēng",
+          "en": "to declare; to claim"
+        },
+        {
+          "hanzi": "永遠",
+          "pinyin": "yǒng yuǎn",
+          "en": "forever; always"
+        },
+        {
           "hanzi": "世界",
           "pinyin": "shì jiè",
           "en": "world"
         },
         {
-          "hanzi": "存在",
-          "pinyin": "cún zài",
-          "en": "to exist; existence"
+          "hanzi": "短暫",
+          "pinyin": "duǎn zàn",
+          "en": "brief; transient"
+        },
+        {
+          "hanzi": "成就",
+          "pinyin": "chéng jiù",
+          "en": "achievement"
+        },
+        {
+          "hanzi": "充分",
+          "pinyin": "chōng fèn",
+          "en": "full; ample"
+        },
+        {
+          "hanzi": "嚮往",
+          "pinyin": "xiàng wǎng",
+          "en": "to yearn for; to long for"
         },
         {
           "hanzi": "超越",
           "pinyin": "chāo yuè",
           "en": "to transcend; to surpass"
+        },
+        {
+          "hanzi": "單純",
+          "pinyin": "dān chún",
+          "en": "simple; pure"
+        },
+        {
+          "hanzi": "存活",
+          "pinyin": "cún huó",
+          "en": "to survive; to live on"
         },
         {
           "hanzi": "精神",
@@ -144,13 +922,482 @@ window.C101.register(
         }
       ],
       "reading": {
-        "zh": "如果我們是神創造的，那麼以創世記的故事之外來定位自己必定是毫無結果的。此外，如果神有靈性，那麼他在創造我們肉體的同時，也會附上「靈魂的飢渴」，而這種饑渴無法用食物或享樂來滿足。《聖經》告訴我們，神把「永恆的意識放在人的心裡」。換句話說，《聖經》宣稱我們永遠不能從這世界中短暫的成就裡得到充分的滿足，因為我們是被神創造的，有永恆的靈魂，嚮往著一種遠遠超越單純存活的精神。",
-        "en": "If we have been created by God, it would follow that our attempt to locate ourselves apart from the larger story of creation is bound to be unfruitful. Further, if God, himself a spiritual being, made us to be more than our bodies, then it follows that we would have such a thing as “spiritual longings” which no amount of food or pleasures can satisfy. The Bible identifies the reason for this longing: God has “put eternity into man’s heart.” In other words, we can never be fully at peace with only the physical, because we have been created by God with eternal souls, which long for something much more than a mere biological existence."
-      }
+        "zh": "《聖經》告訴我們，神把「永恆的意識放在人的心裡」。換句話說，《聖經》宣稱我們永遠不能從這世界中短暫的成就裡得到充分的滿足，因為我們是被神創造的，有永恆的靈魂，嚮往著一種遠遠超越單純存活的精神。",
+        "en": "The Bible identifies the reason for this longing: God has “put eternity into man’s heart.” In other words, we can never be fully at peace with only the physical, because we have been created by God with eternal souls, which long for something much more than a mere biological existence."
+      },
+      "sentences": [
+        {
+          "zh": "《聖經》告訴我們真理。",
+          "en": "The Bible tells us the truth.",
+          "blank": "告訴",
+          "tokens": [
+            "聖經",
+            "告訴",
+            "我們",
+            "真理"
+          ]
+        },
+        {
+          "zh": "神把永恆放在人的心裡。",
+          "en": "God put eternity into man's heart.",
+          "blank": "永恆",
+          "tokens": [
+            "神",
+            "把",
+            "永恆",
+            "放",
+            "在",
+            "人",
+            "的",
+            "心裡"
+          ]
+        },
+        {
+          "zh": "世界的成就是短暫的。",
+          "en": "The world's achievements are fleeting.",
+          "blank": "短暫",
+          "tokens": [
+            "世界",
+            "的",
+            "成就",
+            "是",
+            "短暫",
+            "的"
+          ]
+        },
+        {
+          "zh": "我們嚮往超越存活的精神。",
+          "en": "We yearn for a spirit beyond mere survival.",
+          "blank": "嚮往",
+          "tokens": [
+            "我們",
+            "嚮往",
+            "超越",
+            "存活",
+            "的",
+            "精神"
+          ]
+        }
+      ]
     },
     {
-      "id": "ch01-l3",
-      "title": "In the Beginning",
+      "id": "ch01-l3a",
+      "title": "A Lab Manual",
+      "zh": "實驗手冊",
+      "words": [
+        {
+          "hanzi": "實驗",
+          "pinyin": "shí yàn",
+          "en": "experiment"
+        },
+        {
+          "hanzi": "手冊",
+          "pinyin": "shǒu cè",
+          "en": "manual; handbook"
+        },
+        {
+          "hanzi": "化學",
+          "pinyin": "huà xué",
+          "en": "chemistry"
+        },
+        {
+          "hanzi": "抱怨",
+          "pinyin": "bào yuàn",
+          "en": "to complain"
+        },
+        {
+          "hanzi": "誤解",
+          "pinyin": "wù jiě",
+          "en": "to misunderstand"
+        },
+        {
+          "hanzi": "解釋",
+          "pinyin": "jiě shì",
+          "en": "to explain"
+        },
+        {
+          "hanzi": "講述",
+          "pinyin": "jiǎng shù",
+          "en": "to narrate; to tell"
+        },
+        {
+          "hanzi": "情節",
+          "pinyin": "qíng jié",
+          "en": "plot; storyline"
+        },
+        {
+          "hanzi": "尋找",
+          "pinyin": "xún zhǎo",
+          "en": "to search for; to seek"
+        },
+        {
+          "hanzi": "關心",
+          "pinyin": "guān xīn",
+          "en": "to be concerned with; to care"
+        },
+        {
+          "hanzi": "神學",
+          "pinyin": "shén xué",
+          "en": "theology"
+        },
+        {
+          "hanzi": "虛無",
+          "pinyin": "xū wú",
+          "en": "nothingness; void"
+        },
+        {
+          "hanzi": "宇宙",
+          "pinyin": "yǔ zhòu",
+          "en": "universe; cosmos"
+        },
+        {
+          "hanzi": "存在",
+          "pinyin": "cún zài",
+          "en": "to exist; existence"
+        },
+        {
+          "hanzi": "創造者",
+          "pinyin": "chuàng zào zhě",
+          "en": "creator"
+        },
+        {
+          "hanzi": "關係",
+          "pinyin": "guān xì",
+          "en": "relationship"
+        }
+      ],
+      "reading": {
+        "zh": "假如某人讀完一本化學實驗手冊，然後大聲抱怨說：「這本書太爛了，一點故事情節都沒有！」那只能說他誤解了這本手冊的原意。實驗手冊只解釋實驗過程，並不講述人物或描寫故事情節。想從實驗手冊中看人講故事實在是強人所難。許多人讀創世記也跟看實驗手冊一樣，總想從中尋找本不存在的答案。創世記不關心「如何」的問題，而只專注於回答「為什麼」和「誰」相關的神學問題。比如，宇宙為什麼是真實存在的而不是虛無的？誰創造了宇宙？人是誰，他與創造者的關係是什麼？",
+        "en": "Imagine a person, upon reading a chemistry lab manual, exclaiming in exasperation, “This book has no plot!” Such a person is misunderstanding the genre of what he is reading. A lab manual is not interested in character or plot development; it is only meant to describe how to run experiments. Many read the creation account in Genesis as one would read a lab manual, demanding from it answers Genesis is not interested in providing. Genesis is concerned not with the question of “how” but with the theological narrative of God’s creation—“why” and “who”: why is there something rather than nothing? Who created this universe? Who is man, and what is his relationship to the Creator?"
+      },
+      "sentences": [
+        {
+          "zh": "這本化學實驗手冊沒有故事情節。",
+          "en": "This chemistry lab manual has no plot.",
+          "blank": "情節",
+          "tokens": [
+            "這",
+            "本",
+            "化學",
+            "實驗",
+            "手冊",
+            "沒有",
+            "故事",
+            "情節"
+          ]
+        },
+        {
+          "zh": "他誤解了這本手冊。",
+          "en": "He misunderstood this manual.",
+          "blank": "誤解",
+          "tokens": [
+            "他",
+            "誤解",
+            "了",
+            "這",
+            "本",
+            "手冊"
+          ]
+        },
+        {
+          "zh": "誰創造了宇宙？",
+          "en": "Who created the universe?",
+          "blank": "宇宙",
+          "tokens": [
+            "誰",
+            "創造",
+            "了",
+            "宇宙"
+          ]
+        },
+        {
+          "zh": "人與創造者的關係是什麼？",
+          "en": "What is man's relationship to the Creator?",
+          "blank": "關係",
+          "tokens": [
+            "人",
+            "與",
+            "創造者",
+            "的",
+            "關係",
+            "是",
+            "什麼"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch01-l3b",
+      "title": "The Bible Declares",
+      "zh": "聖經的宣告",
+      "words": [
+        {
+          "hanzi": "注意",
+          "pinyin": "zhù yì",
+          "en": "to note; attention"
+        },
+        {
+          "hanzi": "說服",
+          "pinyin": "shuō fú",
+          "en": "to persuade"
+        },
+        {
+          "hanzi": "讀者",
+          "pinyin": "dú zhě",
+          "en": "reader"
+        },
+        {
+          "hanzi": "章節",
+          "pinyin": "zhāng jié",
+          "en": "chapter; passage"
+        },
+        {
+          "hanzi": "活動",
+          "pinyin": "huó dòng",
+          "en": "activity; to act"
+        },
+        {
+          "hanzi": "起源",
+          "pinyin": "qǐ yuán",
+          "en": "origin"
+        },
+        {
+          "hanzi": "辯論",
+          "pinyin": "biàn lùn",
+          "en": "debate; to argue"
+        },
+        {
+          "hanzi": "清楚",
+          "pinyin": "qīng chu",
+          "en": "clear; distinct"
+        },
+        {
+          "hanzi": "明白",
+          "pinyin": "míng bai",
+          "en": "to understand; clear"
+        },
+        {
+          "hanzi": "萬物",
+          "pinyin": "wàn wù",
+          "en": "all things"
+        },
+        {
+          "hanzi": "主導",
+          "pinyin": "zhǔ dǎo",
+          "en": "to lead; dominant"
+        }
+      ],
+      "reading": {
+        "zh": "請注意《聖經》沒有刻意說服讀者神的存在。從書的開始章節，《聖經》就宣稱了神的活動。我們把關於宇宙起源的辯論放到一邊，《聖經》清楚明白地說明了萬物是在神的主導下被創造出來的。",
+        "en": "Note that the Bible does not attempt to persuade the reader of the existence of God. Rather, from its very first pages, the Bible declares the activity of God. All of the arguments regarding the origin of the universe aside, the Bible simply states that everything has its being in the sovereign creation of God."
+      },
+      "sentences": [
+        {
+          "zh": "《聖經》沒有刻意說服讀者。",
+          "en": "The Bible does not try to persuade the reader.",
+          "blank": "說服",
+          "tokens": [
+            "聖經",
+            "沒有",
+            "刻意",
+            "說服",
+            "讀者"
+          ]
+        },
+        {
+          "zh": "這是關於宇宙起源的辯論。",
+          "en": "This is the debate about the origin of the universe.",
+          "blank": "起源",
+          "tokens": [
+            "這",
+            "是",
+            "關於",
+            "宇宙",
+            "起源",
+            "的",
+            "辯論"
+          ]
+        },
+        {
+          "zh": "《聖經》清楚地說明了這件事。",
+          "en": "The Bible states this clearly.",
+          "blank": "清楚",
+          "tokens": [
+            "聖經",
+            "清楚",
+            "地",
+            "說明",
+            "了",
+            "這",
+            "件",
+            "事"
+          ]
+        },
+        {
+          "zh": "萬物是在神的主導下被創造的。",
+          "en": "All things were created under God's sovereignty.",
+          "blank": "主導",
+          "tokens": [
+            "萬物",
+            "是",
+            "在",
+            "神",
+            "的",
+            "主導",
+            "下",
+            "被",
+            "創造",
+            "的"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch01-l3c",
+      "title": "In God's Image",
+      "zh": "神的形象",
+      "words": [
+        {
+          "hanzi": "特殊",
+          "pinyin": "tè shū",
+          "en": "special; particular"
+        },
+        {
+          "hanzi": "動詞",
+          "pinyin": "dòng cí",
+          "en": "verb"
+        },
+        {
+          "hanzi": "描述",
+          "pinyin": "miáo shù",
+          "en": "to describe"
+        },
+        {
+          "hanzi": "過程",
+          "pinyin": "guò chéng",
+          "en": "process; course"
+        },
+        {
+          "hanzi": "呼吸",
+          "pinyin": "hū xī",
+          "en": "to breathe; breath"
+        },
+        {
+          "hanzi": "深思熟慮",
+          "pinyin": "shēn sī shú lǜ",
+          "en": "to deliberate carefully"
+        },
+        {
+          "hanzi": "按照",
+          "pinyin": "àn zhào",
+          "en": "according to; in accordance with"
+        },
+        {
+          "hanzi": "模樣",
+          "pinyin": "mú yàng",
+          "en": "appearance; look"
+        },
+        {
+          "hanzi": "形象",
+          "pinyin": "xíng xiàng",
+          "en": "image; likeness"
+        },
+        {
+          "hanzi": "身體",
+          "pinyin": "shēn tǐ",
+          "en": "body"
+        },
+        {
+          "hanzi": "特別",
+          "pinyin": "tè bié",
+          "en": "special; especially"
+        },
+        {
+          "hanzi": "說明",
+          "pinyin": "shuō míng",
+          "en": "to explain; to show"
+        },
+        {
+          "hanzi": "意味著",
+          "pinyin": "yì wèi zhe",
+          "en": "to mean; to signify"
+        },
+        {
+          "hanzi": "動物",
+          "pinyin": "dòng wù",
+          "en": "animal"
+        }
+      ],
+      "reading": {
+        "zh": "《聖經》用了一個很特殊的希伯來語動詞來描述神造人的過程。我們仿佛看見神停頓了一下，做了個深呼吸，深思熟慮地把人造出來。其他的動物都是按照動物本身的模樣創造的，「各從其類」，而《聖經》說「神照著自己的形象創造人」，以及神「把生氣吹進」我們的身體。這說明人與神的關係非常特別。按《聖經》的說法，這個特別的關係意味著我們不僅有肉體，還有靈性。",
+        "en": "A special Hebrew verb is used in the creation account when God creates man. We see God taking a pause, almost taking a deep breath, deliberating, and “forming” man. The other animals were created “according to their kinds,” but the Bible declares that “God created man in his own image” and that God “breathed…the breath of life” into us, highlighting the special relationship between mankind and God. Part of the reason for this special relationship is that we are spiritual, and not merely physical, creatures."
+      },
+      "sentences": [
+        {
+          "zh": "神照著自己的形象創造人。",
+          "en": "God created man in his own image.",
+          "blank": "形象",
+          "tokens": [
+            "神",
+            "照",
+            "著",
+            "自己",
+            "的",
+            "形象",
+            "創造",
+            "人"
+          ]
+        },
+        {
+          "zh": "《聖經》用了一個特殊的動詞。",
+          "en": "The Bible uses a special verb.",
+          "blank": "動詞",
+          "tokens": [
+            "聖經",
+            "用",
+            "了",
+            "一個",
+            "特殊",
+            "的",
+            "動詞"
+          ]
+        },
+        {
+          "zh": "動物是按照本身的模樣被創造的。",
+          "en": "The animals were created according to their own kinds.",
+          "blank": "模樣",
+          "tokens": [
+            "動物",
+            "是",
+            "按照",
+            "本身",
+            "的",
+            "模樣",
+            "被",
+            "創造",
+            "的"
+          ]
+        },
+        {
+          "zh": "這個特別的關係意味著我們有靈性。",
+          "en": "This special relationship means we are spiritual.",
+          "blank": "意味著",
+          "tokens": [
+            "這個",
+            "特別",
+            "的",
+            "關係",
+            "意味著",
+            "我們",
+            "有",
+            "靈性"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch01-l3d",
+      "title": "Let There Be Light",
       "zh": "太始之初",
       "words": [
         {
@@ -174,24 +1421,14 @@ window.C101.register(
           "en": "evening; night"
         },
         {
-          "hanzi": "動物",
-          "pinyin": "dòng wù",
-          "en": "animal"
+          "hanzi": "晝夜",
+          "pinyin": "zhòu yè",
+          "en": "day and night"
         },
         {
-          "hanzi": "生物",
-          "pinyin": "shēng wù",
-          "en": "living creature; organism"
-        },
-        {
-          "hanzi": "形象",
-          "pinyin": "xíng xiàng",
-          "en": "image; likeness"
-        },
-        {
-          "hanzi": "關係",
-          "pinyin": "guān xì",
-          "en": "relationship"
+          "hanzi": "天地",
+          "pinyin": "tiān dì",
+          "en": "heaven and earth"
         },
         {
           "hanzi": "各種",
@@ -199,14 +1436,9 @@ window.C101.register(
           "en": "every kind of; various"
         },
         {
-          "hanzi": "創世記",
-          "pinyin": "Chuàng shì jì",
-          "en": "Genesis (book of the Bible)"
-        },
-        {
-          "hanzi": "實驗",
-          "pinyin": "shí yàn",
-          "en": "experiment"
+          "hanzi": "生物",
+          "pinyin": "shēng wù",
+          "en": "living creature; organism"
         },
         {
           "hanzi": "重複",
@@ -215,14 +1447,73 @@ window.C101.register(
         }
       ],
       "reading": {
-        "zh": "假如某人讀完一本化學實驗手冊，然後大聲抱怨說：「這本書太爛了，一點故事情節都沒有！」那只能說他誤解了這本手冊的原意。實驗手冊只解釋實驗過程，並不講述人物或描寫故事情節。想從實驗手冊中看人講故事實在是強人所難。許多人讀創世記也跟看實驗手冊一樣，總想從中尋找本不存在的答案。創世記不關心「如何」的問題，而只專注於回答「為什麼」和「誰」相關的神學問題。比如，宇宙為什麼是真實存在的而不是虛無的？誰創造了宇宙？人是誰，他與創造者的關係是什麼？\n\n請注意《聖經》沒有刻意說服讀者神的存在。從書的開始章節，《聖經》就宣稱了神的活動。我們把關於宇宙起源的辯論放到一邊，《聖經》清楚明白地說明了萬物是在神的主導下被創造出來的。\n\n《聖經》用了一個很特殊的希伯來語動詞來描述神造人的過程。我們仿佛看見神停頓了一下，做了個深呼吸，深思熟慮地把人造出來。其他的動物都是按照動物本身的模樣創造的，「各從其類」，而《聖經》說「神照著自己的形象創造人」，以及神「把生氣吹進」我們的身體。這說明人與神的關係非常特別。按《聖經》的說法，這個特別的關係意味著我們不僅有肉體，還有靈性。",
-        "en": "Imagine a person, upon reading a chemistry lab manual, exclaiming in exasperation, “This book has no plot!” Such a person is misunderstanding the genre of what he is reading. A lab manual is not interested in character or plot development; it is only meant to describe how to run experiments. Many read the creation account in Genesis as one would read a lab manual, demanding from it answers Genesis is not interested in providing. Genesis is concerned not with the question of “how” but with the theological narrative of God’s creation—“why” and “who”: why is there something rather than nothing? Who created this universe? Who is man, and what is his relationship to the Creator?\n\nNote that the Bible does not attempt to persuade the reader of the existence of God. Rather, from its very first pages, the Bible declares the activity of God. All of the arguments regarding the origin of the universe aside, the Bible simply states that everything has its being in the sovereign creation of God.\n\nA special Hebrew verb is used in the creation account when God creates man. We see God taking a pause, almost taking a deep breath, deliberating, and “forming” man. The other animals were created “according to their kinds,” but the Bible declares that “God created man in his own image” and that God “breathed…the breath of life” into us, highlighting the special relationship between mankind and God. Part of the reason for this special relationship is that we are spiritual, and not merely physical, creatures."
-      }
+        "zh": "起初，神創造天地。地是空虛混沌；深淵上一片黑暗；神的靈運行在水面上。神說：「要有光！」就有了光。神看光是好的，他就把光暗分開了。神稱光為晝，稱暗為夜。有晚上，有早晨；這是第一日。",
+        "en": "In the beginning, God created the heavens and the earth. The earth was without form and void, and darkness was over the face of the deep. And the Spirit of God was hovering over the face of the waters. And God said, “Let there be light,” and there was light. And God saw that the light was good. And God separated the light from the darkness. God called the light Day, and the darkness he called Night. And there was evening and there was morning, the first day."
+      },
+      "sentences": [
+        {
+          "zh": "起初，神創造天地。",
+          "en": "In the beginning, God created the heavens and the earth.",
+          "blank": "天地",
+          "tokens": [
+            "起初",
+            "神",
+            "創造",
+            "天地"
+          ]
+        },
+        {
+          "zh": "神說：「要有光！」",
+          "en": "God said, “Let there be light!”",
+          "blank": "光",
+          "tokens": [
+            "神",
+            "說",
+            "要有",
+            "光"
+          ]
+        },
+        {
+          "zh": "深淵上一片黑暗。",
+          "en": "Darkness was over the face of the deep.",
+          "blank": "黑暗",
+          "tokens": [
+            "深淵",
+            "上",
+            "一",
+            "片",
+            "黑暗"
+          ]
+        },
+        {
+          "zh": "有晚上，有早晨。",
+          "en": "There was evening, and there was morning.",
+          "blank": "早晨",
+          "tokens": [
+            "有",
+            "晚上",
+            "有",
+            "早晨"
+          ]
+        },
+        {
+          "zh": "神創造了各種生物。",
+          "en": "God created every kind of living creature.",
+          "blank": "各種",
+          "tokens": [
+            "神",
+            "創造",
+            "了",
+            "各種",
+            "生物"
+          ]
+        }
+      ]
     },
     {
-      "id": "ch01-l4",
-      "title": "Anticipating Parent",
-      "zh": "滿懷期待的父母",
+      "id": "ch01-l4a",
+      "title": "It Is Good",
+      "zh": "神說「好」",
       "words": [
         {
           "hanzi": "父母",
@@ -235,6 +1526,21 @@ window.C101.register(
           "en": "to look forward to; anticipation"
         },
         {
+          "hanzi": "等待",
+          "pinyin": "děng dài",
+          "en": "to wait; to await"
+        },
+        {
+          "hanzi": "降生",
+          "pinyin": "jiàng shēng",
+          "en": "to be born"
+        },
+        {
+          "hanzi": "措手不及",
+          "pinyin": "cuò shǒu bù jí",
+          "en": "caught off guard; unprepared"
+        },
+        {
           "hanzi": "準備",
           "pinyin": "zhǔn bèi",
           "en": "to prepare"
@@ -245,24 +1551,39 @@ window.C101.register(
           "en": "baby"
         },
         {
-          "hanzi": "描述",
-          "pinyin": "miáo shù",
-          "en": "to describe"
+          "hanzi": "房間",
+          "pinyin": "fáng jiān",
+          "en": "room"
+        },
+        {
+          "hanzi": "裝飾",
+          "pinyin": "zhuāng shì",
+          "en": "to decorate; decoration"
+        },
+        {
+          "hanzi": "顏色",
+          "pinyin": "yán sè",
+          "en": "color"
+        },
+        {
+          "hanzi": "嬰兒",
+          "pinyin": "yīng ér",
+          "en": "infant; baby"
+        },
+        {
+          "hanzi": "想像",
+          "pinyin": "xiǎng xiàng",
+          "en": "to imagine; imagination"
+        },
+        {
+          "hanzi": "後退",
+          "pinyin": "hòu tuì",
+          "en": "to step back; to retreat"
         },
         {
           "hanzi": "依據",
           "pinyin": "yī jù",
           "en": "basis; according to"
-        },
-        {
-          "hanzi": "按照",
-          "pinyin": "àn zhào",
-          "en": "according to; in accordance with"
-        },
-        {
-          "hanzi": "心意",
-          "pinyin": "xīn yì",
-          "en": "intention; heart's desire"
         },
         {
           "hanzi": "非常",
@@ -275,25 +1596,184 @@ window.C101.register(
           "en": "even; to the point that"
         },
         {
-          "hanzi": "認為",
-          "pinyin": "rèn wéi",
-          "en": "to think; to consider"
-        },
-        {
           "hanzi": "東西",
           "pinyin": "dōng xi",
           "en": "thing(s)"
         }
       ],
       "reading": {
-        "zh": "創世記提到，神每造一物都會說「好」，最後把人造出來時，甚至還說「非常好。」這個「好」的依據是什麼？等待小寶寶降生的父母親一般不會措手不及。寶寶降生之前，他們會準備一些東西。比如把房間裝飾成柔和的顏色，在牆上畫上火車和雲朵。裝上嬰兒床，並放好軟墊。你能想像到，每做完一件事，這對父母親都會後退一步，看著他們準備好了的東西，說：「這個好。」神在眾生心中有諸多不同的形象：孤傲且不近人情的神；強勢且不怒自威的神；或者老邁又神志不清的老爺爺。",
-        "en": "Genesis reports that God repeatedly declares creation as good, and finally, with man in place, “very good.” What is the basis of this “goodness”? Parents expecting the arrival of a newborn don’t get caught off guard. Before the arrival of the baby, they set up the room. They decorate it with pastel baby colors and line the walls with pictures of trains and clouds. They assemble a crib and pad it with cushion. At each stage, you can imagine the parents stepping back, looking at what they prepared and saying, “This is good.” There are many different perceptions about God: an aloof figure sitting at a distance, a powerful and vindictive force that should be avoided, perhaps an irrelevant and senile grandfather."
-      }
+        "zh": "創世記提到，神每造一物都會說「好」，最後把人造出來時，甚至還說「非常好。」這個「好」的依據是什麼？等待小寶寶降生的父母親一般不會措手不及。寶寶降生之前，他們會準備一些東西。比如把房間裝飾成柔和的顏色，在牆上畫上火車和雲朵。裝上嬰兒床，並放好軟墊。你能想像到，每做完一件事，這對父母親都會後退一步，看著他們準備好了的東西，說：「這個好。」",
+        "en": "Genesis reports that God repeatedly declares creation as good, and finally, with man in place, “very good.” What is the basis of this “goodness”? Parents expecting the arrival of a newborn don’t get caught off guard. Before the arrival of the baby, they set up the room. They decorate it with pastel baby colors and line the walls with pictures of trains and clouds. They assemble a crib and pad it with cushion. At each stage, you can imagine the parents stepping back, looking at what they prepared and saying, “This is good.”"
+      },
+      "sentences": [
+        {
+          "zh": "父母期待寶寶的降生。",
+          "en": "The parents look forward to the baby's birth.",
+          "blank": "降生",
+          "tokens": [
+            "父母",
+            "期待",
+            "寶寶",
+            "的",
+            "降生"
+          ]
+        },
+        {
+          "zh": "他們準備好了房間。",
+          "en": "They got the room ready.",
+          "blank": "房間",
+          "tokens": [
+            "他們",
+            "準備好了",
+            "房間"
+          ]
+        },
+        {
+          "zh": "他們把房間裝飾成柔和的顏色。",
+          "en": "They decorated the room in soft colors.",
+          "blank": "裝飾",
+          "tokens": [
+            "他們",
+            "把",
+            "房間",
+            "裝飾",
+            "成",
+            "柔和",
+            "的",
+            "顏色"
+          ]
+        },
+        {
+          "zh": "神說這非常好。",
+          "en": "God said this was very good.",
+          "blank": "非常",
+          "tokens": [
+            "神",
+            "說",
+            "這",
+            "非常",
+            "好"
+          ]
+        }
+      ]
     },
     {
-      "id": "ch01-l5",
-      "title": "A Fork in the Road",
-      "zh": "人生的十字路口",
+      "id": "ch01-l4b",
+      "title": "Images of God",
+      "zh": "對神的看法",
+      "words": [
+        {
+          "hanzi": "眾生",
+          "pinyin": "zhòng shēng",
+          "en": "all living beings"
+        },
+        {
+          "hanzi": "心中",
+          "pinyin": "xīn zhōng",
+          "en": "in the heart; in mind"
+        },
+        {
+          "hanzi": "諸多",
+          "pinyin": "zhū duō",
+          "en": "numerous; many"
+        },
+        {
+          "hanzi": "不同",
+          "pinyin": "bù tóng",
+          "en": "different; difference"
+        },
+        {
+          "hanzi": "孤傲",
+          "pinyin": "gū ào",
+          "en": "aloof; proud and distant"
+        },
+        {
+          "hanzi": "不近人情",
+          "pinyin": "bù jìn rén qíng",
+          "en": "cold; unfeeling"
+        },
+        {
+          "hanzi": "強勢",
+          "pinyin": "qiáng shì",
+          "en": "domineering; forceful"
+        },
+        {
+          "hanzi": "老邁",
+          "pinyin": "lǎo mài",
+          "en": "aged; old and frail"
+        },
+        {
+          "hanzi": "神志不清",
+          "pinyin": "shén zhì bù qīng",
+          "en": "senile; confused"
+        }
+      ],
+      "reading": {
+        "zh": "神在眾生心中有諸多不同的形象：孤傲且不近人情的神；強勢且不怒自威的神；或者老邁又神志不清的老爺爺。",
+        "en": "There are many different perceptions about God: an aloof figure sitting at a distance, a powerful and vindictive force that should be avoided, perhaps an irrelevant and senile grandfather."
+      },
+      "sentences": [
+        {
+          "zh": "神在眾生心中有諸多不同的形象。",
+          "en": "People hold many different images of God.",
+          "blank": "諸多",
+          "tokens": [
+            "神",
+            "在",
+            "眾生",
+            "心中",
+            "有",
+            "諸多",
+            "不同",
+            "的",
+            "形象"
+          ]
+        },
+        {
+          "zh": "有人認為神是孤傲的。",
+          "en": "Some think God is aloof.",
+          "blank": "孤傲",
+          "tokens": [
+            "有人",
+            "認為",
+            "神",
+            "是",
+            "孤傲",
+            "的"
+          ]
+        },
+        {
+          "zh": "有人認為神像老邁的爺爺。",
+          "en": "Some think God is like a senile grandfather.",
+          "blank": "老邁",
+          "tokens": [
+            "有人",
+            "認為",
+            "神像",
+            "老邁",
+            "的",
+            "爺爺"
+          ]
+        },
+        {
+          "zh": "這樣的神強勢又不近人情。",
+          "en": "Such a god is domineering and unfeeling.",
+          "blank": "不近人情",
+          "tokens": [
+            "這樣",
+            "的",
+            "神",
+            "強勢",
+            "又",
+            "不近人情"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch01-l5a",
+      "title": "A Loving Father",
+      "zh": "慈愛的天父",
       "words": [
         {
           "hanzi": "慈愛",
@@ -321,25 +1801,160 @@ window.C101.register(
           "en": "nature (the natural world)"
         },
         {
-          "hanzi": "萬物",
-          "pinyin": "wàn wù",
-          "en": "all things"
+          "hanzi": "恰恰相反",
+          "pinyin": "qià qià xiāng fǎn",
+          "en": "on the contrary; quite the opposite"
         },
         {
-          "hanzi": "信仰",
-          "pinyin": "xìn yǎng",
-          "en": "faith; belief"
+          "hanzi": "環境",
+          "pinyin": "huán jìng",
+          "en": "environment; surroundings"
         },
         {
-          "hanzi": "基督教",
-          "pinyin": "Jī dū jiào",
-          "en": "Christianity"
+          "hanzi": "保佑",
+          "pinyin": "bǎo yòu",
+          "en": "to bless; to protect"
         },
         {
-          "hanzi": "證據",
-          "pinyin": "zhèng jù",
-          "en": "evidence"
+          "hanzi": "賜福",
+          "pinyin": "cì fú",
+          "en": "to bless; to grant blessing"
         },
+        {
+          "hanzi": "雄偉",
+          "pinyin": "xióng wěi",
+          "en": "majestic; grand"
+        },
+        {
+          "hanzi": "迎接",
+          "pinyin": "yíng jiē",
+          "en": "to welcome; to greet"
+        },
+        {
+          "hanzi": "唯一",
+          "pinyin": "wéi yī",
+          "en": "only; sole"
+        },
+        {
+          "hanzi": "欣賞",
+          "pinyin": "xīn shǎng",
+          "en": "to appreciate; to admire"
+        },
+        {
+          "hanzi": "美景",
+          "pinyin": "měi jǐng",
+          "en": "beautiful scenery"
+        },
+        {
+          "hanzi": "王冠",
+          "pinyin": "wáng guān",
+          "en": "crown"
+        },
+        {
+          "hanzi": "分享",
+          "pinyin": "fēn xiǎng",
+          "en": "to share"
+        },
+        {
+          "hanzi": "本性",
+          "pinyin": "běn xìng",
+          "en": "nature; inherent character"
+        },
+        {
+          "hanzi": "賦予",
+          "pinyin": "fù yǔ",
+          "en": "to endow; to confer"
+        }
+      ],
+      "reading": {
+        "zh": "恰恰相反，《聖經》從第一頁起所描述的神與上面這些形象完全不同。神是一位慈愛的父親，把所造的人放在預先準備好的環境裡面，並「保佑人們」，還「賜福予人」，還說他所造的「非常好！」雄偉的高山，廣袤的原野，奔騰的河流，蔥郁的樹木，已經預先準備好以迎接人類，而人類又是唯一能夠欣賞大自然美景的生物。神造萬物，人為王冠。人類分享著神的本性，被賦予了用愛和智慧來管理這個世界的職務。這是創世記所表達的信息。",
+        "en": "Contrary to such views, the portrait of God revealed in the very first pages of the Bible is that of a loving Father, who places man into an environment prepared for him. God “blesses” and “gives” and pronounces that creation is “very good.” The majestic mountains, the pristine beauty of the meadows, the rivers, the trees, were all prepared for mankind, who uniquely among creatures is endowed with the strange propensity to find nature transcendently beautiful. Man was the crown of all of God’s creation, sharing His nature, and meant to rule over it with love and wisdom. This is the message of Genesis."
+      },
+      "sentences": [
+        {
+          "zh": "神是一位慈愛的父親。",
+          "en": "God is a loving Father.",
+          "blank": "慈愛",
+          "tokens": [
+            "神",
+            "是",
+            "一",
+            "位",
+            "慈愛",
+            "的",
+            "父親"
+          ]
+        },
+        {
+          "zh": "神把人放在預先準備好的環境裡。",
+          "en": "God placed man in a prepared environment.",
+          "blank": "環境",
+          "tokens": [
+            "神",
+            "把",
+            "人",
+            "放",
+            "在",
+            "預先",
+            "準備",
+            "好",
+            "的",
+            "環境",
+            "裡"
+          ]
+        },
+        {
+          "zh": "人類是唯一能欣賞大自然美景的生物。",
+          "en": "Man alone can appreciate the beauty of nature.",
+          "blank": "欣賞",
+          "tokens": [
+            "人類",
+            "是",
+            "唯一",
+            "能",
+            "欣賞",
+            "大自然",
+            "美景",
+            "的",
+            "生物"
+          ]
+        },
+        {
+          "zh": "神賜福給他所造的人。",
+          "en": "God blessed the man he made.",
+          "blank": "賜福",
+          "tokens": [
+            "神",
+            "賜福",
+            "給",
+            "他",
+            "所",
+            "造",
+            "的",
+            "人"
+          ]
+        },
+        {
+          "zh": "神讓人用智慧管理萬物。",
+          "en": "God has man rule over all things with wisdom.",
+          "blank": "管理",
+          "tokens": [
+            "神",
+            "讓",
+            "人",
+            "用",
+            "智慧",
+            "管理",
+            "萬物"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch01-l5b",
+      "title": "What Is Life?",
+      "zh": "生命是什麼",
+      "words": [
         {
           "hanzi": "課程",
           "pinyin": "kè chéng",
@@ -354,84 +1969,478 @@ window.C101.register(
           "hanzi": "價值",
           "pinyin": "jià zhí",
           "en": "value; worth"
+        },
+        {
+          "hanzi": "開頭",
+          "pinyin": "kāi tóu",
+          "en": "beginning; start"
+        },
+        {
+          "hanzi": "提出",
+          "pinyin": "tí chū",
+          "en": "to raise; to put forward"
+        },
+        {
+          "hanzi": "息息相關",
+          "pinyin": "xī xī xiāng guān",
+          "en": "closely linked; bound up together"
+        },
+        {
+          "hanzi": "理解",
+          "pinyin": "lǐ jiě",
+          "en": "to understand; comprehension"
+        },
+        {
+          "hanzi": "接受",
+          "pinyin": "jiē shòu",
+          "en": "to accept; to receive"
+        },
+        {
+          "hanzi": "結論",
+          "pinyin": "jié lùn",
+          "en": "conclusion"
+        },
+        {
+          "hanzi": "後果",
+          "pinyin": "hòu guǒ",
+          "en": "consequence; aftermath"
+        },
+        {
+          "hanzi": "帶來",
+          "pinyin": "dài lái",
+          "en": "to bring about"
+        },
+        {
+          "hanzi": "概念",
+          "pinyin": "gài niàn",
+          "en": "concept; notion"
         }
       ],
       "reading": {
-        "zh": "恰恰相反，《聖經》從第一頁起所描述的神與上面這些形象完全不同。神是一位慈愛的父親，把所造的人放在預先準備好的環境裡面，並「保佑人們」，還「賜福予人」，還說他所造的「非常好！」雄偉的高山，廣袤的原野，奔騰的河流，蔥郁的樹木，已經預先準備好以迎接人類，而人類又是唯一能夠欣賞大自然美景的生物。神造萬物，人為王冠。人類分享著神的本性，被賦予了用愛和智慧來管理這個世界的職務。這是創世記所表達的信息。\n\n回到本課程開頭提出的問題：「生命是什麼？」這個問題的答案與神息息相關。如果神不存在，我們就該理解並接受這個結論所帶來的後果。這個後果就是拒絕一切價值、意義、甚至愛的概念，並接受我們的生命就是毫無意義。\n\n但是，如果《聖經》所說是真的，創造了萬物的神是一個慈愛的天父，那我們就不單純是一群分子堆積物，我們擁有的遠比肉體更多。我們追求比生命更高的渴望不會徒勞，因為這本就是源自于我們超越自然的本質。雖然某些人認為基督信仰是種「盲目的信仰」，但現實情況是有很多證據可以説明基督教所宣揚真理的可信性。本課程的目的就是介紹基督教的信仰根基。不論你是信徒還是探求者，在接下來的幾個星期，讓我們一起來探討基督福音。",
-        "en": "Contrary to such views, the portrait of God revealed in the very first pages of the Bible is that of a loving Father, who places man into an environment prepared for him. God “blesses” and “gives” and pronounces that creation is “very good.” The majestic mountains, the pristine beauty of the meadows, the rivers, the trees, were all prepared for mankind, who uniquely among creatures is endowed with the strange propensity to find nature transcendently beautiful. Man was the crown of all of God’s creation, sharing His nature, and meant to rule over it with love and wisdom. This is the message of Genesis.\n\nLet’s consider once again the question we started with: “What is life?” The answer is integrally linked with the question about God. If it really is the case that there is no God, then we ought to be clear about the consequences and accept them—which would mean we reject notions of value and meaning and align our lives with the belief that life is ultimately meaningless.\n\nOn the other hand, if the Bible is true in its claim that the God who created us is a loving heavenly Father, that means we are more than mere molecules. We are more than our bodies. Our longing for something higher is not a futile desire, but arises out of the very core of who we are as transcendent beings. This course aims to lay out the foundations of Christianity. Whether you’re a believer or just seeking answers, let’s consider together the claims of the Christian gospel through the next few weeks."
-      }
+        "zh": "回到本課程開頭提出的問題：「生命是什麼？」這個問題的答案與神息息相關。如果神不存在，我們就該理解並接受這個結論所帶來的後果。這個後果就是拒絕一切價值、意義、甚至愛的概念，並接受我們的生命就是毫無意義。",
+        "en": "Let’s consider once again the question we started with: “What is life?” The answer is integrally linked with the question about God. If it really is the case that there is no God, then we ought to be clear about the consequences and accept them—which would mean we reject notions of value and meaning and align our lives with the belief that life is ultimately meaningless."
+      },
+      "sentences": [
+        {
+          "zh": "這個問題的答案與神息息相關。",
+          "en": "The answer to this question is bound up with God.",
+          "blank": "息息相關",
+          "tokens": [
+            "這個",
+            "問題",
+            "的",
+            "答案",
+            "與",
+            "神",
+            "息息相關"
+          ]
+        },
+        {
+          "zh": "我們要理解並接受這個結論。",
+          "en": "We must understand and accept this conclusion.",
+          "blank": "結論",
+          "tokens": [
+            "我們",
+            "要",
+            "理解",
+            "並",
+            "接受",
+            "這個",
+            "結論"
+          ]
+        },
+        {
+          "zh": "這個後果就是拒絕一切價值。",
+          "en": "The consequence is rejecting all value.",
+          "blank": "拒絕",
+          "tokens": [
+            "這個",
+            "後果",
+            "就是",
+            "拒絕",
+            "一切",
+            "價值"
+          ]
+        },
+        {
+          "zh": "本課程開頭提出了這個問題。",
+          "en": "This course raised this question at the start.",
+          "blank": "開頭",
+          "tokens": [
+            "本",
+            "課程",
+            "開頭",
+            "提出",
+            "了",
+            "這個",
+            "問題"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch01-l5c",
+      "title": "The Christian Gospel",
+      "zh": "基督福音",
+      "words": [
+        {
+          "hanzi": "信仰",
+          "pinyin": "xìn yǎng",
+          "en": "faith; belief"
+        },
+        {
+          "hanzi": "基督教",
+          "pinyin": "Jī dū jiào",
+          "en": "Christianity"
+        },
+        {
+          "hanzi": "基督",
+          "pinyin": "Jī dū",
+          "en": "Christ"
+        },
+        {
+          "hanzi": "福音",
+          "pinyin": "fú yīn",
+          "en": "gospel; good news"
+        },
+        {
+          "hanzi": "證據",
+          "pinyin": "zhèng jù",
+          "en": "evidence"
+        },
+        {
+          "hanzi": "天父",
+          "pinyin": "tiān fù",
+          "en": "heavenly Father"
+        },
+        {
+          "hanzi": "真的",
+          "pinyin": "zhēn de",
+          "en": "real; really; truly"
+        },
+        {
+          "hanzi": "分子",
+          "pinyin": "fēn zǐ",
+          "en": "molecule"
+        },
+        {
+          "hanzi": "擁有",
+          "pinyin": "yōng yǒu",
+          "en": "to possess; to have"
+        },
+        {
+          "hanzi": "徒勞",
+          "pinyin": "tú láo",
+          "en": "in vain; futile"
+        },
+        {
+          "hanzi": "盲目",
+          "pinyin": "máng mù",
+          "en": "blind; unthinking"
+        },
+        {
+          "hanzi": "現實",
+          "pinyin": "xiàn shí",
+          "en": "reality; actual situation"
+        },
+        {
+          "hanzi": "宣揚",
+          "pinyin": "xuān yáng",
+          "en": "to proclaim; to promote"
+        },
+        {
+          "hanzi": "可信",
+          "pinyin": "kě xìn",
+          "en": "credible; trustworthy"
+        },
+        {
+          "hanzi": "介紹",
+          "pinyin": "jiè shào",
+          "en": "to introduce; introduction"
+        },
+        {
+          "hanzi": "根基",
+          "pinyin": "gēn jī",
+          "en": "foundation; footing"
+        },
+        {
+          "hanzi": "信徒",
+          "pinyin": "xìn tú",
+          "en": "believer"
+        },
+        {
+          "hanzi": "探求",
+          "pinyin": "tàn qiú",
+          "en": "to seek; to inquire into"
+        }
+      ],
+      "reading": {
+        "zh": "但是，如果《聖經》所說是真的，創造了萬物的神是一個慈愛的天父，那我們就不單純是一群分子堆積物，我們擁有的遠比肉體更多。我們追求比生命更高的渴望不會徒勞，因為這本就是源自于我們超越自然的本質。雖然某些人認為基督信仰是種「盲目的信仰」，但現實情況是有很多證據可以説明基督教所宣揚真理的可信性。本課程的目的就是介紹基督教的信仰根基。不論你是信徒還是探求者，在接下來的幾個星期，讓我們一起來探討基督福音。",
+        "en": "On the other hand, if the Bible is true in its claim that the God who created us is a loving heavenly Father, that means we are more than mere molecules. We are more than our bodies. Our longing for something higher is not a futile desire, but arises out of the very core of who we are as transcendent beings. This course aims to lay out the foundations of Christianity. Whether you’re a believer or just seeking answers, let’s consider together the claims of the Christian gospel through the next few weeks."
+      },
+      "sentences": [
+        {
+          "zh": "神是一個慈愛的天父。",
+          "en": "God is a loving heavenly Father.",
+          "blank": "天父",
+          "tokens": [
+            "神",
+            "是",
+            "一個",
+            "慈愛",
+            "的",
+            "天父"
+          ]
+        },
+        {
+          "zh": "我們不單純是一群分子。",
+          "en": "We are not merely a bunch of molecules.",
+          "blank": "分子",
+          "tokens": [
+            "我們",
+            "不單",
+            "純",
+            "是",
+            "一",
+            "群",
+            "分子"
+          ]
+        },
+        {
+          "zh": "我們的渴望不會徒勞。",
+          "en": "Our longing is not in vain.",
+          "blank": "徒勞",
+          "tokens": [
+            "我們",
+            "的",
+            "渴望",
+            "不會",
+            "徒勞"
+          ]
+        },
+        {
+          "zh": "有很多證據說明基督教的真理。",
+          "en": "There is much evidence for the truth of Christianity.",
+          "blank": "證據",
+          "tokens": [
+            "有",
+            "很",
+            "多",
+            "證據",
+            "說明",
+            "基督教",
+            "的",
+            "真理"
+          ]
+        },
+        {
+          "zh": "讓我們一起來探討基督福音。",
+          "en": "Let us consider the gospel of Christ together.",
+          "blank": "福音",
+          "tokens": [
+            "讓",
+            "我們",
+            "一起",
+            "來",
+            "探討",
+            "基督",
+            "福音"
+          ]
+        },
+        {
+          "zh": "這門課程介紹基督教的信仰根基。",
+          "en": "This course introduces the foundations of the Christian faith.",
+          "blank": "根基",
+          "tokens": [
+            "這",
+            "門",
+            "課程",
+            "介紹",
+            "基督教",
+            "的",
+            "信仰",
+            "根基"
+          ]
+        }
+      ]
     }
   ],
   "sentences": [
     {
       "zh": "人生的意義是什麼？",
       "en": "What is the meaning of life?",
-      "blank": "意義"
+      "blank": "意義",
+      "tokens": [
+        "人生",
+        "的",
+        "意義",
+        "是",
+        "什麼"
+      ]
     },
     {
       "zh": "我是一個有靈魂的生命。",
       "en": "I am a living being with a soul.",
-      "blank": "靈魂"
+      "blank": "靈魂",
+      "tokens": [
+        "我",
+        "是",
+        "一個",
+        "有",
+        "靈魂",
+        "的",
+        "生命"
+      ]
     },
     {
       "zh": "這些問題的答案很重要。",
       "en": "The answers to these questions matter.",
-      "blank": "答案"
+      "blank": "答案",
+      "tokens": [
+        "這些",
+        "問題",
+        "的",
+        "答案",
+        "很",
+        "重要"
+      ]
     },
     {
       "zh": "神創造了宇宙。",
       "en": "God created the universe.",
-      "blank": "創造"
+      "blank": "創造",
+      "tokens": [
+        "神",
+        "創造",
+        "了",
+        "宇宙"
+      ]
     },
     {
       "zh": "《聖經》告訴我們世界的起源。",
       "en": "The Bible tells us the origin of the world.",
-      "blank": "起源"
+      "blank": "起源",
+      "tokens": [
+        "聖經",
+        "告訴",
+        "我們",
+        "世界",
+        "的",
+        "起源"
+      ]
     },
     {
       "zh": "人心渴望永恆。",
       "en": "The human heart longs for eternity.",
-      "blank": "永恆"
+      "blank": "永恆",
+      "tokens": [
+        "人心",
+        "渴望",
+        "永恆"
+      ]
     },
     {
       "zh": "神說要有光。",
       "en": "God said, “let there be light.”",
-      "blank": "光"
+      "blank": "光",
+      "tokens": [
+        "神",
+        "說",
+        "要有",
+        "光"
+      ]
     },
     {
       "zh": "神照著自己的形象造人。",
       "en": "God made man in his own image.",
-      "blank": "形象"
+      "blank": "形象",
+      "tokens": [
+        "神",
+        "照",
+        "著",
+        "自己",
+        "的",
+        "形象",
+        "造人"
+      ]
     },
     {
       "zh": "《創世記》記載了各種動物。",
       "en": "Genesis records every kind of animal.",
-      "blank": "動物"
+      "blank": "動物",
+      "tokens": [
+        "創世記",
+        "記載",
+        "了",
+        "各種",
+        "動物"
+      ]
     },
     {
       "zh": "父母期待寶寶的出生。",
       "en": "The parents look forward to the baby's birth.",
-      "blank": "期待"
+      "blank": "期待",
+      "tokens": [
+        "父母",
+        "期待",
+        "寶寶",
+        "的",
+        "出生"
+      ]
     },
     {
       "zh": "他們為寶寶準備了很多東西。",
       "en": "They prepared many things for the baby.",
-      "blank": "準備"
+      "blank": "準備",
+      "tokens": [
+        "他們",
+        "為",
+        "寶寶",
+        "準備",
+        "了",
+        "很",
+        "多",
+        "東西"
+      ]
     },
     {
       "zh": "慈愛的父親有智慧。",
       "en": "The loving father has wisdom.",
-      "blank": "智慧"
+      "blank": "智慧",
+      "tokens": [
+        "慈愛",
+        "的",
+        "父親",
+        "有",
+        "智慧"
+      ]
     },
     {
       "zh": "神讓人管理大自然的萬物。",
       "en": "God lets man rule over all things in nature.",
-      "blank": "管理"
+      "blank": "管理",
+      "tokens": [
+        "神",
+        "讓",
+        "人",
+        "管理",
+        "大自然",
+        "的",
+        "萬物"
+      ]
     },
     {
       "zh": "這門課程講述基督教信仰。",
       "en": "This course teaches the Christian faith.",
-      "blank": "信仰"
+      "blank": "信仰",
+      "tokens": [
+        "這",
+        "門",
+        "課程",
+        "講述",
+        "基督教",
+        "信仰"
+      ]
     }
   ]
 }

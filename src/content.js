@@ -63,8 +63,10 @@ const C101 = (function () {
   function currentBook() { return bookIndex.get(currentBookId) || books[0] || null; }
 
   // Split a section (book lesson) into bite-size parts for finishable sessions:
-  // consecutive chunks of CONFIG.PART_SIZE "learn" words, plus a final no-pinyin
-  // "reading" part that re-drills the whole section. Pure — derived from data.
+  // consecutive chunks of CONFIG.PART_SIZE "learn" words, then a no-pinyin
+  // "reading" part that re-drills the whole section, then (if the section has
+  // example sentences) a "cloze" part that puts those words back into real
+  // sentences. Pure — derived from data.
   function parts(lesson) {
     const out = [];
     const size = CONFIG.PART_SIZE;
@@ -84,12 +86,55 @@ const C101 = (function () {
       label: '📖 Reading', title: `${lesson.title} · Reading`,
       zh: lesson.zh, words: lesson.words.slice()
     });
+    // Sentence practice for the section: only the blanks whose word this section
+    // actually teaches (a sentence may reuse earlier vocabulary as context).
+    const sents = (lesson.sentences || []).filter(s => s && s.blank && s.zh);
+    if (sents.length) {
+      const own = new Set(lesson.words.map(w => w.hanzi));
+      out.push({
+        id: `${lesson.id}-cloze`, lessonId: lesson.id, kind: 'cloze',
+        label: '✍️ Sentences', title: `${lesson.title} · Sentences`,
+        zh: lesson.zh, sentences: sents.slice(),
+        words: lesson.words.filter(w => own.has(w.hanzi) &&
+                                        sents.some(s => s.blank === w.hanzi))
+      });
+    }
+    return out;
+  }
+
+  // Pull fill-in-the-blank items straight out of a section's book passage: a
+  // sentence from the real text with one of this section's words removed. No
+  // English clue — the surrounding Chinese is the context. Pure, derived from
+  // the passage, so it needs no extra curated data.
+  function passageClozes(lesson, max) {
+    const zh = (lesson && lesson.reading && lesson.reading.zh) || '';
+    if (!zh) return [];
+    const out = [];
+    const seen = new Set();
+    // The book text mixes fullwidth and ASCII sentence punctuation — split on
+    // both (or two sentences run together), keeping each terminator so a
+    // question still reads as a question.
+    const pieces = zh.split(/([。！？；!?;\n]+)/);
+    for (let i = 0; i < pieces.length; i += 2) {
+      const f = (pieces[i] || '').trim();
+      const end = (pieces[i + 1] || '。').replace(/\n/g, '') || '。';
+      if (f.length < 8 || f.length > 34) continue;   // long enough to cue, short enough to read
+      for (const w of lesson.words) {
+        if (seen.has(w.hanzi)) continue;
+        if (f.split(w.hanzi).length !== 2) continue; // must appear exactly once
+        seen.add(w.hanzi);
+        out.push({ zh: f + end, blank: w.hanzi, en: '' });
+        break;
+      }
+      if (out.length >= (max || 3)) break;
+    }
     return out;
   }
 
   return {
     register,
     registerReference,
+    passageClozes,
     // reference docs scoped to the current book (parallels chapters())
     references: () => referenceDocs.filter(d => (d.bookId || 'c101') === currentBookId),
     // Books (modules)

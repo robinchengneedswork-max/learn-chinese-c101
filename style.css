@@ -259,6 +259,50 @@ body {
   border: none; border-radius: 12px; cursor: pointer;
 }
 .type-input:disabled, .type-submit:disabled { opacity: .5; }
+.type-solo { margin-top: 30px; }
+.type-input.correct { border-color: var(--brand); background: rgba(34,197,94,.12); }
+.type-input.wrong { border-color: var(--wrong); background: rgba(239,68,68,.12); }
+
+/* ---- Sentence building (word bank) ---- */
+.build-en { font-size: 18px; color: var(--muted); text-align: center; margin-bottom: 8px; }
+.build-tray {
+  width: 100%; min-height: 96px; margin-top: 22px; padding: 10px;
+  display: flex; flex-wrap: wrap; align-content: flex-start; gap: 8px;
+  border-radius: 12px; background: var(--bg-2);
+  border: 1px solid var(--line);
+  /* ruled lines to read as a writing area, not another button row */
+  background-image: linear-gradient(var(--line) 1px, transparent 1px);
+  background-size: 100% 48px;
+}
+.build-tray.ok { border-color: var(--brand); }
+.build-tray.bad { border-color: var(--wrong); }
+.build-bank {
+  width: 100%; margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px;
+  justify-content: center;
+}
+.tile {
+  padding: 10px 14px; font-size: 22px; font-weight: 700;
+  background: var(--card); color: var(--text);
+  border: 1px solid var(--line); border-radius: 10px; cursor: pointer;
+}
+.tile:active:not(:disabled) { transform: translateY(1px); }
+.tile-used { opacity: 0; pointer-events: none; }
+.tile-placed { background: var(--bg-2); }
+
+/* ---- Tap the pairs ---- */
+.pairs-board {
+  width: 100%; margin-top: 28px;
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+}
+.pair-cell {
+  min-height: 68px; padding: 12px 10px; font-size: 16px; line-height: 1.3;
+  background: var(--card); color: var(--text);
+  border: 1px solid var(--line); border-radius: 12px; cursor: pointer;
+}
+.pair-cell.pair-zh { font-size: 24px; font-weight: 700; }
+.pair-cell.sel { border-color: var(--accent); background: rgba(56,189,248,.12); }
+.pair-cell.miss { border-color: var(--wrong); background: rgba(239,68,68,.14); }
+.pair-cell.matched { opacity: .25; pointer-events: none; }
 
 /* footer / feedback */
 .session-foot { padding: 16px 18px calc(18px + var(--safe-b)); border-top: 1px solid transparent; max-width: 640px; margin: 0 auto; width: 100%; }

@@ -43,7 +43,19 @@ Trust it for status, but verify any file/flag it names still exists before actin
 
 ## Next up
 
-Simplified-Chinese display is **done**: a top-left picker (`src/lang.js`, data-driven from
-`Lang.langs()`) converts Chinese at render time via the generated `src/lang-map.js`; canonical
-content and progress stay Traditional. Future languages/scripts slot into that same list. Not
-yet device-tested. See the memory for the full status.
+**Chapter 1 is the template for the rest of C101.** It was rebuilt to a *reading-coverage*
+bar (teach ~every content word in the passage the app shows) — 60 words/5 lessons → **228
+words/16 lessons**, dense sections split along paragraph seams. Curate with
+`py tools/extract_passage_vocab.py` (needs `PYTHONIOENCODING=utf-8`), then follow README
+"Adding a chapter". Chapter 2 is the next content job.
+
+Exercises now cover production, not just recognition: tap-the-pairs, typed recall,
+passage cloze (from the book's own text), build-the-sentence from word tiles, and
+listen-and-build. **Tone drills and radical/character-part drills are deliberately
+deferred** to a separate future module — the user knows tones, and radicals are a
+"fun side flashcard thing," not core. A 95-row radicals table already exists in
+`content/gnr-reference.js` if that module gets built.
+
+Simplified-Chinese display is done (`src/lang.js` + generated `src/lang-map.js`, render-time
+only; canonical content and progress stay Traditional). **Still never device-tested** — a real
+phone playtest is the highest-value untested thing. See the memory for full status.

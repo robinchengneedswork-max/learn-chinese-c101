@@ -5,7 +5,8 @@ Foundations_**. The book is a bilingual (English + Traditional Chinese)
 discipleship course; this app teaches the Chinese words it uses, section by
 section, with spaced repetition.
 
-Chapter 1 is built. More chapters drop in as you learn them — see
+Chapter 1 is built — 228 words across 16 lessons, covering the vocabulary of the
+chapter's own text. More chapters drop in as you learn them — see
 [Adding a chapter](#adding-a-chapter).
 
 ## Run it
@@ -52,15 +53,28 @@ Word progress is keyed by `hanzi` and **shared across books**, so a word learned
 in one counts in another. A second book, **Good News Reader** (`content/gnr-chapter-01.js`,
 lessons 1–3), ships as an optional module.
 
-**Sections → parts.** Each book section (~12 words) is split at runtime into
-bite-size **parts** so a sitting is finishable: two ~6-word **learn** parts, then
-one **📖 Reading** part that re-drills the whole section with the pinyin hidden —
-the on-ramp to reading unaided. (Tuning: `CONFIG.PART_SIZE`.)
+**Sections → parts.** Each book section is split at runtime into bite-size
+**parts** so a sitting is finishable: ~6-word **learn** parts, then a
+**📖 Reading** part that re-drills the whole section with the pinyin hidden — the
+on-ramp to reading unaided — then a **✍️ Sentences** part that puts the section's
+words back into real sentences. (Tuning: `CONFIG.PART_SIZE`.)
 
-**Exercise types:** new-word flashcard (with audio) → multiple choice
-Chinese→English, English→Chinese, and listen→Chinese. In a Reading part, pinyin is
-suppressed everywhere. Missed words are re-queued and demoted a box; correct
-answers promote a word toward "mastered."
+**Exercise types.** Recognition *and* production — multiple choice alone doesn't
+build recall:
+
+| Exercise | Where | What it asks |
+| --- | --- | --- |
+| New-word flashcard | learn | read + hear a new word |
+| **Tap the pairs** | learn | clear a board of 5 hanzi against their English (warm-up; deliberately does **not** feed SRS — matching with elimination is too weak a signal) |
+| Multiple choice | learn, reading | zh→en, en→zh, and listen→zh |
+| **Type it** | learn | produce a seen word from its gloss, no options, tone-tolerant pinyin |
+| **Passage cloze** | reading | a sentence from the **book's own text** with a word removed, no translation |
+| Cloze | sentences, test | curated sentence + English clue; choose or type the missing word |
+| **Build the sentence** | sentences | assemble the Chinese from word tiles (+2 decoys) — the only drill that teaches word **order** |
+| **Listen & build** | sentences | same, cued by audio instead of English |
+
+In a Reading part pinyin is suppressed everywhere. Missed items are re-queued and
+demoted a box; correct answers promote a word toward "mastered."
 
 **Traditional / Simplified.** The book — and therefore all content and saved
 progress — is **Traditional** Chinese. The picker in the top-left switches the
@@ -93,13 +107,23 @@ window.C101.register({
       // Powers the per-section "📖 Read the C101 text" button on the home path
       // (Chinese to read unaided, with a play button + an English reveal).
       // Paragraphs are blank-line separated. See "Adding a chapter".
-      reading: { zh: "人生多問。…\n\n道金斯和羅素…", en: "Man asks questions. …" }
+      reading: { zh: "人生多問。…\n\n道金斯和羅素…", en: "Man asks questions. …" },
+
+      // Optional: this section's own sentence practice (the ✍️ Sentences node).
+      // `blank` must be a word THIS section teaches and appear exactly once in
+      // `zh`. `tokens` is the word-segmentation used by "build the sentence"
+      // (generated — joining them must reproduce `zh` minus punctuation).
+      sentences: [
+        { zh: "人是一個複雜的生物。", en: "Man is a complex living creature.",
+          blank: "複雜", tokens: ["人","是","一個","複雜","的","生物"] }
+      ]
     }
   ],
   // Chapter Test cloze items. `blank` is a chapter word that appears verbatim in
   // `zh`; it's removed and the learner supplies it. Curated from the book text.
   sentences: [
-    { zh: "神創造了宇宙。", en: "God created the universe.", blank: "創造" },
+    { zh: "神創造了宇宙。", en: "God created the universe.", blank: "創造",
+      tokens: ["神","創造","了","宇宙"] },
     ...
   ]
 });
@@ -142,13 +166,32 @@ English (ground truth) text** — the book tells you exactly which sense is mean
 CC-CEDICT sometimes picks the wrong reading (e.g. 說 as _shuì_ "to persuade"
 instead of _shuō_ "to say"); the English column is how you catch it.
 
-**3. Curate** the chapter's word list into `tools/build_content.py` (`CHAPTER`),
-grouping words into lessons that mirror the book's sections (~8–12 words each).
+**3. Curate** the chapter's word list into `tools/build_content.py` (`CHAPTER`).
+
+> **The bar is reading coverage:** a section should teach ~every content word in
+> the passage the app shows for it, so the 📖 Reading text is actually readable.
+> Split a dense section into several lessons along its paragraph seams (give each
+> a distinct title — the parts system already appends "· N"), and give each one
+> the `READINGS` paragraphs whose words it teaches. Chapter 1 is the worked
+> example: 5 book sections → 16 lessons.
+
+To see what a passage actually demands, run the extractor — it segments each
+lesson's `READINGS` prose and flags every word `TAUGHT` / `FUNC` / `NAME` /
+`1CHAR`, so curation is pruning a list rather than brainstorming one:
+
+```bash
+PYTHONIOENCODING=utf-8 py tools/extract_passage_vocab.py [lesson-id]
+```
+
+(The `PYTHONIOENCODING` is required — the Windows console is cp1252 and will
+`UnicodeEncodeError` on hanzi otherwise.)
+
 Give each word a clean English gloss. Add a pinyin override only when CC-CEDICT's
-first entry is the wrong reading. Also add a handful of **`sentences`** (cloze items
-for the Chapter Test) — short sentences from the book's Chinese text, each blanking
-one chapter word. The build validates that every `blank` is a chapter word and
-appears verbatim in its sentence.
+first entry is the wrong reading. Then add sentences in two places:
+`LESSON_SENTENCES[lesson-id]` (the per-section ✍️ Sentences node) and the
+chapter-level **`sentences`** (the Chapter Test). The build validates every
+`blank`: it must be a word of that lesson/chapter, appear **exactly once** in its
+sentence, and be a whole token of the segmentation.
 
 **4. Build** the content file (pinyin is pulled from CC-CEDICT automatically).
 The build also attaches each section's book passage as the lesson's `reading`
