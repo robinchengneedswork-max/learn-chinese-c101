@@ -372,3 +372,25 @@ body.modal-open { overflow: hidden; }
 .vocab-py { font-size: 13px; color: var(--accent); }
 .vocab-en { flex: 1; font-size: 15px; }
 .vocab-row .speaker { font-size: 16px; padding: 6px 11px; }
+
+/* ---- Reference (附錄) area + its modals ---- */
+.band.reference { background: #101a33; }
+.ref-actions { margin-top: 4px; }
+
+.ref-intro { color: var(--muted); font-size: 14px; line-height: 1.6; margin: 16px 0 4px; }
+.ref-group {
+  margin: 22px 0 10px; font-size: 13px; font-weight: 800; letter-spacing: .4px;
+  color: var(--accent); text-transform: uppercase;
+  padding-bottom: 6px; border-bottom: 1px solid var(--line);
+}
+.ref-table { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px 14px; }
+.ref-cell { display: flex; align-items: baseline; gap: 10px; padding: 5px 0; }
+.ref-hz { font-size: 26px; font-weight: 700; line-height: 1; min-width: 34px; text-align: center; }
+.ref-name { font-size: 13px; color: var(--text); line-height: 1.35; }
+
+.ref-search {
+  width: 100%; margin: 16px 0 4px; padding: 11px 14px; box-sizing: border-box;
+  border: 1px solid var(--line); border-radius: 10px;
+  background: rgba(6,10,26,.55); color: var(--text); font-size: 15px;
+}
+.ref-search::placeholder { color: var(--muted); }

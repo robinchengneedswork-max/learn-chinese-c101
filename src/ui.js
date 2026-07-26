@@ -245,6 +245,10 @@ const UI = (function () {
         scene.appendChild(band);
       }
     }
+    // The book's back-matter (radicals, glossary, appendices, …) as a Reference
+    // area at the foot of the path — study aids, not gated exercises.
+    const refs = C101.references();
+    if (refs.length) scene.appendChild(referenceBand(refs));
     // The current node's bubble is the "current lesson" jump anchor.
     const cur = trailNodeEls.find(({ node }) => node.current);
     jumpTargets.current = cur ? cur.btn : null;
@@ -504,6 +508,129 @@ const UI = (function () {
       list.appendChild(rowEl);
     }
     body.appendChild(list);
+  }
+
+  // ---- Reference (附錄) ------------------------------------------------------
+  // The book's back-matter as a band at the foot of the path: one button per
+  // reference doc, each opening the shared modal. Not SRS, not gated.
+
+  function referenceBand(refs) {
+    const band = el('div', 'band reference');
+    const banner = el('div', 'trail-banner');
+    banner.appendChild(el('span', 'trail-banner-name', 'Reference'));
+    banner.appendChild(el('span', 'trail-banner-zh', Lang.zh('附錄')));
+    band.appendChild(banner);
+    const row = el('div', 'section-actions ref-actions');
+    for (const doc of refs) {
+      const btn = el('button', 'sec-btn', (doc.icon ? doc.icon + ' ' : '') + doc.title);
+      btn.addEventListener('click', () => openModal((b) => buildReference(b, doc)));
+      row.appendChild(btn);
+    }
+    band.appendChild(row);
+    return band;
+  }
+
+  function refHead(body, doc) {
+    body.appendChild(el('div', 'modal-kicker', (doc.icon ? doc.icon + ' ' : '') + 'Reference'));
+    body.appendChild(el('div', 'modal-title', doc.title));
+    body.appendChild(el('div', 'modal-sub', Lang.zh(doc.zh)));
+  }
+
+  function buildReference(body, doc) {
+    if (doc.kind === 'table') return buildRefTable(body, doc);
+    if (doc.kind === 'glossary') return buildRefGlossary(body, doc);
+    if (doc.kind === 'passage') return buildRefPassage(body, doc);
+  }
+
+  // A grouped table of parts/characters (the radicals doc): each row is a big
+  // glyph and its book name/meaning, under a group heading.
+  function buildRefTable(body, doc) {
+    refHead(body, doc);
+    if (doc.intro) body.appendChild(el('p', 'ref-intro', doc.intro));
+    for (const g of (doc.groups || [])) {
+      if (g.title) body.appendChild(el('div', 'ref-group', g.title));
+      const grid = el('div', 'ref-table');
+      for (const r of (g.rows || [])) {
+        const cell = el('div', 'ref-cell');
+        cell.appendChild(el('div', 'ref-hz', Lang.zh(r.hz)));
+        cell.appendChild(el('div', 'ref-name', r.name));
+        grid.appendChild(cell);
+      }
+      body.appendChild(grid);
+    }
+  }
+
+  // A long word list (Bible books, the cumulative glossary): hanzi · pinyin ·
+  // gloss with a per-word play button, plus a live filter box for long lists.
+  function buildRefGlossary(body, doc) {
+    refHead(body, doc);
+    const words = doc.words || [];
+    if (doc.note) body.appendChild(el('p', 'ref-intro', doc.note));
+
+    const list = el('div', 'vocab-list');
+    const render = (q) => {
+      list.innerHTML = '';
+      const needle = (q || '').trim().toLowerCase();
+      let shown = 0;
+      for (const w of words) {
+        if (needle &&
+            !(w.hanzi.includes(needle) || (w.pinyin || '').toLowerCase().includes(needle) ||
+              (w.en || '').toLowerCase().includes(needle))) continue;
+        const rowEl = el('div', 'vocab-row');
+        const main = el('div', 'vocab-main');
+        main.appendChild(el('div', 'vocab-hz', Lang.zh(w.hanzi)));
+        main.appendChild(el('div', 'vocab-py', w.pinyin));
+        rowEl.appendChild(main);
+        rowEl.appendChild(el('div', 'vocab-en', w.en));
+        rowEl.appendChild(speakerBtn(w.hanzi));
+        list.appendChild(rowEl);
+        shown++;
+      }
+      if (!shown) list.appendChild(el('p', 'ref-intro', 'No matches.'));
+    };
+
+    if (words.length > 24) {
+      const search = el('input', 'ref-search');
+      search.type = 'search';
+      search.placeholder = 'Filter ' + words.length + ' words — hanzi, pinyin or English';
+      search.addEventListener('input', () => render(search.value));
+      body.appendChild(search);
+    }
+    body.appendChild(list);
+    render('');
+  }
+
+  // A prose passage (closing prayer, appendix essays): each section is Chinese to
+  // read, with a Play (TTS) button and an English reveal — like the reading modal.
+  function buildRefPassage(body, doc) {
+    refHead(body, doc);
+    const sections = doc.sections || [];
+    const allZh = sections.map(s => s.zh).join('\n');
+
+    const controls = el('div', 'reading-controls');
+    const play = el('button', 'pill-btn', '🔊 Play');
+    play.addEventListener('click', () => Audio101.speak(allZh));
+    controls.appendChild(play);
+    const toggle = el('button', 'pill-btn', 'Show English');
+    controls.appendChild(toggle);
+    body.appendChild(controls);
+
+    const ens = [];
+    for (const sec of sections) {
+      const zhWrap = el('div', 'reading-zh');
+      paragraphs(sec.zh).forEach((p) => zhWrap.appendChild(el('p', 'reading-p', Lang.zh(p))));
+      body.appendChild(zhWrap);
+      const en = el('div', 'reading-en');
+      paragraphs(sec.en).forEach((p) => en.appendChild(el('p', 'reading-p', p)));
+      en.hidden = true;
+      body.appendChild(en);
+      ens.push(en);
+    }
+    toggle.addEventListener('click', () => {
+      const show = ens[0] ? ens[0].hidden : false;
+      ens.forEach((en) => { en.hidden = !show; });
+      toggle.textContent = show ? 'Hide English' : 'Show English';
+    });
   }
 
   // ---- Jump menu ------------------------------------------------------------

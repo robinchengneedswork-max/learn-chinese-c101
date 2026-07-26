@@ -14,7 +14,8 @@ const C101 = (function () {
   const byHanzi = new Map();          // hanzi -> { ...word, chapterId, lessonId }
   const books = [];                   // book objects, in first-seen order
   const bookIndex = new Map();        // bookId -> book object
-  let currentBookId = null;           // the book the home path is showing
+  const referenceDocs = [];           // reference docs (radicals, glossary, …), per book
+  let currentBookId = null;           // the home path is showing
 
   function ensureBook(chapter) {
     const id = chapter.bookId || 'c101';
@@ -51,6 +52,14 @@ const C101 = (function () {
     }
   }
 
+  // Reference material (the book's back-matter: a radicals table, a glossary, the
+  // appendices, the closing prayer). Deliberately NOT registered as SRS words —
+  // it never enters byHanzi, so it can't pollute the multiple-choice distractor
+  // pool that the graded lessons draw from. It's browsed via the home "Reference"
+  // area. A doc = { bookId, id, icon, title, zh, kind, ...payload } where kind is
+  // 'table' | 'glossary' | 'passage' (see ui.js for the payload each expects).
+  function registerReference(doc) { referenceDocs.push(doc); }
+
   function currentBook() { return bookIndex.get(currentBookId) || books[0] || null; }
 
   // Split a section (book lesson) into bite-size parts for finishable sessions:
@@ -80,6 +89,9 @@ const C101 = (function () {
 
   return {
     register,
+    registerReference,
+    // reference docs scoped to the current book (parallels chapters())
+    references: () => referenceDocs.filter(d => (d.bookId || 'c101') === currentBookId),
     // Books (modules)
     books: () => books,
     currentBook,
