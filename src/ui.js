@@ -563,10 +563,25 @@ const UI = (function () {
   // A long word list (Bible books, the cumulative glossary): hanzi · pinyin ·
   // gloss with a per-word play button, plus a live filter box for long lists.
   // Accepts either a flat `words` list or `groups:[{title, words}]`.
+  // Gather every distinct word taught across the current book's lessons, sorted
+  // like a dictionary (by pinyin). Powers the auto-generated cumulative glossary.
+  function bookGlossaryWords() {
+    const seen = new Set(); const words = [];
+    const book = C101.currentBook();
+    for (const ch of (book ? book.chapters : []))
+      for (const l of ch.lessons)
+        for (const w of l.words)
+          if (!seen.has(w.hanzi)) { seen.add(w.hanzi); words.push(w); }
+    words.sort((a, b) => (a.pinyin || '').toLowerCase().localeCompare((b.pinyin || '').toLowerCase()));
+    return words;
+  }
+
   function buildRefGlossary(body, doc) {
     refHead(body, doc);
     // Normalize to groups; count total for the filter threshold.
-    const groups = doc.groups || [{ title: null, words: doc.words || [] }];
+    const groups = doc.source === 'book-words'
+      ? [{ title: null, words: bookGlossaryWords() }]
+      : doc.groups || [{ title: null, words: doc.words || [] }];
     const total = groups.reduce((n, g) => n + g.words.length, 0);
     if (doc.note) body.appendChild(el('p', 'ref-intro', doc.note));
 

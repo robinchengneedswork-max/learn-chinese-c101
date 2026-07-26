@@ -233,6 +233,22 @@ window.C101.registerReference({
   ]
 });
 
+// ---- Glossary — every word taught in the course ---------------------------
+// Generated at render time from the book's own lesson data (source:'book-words'),
+// so it's always complete, deduped and in sync — a searchable dictionary of every
+// word the 25 lessons teach, sorted by pinyin. (The scanned book ships a 31-page
+// Chinese–English glossary; this in-app version is built from the curated data.)
+window.C101.registerReference({
+  bookId: 'gnr',
+  id: 'gnr-glossary',
+  icon: '📚',
+  title: 'Glossary',
+  zh: '詞彙表',
+  kind: 'glossary',
+  source: 'book-words',
+  note: 'Every word taught across the 25 lessons, sorted by pinyin. Type in the box to look one up.'
+});
+
 // ---- Closing passage — 信主 (Believing in the Lord) ------------------------
 // The book's altar-call passage after Lesson 25 (pp.162–163), Chinese only in the
 // source; converted to Traditional, with an English translation supplied here.
