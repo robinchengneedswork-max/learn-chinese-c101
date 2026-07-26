@@ -562,37 +562,46 @@ const UI = (function () {
 
   // A long word list (Bible books, the cumulative glossary): hanzi · pinyin ·
   // gloss with a per-word play button, plus a live filter box for long lists.
+  // Accepts either a flat `words` list or `groups:[{title, words}]`.
   function buildRefGlossary(body, doc) {
     refHead(body, doc);
-    const words = doc.words || [];
+    // Normalize to groups; count total for the filter threshold.
+    const groups = doc.groups || [{ title: null, words: doc.words || [] }];
+    const total = groups.reduce((n, g) => n + g.words.length, 0);
     if (doc.note) body.appendChild(el('p', 'ref-intro', doc.note));
+
+    const wordRow = (w) => {
+      const rowEl = el('div', 'vocab-row');
+      const main = el('div', 'vocab-main');
+      main.appendChild(el('div', 'vocab-hz', Lang.zh(w.hanzi)));
+      main.appendChild(el('div', 'vocab-py', w.pinyin));
+      rowEl.appendChild(main);
+      rowEl.appendChild(el('div', 'vocab-en', w.en));
+      rowEl.appendChild(speakerBtn(w.hanzi));
+      return rowEl;
+    };
+    const match = (w, needle) => !needle ||
+      w.hanzi.includes(needle) || (w.pinyin || '').toLowerCase().includes(needle) ||
+      (w.en || '').toLowerCase().includes(needle);
 
     const list = el('div', 'vocab-list');
     const render = (q) => {
       list.innerHTML = '';
       const needle = (q || '').trim().toLowerCase();
       let shown = 0;
-      for (const w of words) {
-        if (needle &&
-            !(w.hanzi.includes(needle) || (w.pinyin || '').toLowerCase().includes(needle) ||
-              (w.en || '').toLowerCase().includes(needle))) continue;
-        const rowEl = el('div', 'vocab-row');
-        const main = el('div', 'vocab-main');
-        main.appendChild(el('div', 'vocab-hz', Lang.zh(w.hanzi)));
-        main.appendChild(el('div', 'vocab-py', w.pinyin));
-        rowEl.appendChild(main);
-        rowEl.appendChild(el('div', 'vocab-en', w.en));
-        rowEl.appendChild(speakerBtn(w.hanzi));
-        list.appendChild(rowEl);
-        shown++;
+      for (const g of groups) {
+        const hits = g.words.filter((w) => match(w, needle));
+        if (!hits.length) continue;
+        if (g.title) list.appendChild(el('div', 'ref-group', g.title));
+        for (const w of hits) { list.appendChild(wordRow(w)); shown++; }
       }
       if (!shown) list.appendChild(el('p', 'ref-intro', 'No matches.'));
     };
 
-    if (words.length > 24) {
+    if (total > 24) {
       const search = el('input', 'ref-search');
       search.type = 'search';
-      search.placeholder = 'Filter ' + words.length + ' words — hanzi, pinyin or English';
+      search.placeholder = 'Filter ' + total + ' words — hanzi, pinyin or English';
       search.addEventListener('input', () => render(search.value));
       body.appendChild(search);
     }
