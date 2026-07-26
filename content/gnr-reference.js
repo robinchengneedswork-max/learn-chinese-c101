@@ -270,3 +270,31 @@ window.C101.registerReference({
     }
   ]
 });
+
+// ---- Appendix 4 — The Christian and Materialist worldviews ----------------
+// A pair of diagrams in the book (pp.174–175); we transcribe their Chinese labels
+// and notes as a readable passage (the spatial Venn layout can't survive as text).
+// Appendices 1 (a booklist) and 3 (thoughts on justice) are English-only in the
+// source, so they're intentionally left out — no Chinese to read or drill.
+window.C101.registerReference({
+  bookId: 'gnr',
+  id: 'gnr-worldviews',
+  icon: '🌐',
+  title: 'Two worldviews',
+  zh: '兩種世界觀',
+  kind: 'passage',
+  sections: [
+    {
+      zh: '唯物主義的世界觀：只有一個「物質世界」，它是客觀存在的；物質以外沒有任何實際存在的東西。人在物質世界之中。所謂的「精神世界」，只是大腦中各種化學反映的產物，是主觀的世界、想像的世界，並不實際存在。',
+      en: 'The materialist worldview: there is only one “material world,” which exists objectively; outside of matter nothing actually exists. Man is inside the material world. The so-called “mental world” is merely the product of various chemical reactions in the brain — a subjective, imagined world that does not really exist.'
+    },
+    {
+      zh: '基督教的世界觀：有一個更大的「靈的世界」，就是物質以外的客觀世界——客觀存在的、看不見的、超自然的、不能用科學解釋或描寫。其中包含著一個「物質世界」，它是客觀存在的、肉眼可看見的、自然的。人同時屬於這兩者，而人的「精神世界」是主觀的。',
+      en: 'The Christian worldview: there is a larger “spiritual world” — the objective world beyond matter: objectively real, invisible, supernatural, and impossible to explain or describe by science. Within it lies a “material world,” which is objectively real, visible to the naked eye, and natural. Man belongs to both at once, while man’s “mental world” is subjective.'
+    },
+    {
+      zh: '註一：人是大自然中唯一具有靈魂的被造之物。靈魂和精神不是一回事。人既屬物質界（身體），又屬靈界（靈魂）。註二：物質世界及靈的世界都是有限的，都由無限的上帝所創造。',
+      en: 'Note 1: Man is the only created being in nature that has a soul. The soul and the mind are not the same thing. Man belongs both to the material realm (the body) and to the spiritual realm (the soul). Note 2: Both the material world and the spiritual world are finite, and both were created by the infinite God.'
+    }
+  ]
+});
