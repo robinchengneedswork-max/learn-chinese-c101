@@ -7,9 +7,17 @@ const path = require('path');
 const vm = require('vm');
 
 const ROOT = path.join(__dirname, '..');
+// Every content file, in index.html's order — the Basics radical drill draws its
+// example characters from the WHOLE graded corpus (Course 101 + Good News
+// Reader), so a test loading only Chapter 1 would report real examples as stray.
 const files = [
   'src/config.js', 'src/content.js', 'content/chapter-01.js',
-  'src/state.js', 'src/srs.js', 'src/session.js'
+  'content/gnr-chapter-01.js', 'content/gnr-chapter-02.js', 'content/gnr-chapter-03.js',
+  'content/gnr-chapter-04.js', 'content/gnr-chapter-05.js', 'content/gnr-chapter-06.js',
+  'content/gnr-chapter-07.js',
+  'content/basics-01-sounds.js', 'content/basics-02-tones.js',
+  'content/basics-03-radicals.js', 'content/basics-04-core.js',
+  'src/pinyin.js', 'src/state.js', 'src/srs.js', 'src/session.js'
 ];
 const src = files.map(f => fs.readFileSync(path.join(ROOT, f), 'utf8')).join('\n;\n');
 
@@ -27,8 +35,8 @@ const sandbox = {
 sandbox.globalThis = sandbox;
 vm.createContext(sandbox);
 // expose the module globals we need back onto the sandbox for the test tail
-vm.runInContext(src + '\n;globalThis.__api = { CONFIG, C101, State, SRS, Session };', sandbox);
-const { CONFIG, C101, State, SRS, Session } = sandbox.__api;
+vm.runInContext(src + '\n;globalThis.__api = { CONFIG, C101, State, SRS, Session, Pinyin };', sandbox);
+const { CONFIG, C101, State, SRS, Session, Pinyin } = sandbox.__api;
 
 let pass = 0, fail = 0;
 function ok(name, cond) {
@@ -39,9 +47,11 @@ function ok(name, cond) {
 State.load();
 
 // --- content loaded correctly
-ok('one chapter registered', C101.chapters().length === 1);
-ok('16 lessons', C101.lessons().length === 16);
-ok('228 words', C101.allWords().length === 228);
+ok('one chapter in the current book', C101.chapters().length === 1);
+ok('16 lessons', C101.chapter('ch01').lessons.length === 16);
+ok('228 words in chapter 1',
+   new Set(C101.chapter('ch01').lessons.flatMap(l => l.words.map(w => w.hanzi))).size === 228);
+ok('805 words in the graded corpus', C101.allWords().length === 805);
 ok('every word has pinyin+en', C101.allWords().every(w => w.pinyin && w.en && w.pinyin !== '?'));
 ok('word lookup works', C101.word('生命').en.startsWith('life'));
 
@@ -235,6 +245,186 @@ State.get().words['宇宙'].due = Date.now() - 1000;
 ok('due word detected', SRS.dueWords().some(w => w.hanzi === '宇宙'));
 const rev = Session.forReview();
 ok('review session built from due words', rev.total >= 1);
+
+// ============================================================================
+// Basics book — sounds, tones, radicals, everyday words
+// ============================================================================
+store.clear(); State.reset(); State.load();
+
+const basics = C101.books().find(b => b.id === 'basics');
+ok('basics book registered', !!basics);
+ok('basics is an open path (no gating)', basics.open === true);
+ok('basics has four chapters', basics.chapters.length === 4);
+
+// --- isolation: aux words are real study items but out of the graded corpus
+{
+  const corpus = new Set(C101.allWords().map(w => w.hanzi));
+  ok('aux words stay out of the graded corpus', !corpus.has('氵') && !corpus.has('亻'));
+  ok('graded corpus is unchanged by the Basics book', C101.allWords().length === 805);
+  ok('aux words are still looked up by hanzi', !!C101.word('氵') && C101.word('氵').en.includes('water'));
+  // A word the real book already teaches is NOT shadowed by the Basics copy.
+  ok('a shared word keeps its Course 101 record', C101.word('生命').chapterId === 'ch01');
+
+  // The point of the isolation: no Course 101 question may offer a radical or a
+  // bare tone syllable as a distractor.
+  const aux = new Set(C101.auxWords().map(w => w.hanzi));
+  let leaked = null;
+  for (const les of C101.chapter('ch01').lessons) {
+    for (const part of C101.parts(les).filter(p => p.kind === 'learn')) {
+      for (const item of Session.forPart(part).queue) {
+        for (const o of (item.options || [])) if (aux.has(o)) leaked = o;
+      }
+    }
+  }
+  ok('no aux item leaks into a Course 101 lesson', leaked === null);
+}
+
+// --- tone drill
+{
+  store.clear(); State.reset(); State.load();
+  ok('tone lessons carry a drill flag', C101.lesson('bas-tones-l1').drill === 'tone');
+  const tp = C101.parts(C101.lesson('bas-tones-l1'));
+  ok('a drill lesson gets no Reading part', tp.every(p => p.kind !== 'reading'));
+  ok('parts carry the drill through', tp.every(p => p.drill === 'tone'));
+
+  const ts2 = Session.forPart(tp[0]);
+  const tones = ts2.queue.filter(i => i.kind === 'tone');
+  ok('tone part builds tone items', tones.length > 0);
+  ok('tone answer is the pattern read off the pinyin',
+     tones.every(i => i.correct === Pinyin.pattern(i.word.pinyin)));
+  ok('tone options include the answer', tones.every(i => i.options.indexOf(i.correct) >= 0));
+  ok('tone options are distinct', tones.every(i => new Set(i.options).size === i.options.length));
+  ok('a one-syllable tone item offers all five tones',
+     tones.filter(i => i.bases.length === 1).every(i => i.options.length === 5));
+  // The options must render as different spellings, or the question is unanswerable.
+  ok('tone options spell out differently',
+     tones.every(i => new Set(i.options.map(o => Pinyin.spell(i.bases, o))).size === i.options.length));
+  // 媽/麻/馬/罵 differ only by tone — exactly what the drill is for.
+  ok('the four-tone lesson really is one syllable in four tones',
+     new Set(C101.lesson('bas-tones-l1').words.map(w => Pinyin.strip(w.pinyin))).size === 1);
+
+  const tps = Session.forPart(tp[0]);
+  let tg = 0;
+  while (!tps.done && tg++ < 500) {
+    const it = tps.current();
+    tps.answer(it.kind === 'intro' ? null : it.correct);
+  }
+  ok('tone session completes all-correct', tps.done && tps.missed === 0);
+
+  // Two-syllable words drill the PATTERN.
+  const pairPart = C101.parts(C101.lesson('bas-tones-l4'))[0];
+  const pairItems = Session.forPart(pairPart).queue.filter(i => i.kind === 'tone');
+  ok('tone pairs produce two-part patterns', pairItems.every(i => i.correct.indexOf('-') > 0));
+  ok('生命 is drilled as 1-4', Pinyin.pattern('shēng mìng') === '1-4');
+}
+
+// --- sound drill: options are the lesson's own minimal pairs
+{
+  store.clear(); State.reset(); State.load();
+  const sp = C101.parts(C101.lesson('bas-sounds-l1'))[0];
+  const ss = Session.forPart(sp);
+  const hears = ss.queue.filter(i => i.kind === 'hear2py');
+  ok('sound part builds listening items', hears.length > 0);
+  ok('sound answer is the word\'s own pinyin', hears.every(i => i.correct === i.word.pinyin));
+  ok('sound options include the answer', hears.every(i => i.options.indexOf(i.correct) >= 0));
+  const lessonWords = C101.lesson('bas-sounds-l1').words;
+  const lessonPy = new Set(lessonWords.map(w => w.pinyin));
+  const lessonHz = new Set(lessonWords.map(w => w.hanzi));
+  ok('sound distractors come from the same contrast set',
+     hears.every(i => i.options.every(o => lessonPy.has(o))));
+  // The listen→hanzi item is scoped the same way, or it stops being a listening
+  // test: options drawn chapter-wide wouldn't sound alike at all.
+  ok('listening options are confusable too',
+     ss.queue.filter(i => i.kind === 'listen').every(i => i.options.every(o => lessonHz.has(o))));
+  ok('sound options are distinct', hears.every(i => new Set(i.options).size === i.options.length));
+  let sg = 0;
+  while (!ss.done && sg++ < 500) {
+    const it = ss.current();
+    ss.answer(it.kind === 'intro' ? null : it.correct);
+  }
+  ok('sound session completes all-correct', ss.done && ss.missed === 0);
+}
+
+// --- radical drill + the curation rules the contains-item depends on
+{
+  store.clear(); State.reset(); State.load();
+  const radLessons = C101.chapter('bas-radicals').lessons;
+  const rads = radLessons.flatMap(l => l.words);
+  ok('all 95 radicals are taught', rads.length === 95);
+  ok('every radical has a pinyin and a gloss', rads.every(w => w.pinyin && w.en));
+  // Distinct glosses: two options meaning the same thing is an unanswerable item.
+  ok('radical glosses are distinct', new Set(rads.map(w => w.en)).size === rads.length);
+  ok('side-forms carry a spoken parent', rads.filter(w => w.hanzi === '氵' || w.hanzi === '亻')
+     .every(w => !!w.say));
+
+  // Rule 1: examples are single characters drawn from the graded corpus.
+  const corpusChars = new Set();
+  for (const w of C101.allWords()) for (const c of w.hanzi) corpusChars.add(c);
+  const exs = rads.flatMap(w => (w.examples || []).map(e => [w.hanzi, e]));
+  ok('radical examples exist', exs.length > 50);
+  ok('every example is a single character', exs.every(([, e]) => [...e].length === 1));
+  const notInCorpus = exs.filter(([, e]) => !corpusChars.has(e));
+  if (notInCorpus.length) console.log('     stray:', notInCorpus.map(x => x[1]).join(' '));
+  ok('every example character appears in the graded corpus', notInCorpus.length === 0);
+
+  // Rule 2 (partially checkable): a character listed under two radicals would be
+  // a second correct answer whenever the other one is the question.
+  const seenEx = new Map();
+  const dupes = [];
+  for (const [rad, e] of exs) {
+    if (seenEx.has(e)) dupes.push(`${e} (${seenEx.get(e)} + ${rad})`);
+    else seenEx.set(e, rad);
+  }
+  if (dupes.length) console.log('     dupes:', dupes.join(', '));
+  ok('no example character is claimed by two radicals', dupes.length === 0);
+
+  const rp = C101.parts(C101.lesson('bas-rad-l2'));
+  ok('radical parts carry the drill', rp.every(p => p.drill === 'radical'));
+  const rs = Session.forPart(rp[0]);
+  const cons = rs.queue.filter(i => i.kind === 'contains');
+  ok('radical part builds contains items', cons.length > 0);
+  ok('the contains answer is one of that radical\'s examples',
+     cons.every(i => (i.word.examples || []).indexOf(i.correct) >= 0));
+  ok('contains decoys are never that radical\'s own examples',
+     cons.every(i => i.options.filter(o => (i.word.examples || []).indexOf(o) >= 0).length === 1));
+  ok('contains offers four options', cons.every(i => i.options.length === 4));
+  ok('radical part opens with a pairs warm-up', rs.queue.some(i => i.kind === 'pairs'));
+  ok('no typed recall in a drill part', rs.queue.every(i => i.kind !== 'type'));
+  let rg = 0;
+  while (!rs.done && rg++ < 500) {
+    const it = rs.current();
+    rs.answer(it.kind === 'intro' ? null : (it.kind === 'pairs' ? true : it.correct));
+  }
+  ok('radical session completes all-correct', rs.done && rs.missed === 0);
+}
+
+// --- a missed drill item is requeued, same as any other exercise
+{
+  store.clear(); State.reset(); State.load();
+  const s2 = Session.forPart(C101.parts(C101.lesson('bas-tones-l1'))[0]);
+  while (s2.current().kind === 'intro') s2.answer(null);
+  const idx = s2.queue.findIndex((i, n) => n >= s2.idx && i.kind === 'tone');
+  while (s2.idx < idx) s2.answer(s2.current().correct);
+  const before = s2.queue.length;
+  s2.answer(s2.current().options.find(o => o !== s2.current().correct));
+  ok('a missed tone item is requeued', s2.queue.length === before + 1);
+  ok('the requeued item is another tone item', s2.queue[s2.queue.length - 1].kind === 'tone');
+}
+
+// --- everyday words are ordinary vocabulary (no drill), so they keep Reading
+{
+  const coreParts = C101.parts(C101.lesson('bas-core-l1'));
+  ok('a non-drill Basics lesson still gets a Reading part',
+     coreParts.some(p => p.kind === 'reading'));
+  ok('numbers lesson teaches 1-10', C101.lesson('bas-core-l1').words.length === 10);
+}
+
+// --- pinyin helpers
+ok('tone read off a mark', Pinyin.toneOf('mǎ') === 3 && Pinyin.toneOf('ma') === 5);
+ok('ü survives stripping', Pinyin.strip('lǜ') === 'lü' && Pinyin.toneOf('nǚ') === 3);
+ok('tone mark placed by the a/o/e rule', Pinyin.withTone('jiu', 2) === 'jiú' &&
+   Pinyin.withTone('hui', 4) === 'huì' && Pinyin.withTone('xiang', 3) === 'xiǎng');
+ok('pattern round-trips', Pinyin.spell(['sheng', 'ming'], '1-4') === 'shēng mìng');
 
 console.log(`\n${pass}/${pass + fail} passed`);
 process.exit(fail ? 1 : 0);

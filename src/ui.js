@@ -26,6 +26,11 @@ const UI = (function () {
     return b;
   }
 
+  // What to actually pronounce for a word. Normally the word itself — but a
+  // Basics entry may set `say` because its own glyph is unspeakable: a bare
+  // radical like 氵 has no reading of its own, so it's read as its parent 水.
+  const spoken = (w) => (w && (w.say || w.hanzi)) || '';
+
   // ---- Language / script picker (top-left) ----------------------------------
   // A small dropdown driven by Lang.langs(), so adding a language later needs no
   // UI change here. Picking one re-renders everything through Lang.zh(...).
@@ -177,9 +182,12 @@ const UI = (function () {
       chapters.push(cm);
     });
     // Gating: unlocked if first or previous cleared; current = first open+uncleared.
+    // An "open" book (Basics) skips gating entirely — it's a toolbox you dip into
+    // for the drill you need, not a course you walk end to end.
+    const openBook = !!(C101.currentBook() || {}).open;
     let prevCleared = true, currentTaken = false;
     for (const n of allNodes) {
-      n.unlocked = prevCleared;
+      n.unlocked = openBook || prevCleared;
       if (n.unlocked && !n.cleared && !currentTaken) { n.current = true; currentTaken = true; }
       prevCleared = n.cleared;
     }
@@ -417,6 +425,11 @@ const UI = (function () {
     if (node.kind === 'test') return '🏆';
     if (node.kind === 'reading') return '📖';
     if (node.kind === 'cloze') return '✍️';
+    // Basics drills read at a glance on the path.
+    const drill = node.part.drill;
+    if (drill === 'tone') return '🎵';
+    if (drill === 'sound') return '👂';
+    if (drill === 'radical') return '🧩';
     return '⭐';
   }
 
@@ -505,7 +518,7 @@ const UI = (function () {
       main.appendChild(el('div', 'vocab-py', w.pinyin));
       rowEl.appendChild(main);
       rowEl.appendChild(el('div', 'vocab-en', w.en));
-      rowEl.appendChild(speakerBtn(w.hanzi));
+      rowEl.appendChild(speakerBtn(spoken(w)));
       list.appendChild(rowEl);
     }
     body.appendChild(list);
@@ -593,7 +606,7 @@ const UI = (function () {
       main.appendChild(el('div', 'vocab-py', w.pinyin));
       rowEl.appendChild(main);
       rowEl.appendChild(el('div', 'vocab-en', w.en));
-      rowEl.appendChild(speakerBtn(w.hanzi));
+      rowEl.appendChild(speakerBtn(spoken(w)));
       return rowEl;
     };
     const match = (w, needle) => !needle ||
@@ -736,7 +749,90 @@ const UI = (function () {
     else if (item.kind === 'build' || item.kind === 'dictate') renderBuild(stage, foot, item);
     else if (item.kind === 'type') renderType(stage, foot, item);
     else if (item.kind === 'pairs') renderPairs(stage, foot, item);
+    else if (item.kind === 'tone') renderTone(stage, foot, item);
+    else if (item.kind === 'hear2py') renderHear(stage, foot, item);
+    else if (item.kind === 'contains') renderContains(stage, foot, item);
     else renderMC(stage, foot, item);
+  }
+
+  // ---- Basics drills ---------------------------------------------------------
+  // All three are option-picking items, so they share onChoose/showFeedback with
+  // multiple choice; only the prompt and the option faces differ.
+
+  function optionList(item, faces, foot) {
+    const opts = el('div', 'options');
+    for (const opt of item.options) {
+      const b = el('button', 'option');
+      faces(b, opt);
+      b.dataset.val = opt;  // canonical value — grading and reveal read this
+      b.addEventListener('click', () => onChoose(item, opt, b, opts, foot));
+      opts.appendChild(b);
+    }
+    return opts;
+  }
+
+  // Tone: hear the word, pick the tone. The options are the word's own syllables
+  // spelled under each candidate tone, so the learner chooses between real
+  // pinyin ("mā / má / mǎ / mà / ma") rather than bare numbers.
+  function renderTone(stage, foot, item) {
+    stage.appendChild(el('div', 'prompt-label',
+      item.bases.length > 1 ? 'Which tones?' : 'Which tone?'));
+
+    const p = el('div', 'prompt-hanzi');
+    p.appendChild(el('span', 'hanzi-md', Lang.zh(item.word.hanzi)));
+    p.appendChild(speakerBtn(spoken(item.word)));
+    stage.appendChild(p);
+    stage.appendChild(el('div', 'prompt-en', item.word.en));
+    Audio101.speak(spoken(item.word));
+
+    stage.appendChild(optionList(item, (b, opt) => {
+      b.classList.add('option-tone');
+      b.appendChild(el('span', 'opt-hanzi', Pinyin.spell(item.bases, opt)));
+      b.appendChild(el('span', 'opt-pinyin', toneCaption(opt)));
+    }, foot));
+  }
+
+  // "2-4" -> "rising · falling" (a single tone just names itself).
+  function toneCaption(pattern) {
+    return String(pattern).split('-').map(t => Pinyin.toneName(Number(t))).join(' · ');
+  }
+
+  // Sound: hear it, pick the spelling out of the lesson's minimal-pair set.
+  function renderHear(stage, foot, item) {
+    stage.appendChild(el('div', 'prompt-label', 'What did you hear?'));
+    const big = speakerBtn(spoken(item.word));
+    big.className = 'speaker speaker-big';
+    big.textContent = '🔊';
+    stage.appendChild(big);
+    Audio101.speak(spoken(item.word));
+
+    stage.appendChild(optionList(item, (b, opt) => {
+      b.appendChild(el('span', 'opt-hanzi', opt));
+    }, foot));
+  }
+
+  // Radical: which of these real words contains this character part?
+  //
+  // Deliberately NOT script-converted, unlike every other drill. The question is
+  // about the shape on the page, and simplification rewrites the parts: 言 shrinks
+  // to 讠 inside 说话, so "which word contains 言?" would have no true answer in
+  // Simplified. Canonical Traditional here keeps the question answerable, with a
+  // caption saying so when that differs from what the learner picked.
+  function renderContains(stage, foot, item) {
+    stage.appendChild(el('div', 'prompt-label', 'Which character contains this part?'));
+    const p = el('div', 'prompt-hanzi');
+    p.appendChild(el('span', 'hanzi-md', item.word.hanzi));
+    stage.appendChild(p);
+    stage.appendChild(el('div', 'prompt-en', item.word.en));
+    if (Lang.current().convert) {
+      stage.appendChild(el('div', 'prompt-note', 'Traditional forms — the parts are what changed in simplification.'));
+    }
+
+    stage.appendChild(optionList(item, (b, opt) => {
+      b.appendChild(el('span', 'opt-hanzi', opt));
+      const w = C101.word(opt);
+      if (w) b.appendChild(el('span', 'opt-pinyin', w.pinyin));
+    }, foot));
   }
 
   // Sentence building: tap word tiles in order to assemble the Chinese. The
@@ -851,8 +947,8 @@ const UI = (function () {
 
     const cells = [];
     item.words.forEach((w) => {
-      cells.push({ key: w.hanzi, face: Lang.zh(w.hanzi), zh: true, hanzi: w.hanzi });
-      cells.push({ key: w.hanzi, face: w.en, zh: false, hanzi: w.hanzi });
+      cells.push({ key: w.hanzi, face: Lang.zh(w.hanzi), zh: true, say: spoken(w) });
+      cells.push({ key: w.hanzi, face: w.en, zh: false, say: spoken(w) });
     });
     for (let i = cells.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -874,7 +970,7 @@ const UI = (function () {
           a.classList.add('matched'); b.classList.add('matched');
           a.disabled = b.disabled = true;
           sel = null;
-          Audio101.speak(c.hanzi);
+          Audio101.speak(c.say);
           if (--left === 0) {
             answered = true;
             foot.innerHTML = '';
@@ -901,12 +997,15 @@ const UI = (function () {
     stage.appendChild(el('div', 'prompt-label', 'New word'));
     const card = el('div', 'flashcard');
     const hz = el('div', 'hanzi-lg', Lang.zh(w.hanzi));
-    hz.appendChild(speakerBtn(w.hanzi));
+    hz.appendChild(speakerBtn(spoken(w)));
     card.appendChild(hz);
     card.appendChild(el('div', 'pinyin-lg', w.pinyin));
     card.appendChild(el('div', 'gloss-lg', w.en));
+    // A radical's own note ("nearly every character with this part relates to
+    // water") is the whole reason to learn it, so the intro card carries it.
+    if (w.note) card.appendChild(el('div', 'gloss-note', w.note));
     stage.appendChild(card);
-    Audio101.speak(w.hanzi);
+    Audio101.speak(spoken(w));
 
     const cont = el('button', 'continue', 'Got it');
     cont.addEventListener('click', () => { session.answer(null); renderItem(); });
@@ -922,7 +1021,7 @@ const UI = (function () {
         reading ? 'Read this — what does it mean?' : 'What does this mean?'));
       const p = el('div', 'prompt-hanzi');
       p.appendChild(el('span', 'hanzi-md', Lang.zh(item.word.hanzi)));
-      p.appendChild(speakerBtn(item.word.hanzi));
+      p.appendChild(speakerBtn(spoken(item.word)));
       stage.appendChild(p);
       if (!reading) stage.appendChild(el('div', 'prompt-pinyin', item.word.pinyin));
     } else if (item.kind === 'en2zh') {
@@ -930,11 +1029,11 @@ const UI = (function () {
       stage.appendChild(el('div', 'prompt-en', item.word.en));
     } else { // listen
       stage.appendChild(el('div', 'prompt-label', 'What did you hear?'));
-      const big = speakerBtn(item.word.hanzi);
+      const big = speakerBtn(spoken(item.word));
       big.className = 'speaker speaker-big';
       big.textContent = '🔊';
       stage.appendChild(big);
-      Audio101.speak(item.word.hanzi);
+      Audio101.speak(spoken(item.word));
     }
 
     // Options
@@ -1052,6 +1151,16 @@ const UI = (function () {
       banner.textContent = `Answer: ${Lang.zh(item.zh)}`;
     } else if (item.kind === 'type') {
       banner.textContent = `Answer: ${Lang.zh(item.word.hanzi)} (${item.word.pinyin})`;
+    } else if (item.kind === 'tone') {
+      // The answer is a tone pattern; show it as the spelling it produces.
+      banner.textContent = `Answer: ${Pinyin.spell(item.bases, item.correct)}` +
+        ` — ${toneCaption(item.correct)}`;
+    } else if (item.kind === 'hear2py') {
+      banner.textContent = `Answer: ${item.correct} ${Lang.zh(item.word.hanzi)}`;
+    } else if (item.kind === 'contains') {
+      // Canonical, to match the (unconverted) question.
+      const w = C101.word(item.correct);
+      banner.textContent = `Answer: ${item.correct}` + (w ? ` (${w.pinyin}) — ${w.en}` : '');
     } else {
       banner.textContent = `Answer: ${Lang.zh(item.correct)}` +
         (item.kind !== 'zh2en' && C101.word(item.correct)

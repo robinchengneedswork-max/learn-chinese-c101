@@ -240,6 +240,14 @@ body {
 .option.correct { background: rgba(34,197,94,.15); border-color: var(--brand); color: #bbf7d0; }
 .option.wrong { background: rgba(239,68,68,.15); border-color: var(--wrong); color: #fecaca; }
 
+/* ---- Basics drills (tones / sounds / radicals) ---- */
+/* Tone options are pinyin, not hanzi — the marks are the answer, so they get the
+   accent colour and room to breathe rather than hanzi-sized weight. */
+.option-tone .opt-hanzi { font-size: 30px; color: var(--accent); letter-spacing: 1px; }
+.option-tone .opt-pinyin { text-transform: lowercase; }
+.gloss-note { font-size: 15px; color: var(--muted); margin-top: 14px; max-width: 30ch; line-height: 1.5; }
+.prompt-note { font-size: 13px; color: var(--muted); margin-top: 10px; text-align: center; }
+
 /* ---- Cloze (chapter test) ---- */
 .cloze-en { font-size: 18px; color: var(--muted); text-align: center; margin-bottom: 14px; }
 .cloze-zh { font-size: 34px; font-weight: 700; line-height: 1.5; text-align: center; }

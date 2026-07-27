@@ -34,7 +34,8 @@ load order in `index.html` is dependency order.
 src/config.js    — tuning: SRS intervals, session size, XP, TTS language
 src/content.js   — window.C101 registry; chapter files register into it
 src/lang-map.js  — generated Traditional→Simplified char map (tools/build_langmap.py)
-src/lang.js      — display script picker; converts Chinese at render time only
+src/lang.js      — display script picker; converts Chinese at render time
+src/pinyin.js    — tone arithmetic on tone-marked pinyin (powers the tone drills) only
 src/state.js     — progress in localStorage (xp, streak, per-word SRS record)
 src/srs.js       — Leitner spaced repetition (6 boxes, correct↑ / miss↓)
 src/session.js   — builds an exercise queue for a lesson or a review set
@@ -50,8 +51,33 @@ chapter may carry book metadata (`bookId` / `bookTitle` / `bookZh` /
 The home screen shows a **book picker** (top of the path, hidden when only one
 book exists) that swaps which book's learning path you see — the choice persists.
 Word progress is keyed by `hanzi` and **shared across books**, so a word learned
-in one counts in another. A second book, **Good News Reader** (`content/gnr-chapter-01.js`,
-lessons 1–3), ships as an optional module.
+in one counts in another. Two optional modules ship alongside Course 101:
+**Good News Reader** (`content/gnr-chapter-*.js`) and **Basics**
+(`content/basics-*.js`).
+
+**Basics.** The groundwork Course 101 assumes you already have: the sounds, the
+tones, the parts characters are built from, and everyday words like 不 / 很 / 個.
+Two things make it different from a normal book:
+
+- **It's an open path** (`bookOpen: true`). Nothing is gated — it's a toolbox you
+  dip into for the drill you need, not a course you walk end to end.
+- **Its words are `aux`** (`aux: true` on the chapter). They register into a
+  separate pool, so a bare 氵 or a tone-drill syllable can never turn up as a
+  multiple-choice distractor in a Course 101 or GNR lesson — an option that's
+  trivially eliminable teaches nothing. Each Basics drill draws its options from
+  its own chapter instead. Progress is still shared by `hanzi` as everywhere else,
+  so drilling the tones of 聖經 here feeds its Chapter 1 record.
+
+A lesson opts into a specialised session with `drill`:
+
+| `drill` | Chapter | What the session does |
+| --- | --- | --- |
+| `'sound'` | Sounds & Pinyin | **hear → pick the spelling**, plus listen→hanzi. Options come from the *same lesson*, so every lesson is a deliberate minimal-pair set (zhī/zī, xīn/xīng) and the item is a real discrimination |
+| `'tone'` | Tones | **hear → pick the tone.** Options are generated: the word's own syllables respelled under each candidate tone (mā / má / mǎ / mà / ma), so you choose between real spellings, not numbers. Two-syllable entries drill the tone *pattern* |
+| `'radical'` | Radicals & Character Parts | part→meaning, meaning→part, and **"which character contains this part?"** built from corpus characters |
+
+Drill lessons get no 📖 Reading part — hiding the pinyin is the point of reading
+practice, and it's the *answer* in a tone or sound drill.
 
 **Sections → parts.** Each book section is split at runtime into bite-size
 **parts** so a sitting is finishable: ~6-word **learn** parts, then a
@@ -72,6 +98,9 @@ build recall:
 | Cloze | sentences, test | curated sentence + English clue; choose or type the missing word |
 | **Build the sentence** | sentences | assemble the Chinese from word tiles (+2 decoys) — the only drill that teaches word **order** |
 | **Listen & build** | sentences | same, cued by audio instead of English |
+| **Which tone?** | Basics · tones | hear a word, pick its tone (or tone pattern) from its own syllables respelled |
+| **What did you hear?** | Basics · sounds | pick the pinyin out of the lesson's minimal pairs |
+| **Which character contains this part?** | Basics · radicals | pick the character built from a given radical |
 
 In a Reading part pinyin is suppressed everywhere. Missed items are re-queued and
 demoted a box; correct answers promote a word toward "mastered."
@@ -219,6 +248,29 @@ book's reading in `OVERRIDES` in `tools/build_langmap.py` if needed.
 **6. Wire it up:** add `<script src="content/chapter-02.js"></script>` to
 `index.html` (after `chapter-01.js`) and add the path to `ASSETS` in `sw.js`
 (and bump `CACHE` to the next `c101-vN` so clients refresh).
+
+## Adding to Basics
+
+Basics content is hand-written (no PDF pipeline) — `content/basics-*.js`, same
+`register(...)` shape plus `aux: true` and a per-lesson `drill`. Two rules are
+load-bearing:
+
+**Tone lessons.** The only thing that must be right is the tone mark in `pinyin`;
+`src/pinyin.js` reads the tone off it and generates the options. No per-word
+option data.
+
+**Radical `examples`.** These feed "which character contains this part?", and the
+drill draws its decoys from *other* radicals' example lists. So an example must
+contain its own radical **and no other radical in the chapter** — otherwise it is
+a second correct answer to somebody else's question. 案 (宀+**女**+**木**) is out;
+洗 (氵+先) is in. Examples must also be single characters that appear somewhere in
+the graded corpus, so they're characters you actually meet in the books.
+
+There is no character-decomposition data in this repo, so the second rule is
+curation, not computation: `npm test` verifies corpus membership and catches a
+character claimed by two radicals, but it cannot catch a second component you
+overlooked. Check the components by hand. A radical with no clean example simply
+gets none — the drill skips that item and still teaches the part by meaning.
 
 ## Deploy (Vercel)
 

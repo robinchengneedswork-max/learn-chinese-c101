@@ -18,20 +18,118 @@ const Session = (function () {
     return shuffle(pool.slice()).slice(0, n);
   }
 
-  // Build 3 distractors for a multiple-choice item, drawn from the whole corpus
-  // so options stay plausible even for a short part.
-  function distractors(word, field) {
-    const others = C101.allWords().filter(w => w.hanzi !== word.hanzi);
-    return pick(others.map(w => w[field]), 3);
+  // The record a drill should use for a word: the lesson's own entry (it carries
+  // extras the registry copy may not have, like a radical's example words),
+  // backfilled from the registry (which adds chapterId/lessonId).
+  function rec(w) { return Object.assign({}, C101.word(w.hanzi) || {}, w); }
+
+  // Build 3 distractors for a multiple-choice item. `pool` defaults to the whole
+  // graded corpus so options stay plausible even for a short part; aux parts pass
+  // their own chapter (see C101.pool). Values are deduped and never equal the
+  // answer — two entries can legitimately share a gloss (扌 and 手 are both
+  // "hand"), and a duplicate option is an unanswerable question.
+  function distractors(word, field, pool, correct) {
+    const seen = new Set([correct]);
+    const out = [];
+    for (const w of shuffle((pool || C101.allWords()).slice())) {
+      if (w.hanzi === word.hanzi) continue;
+      const v = w[field];
+      if (!v || seen.has(v)) continue;
+      seen.add(v);
+      out.push(v);
+      if (out.length === 3) break;
+    }
+    return out;
   }
 
   // dir 'zh2en': show hanzi, choose English. 'en2zh': show English, choose hanzi.
   // dir 'listen': hear TTS, choose hanzi. mode 'reading' hides pinyin in the UI.
-  function mcItem(word, dir, mode) {
+  // The pool travels on the item so a missed item can be rebuilt from the same
+  // one when it's requeued.
+  function mcItem(word, dir, mode, pool) {
     const field = dir === 'zh2en' ? 'en' : 'hanzi';
     const correct = word[field];
-    const options = shuffle(distractors(word, field).concat(correct));
-    return { kind: dir, mode: mode || 'learn', hanzi: word.hanzi, word, correct, options };
+    const options = shuffle(distractors(word, field, pool, correct).concat(correct));
+    return { kind: dir, mode: mode || 'learn', hanzi: word.hanzi, word, correct, options, pool };
+  }
+
+  // ---- Basics drills --------------------------------------------------------
+  // Three item kinds the vocabulary drills can't express. Each grades on plain
+  // equality (see answer()), so only the option-building differs.
+
+  // Tone: hear the word, pick the tone it carries. Options are rendered as the
+  // word's OWN syllables under each candidate tone ("mā / má / mǎ / mà / ma"),
+  // so the choice is between real spellings rather than abstract numbers — hence
+  // `bases` (the toneless syllables) travelling on the item for ui.js.
+  function toneItem(word) {
+    const bases = Pinyin.syllables(word.pinyin).map(Pinyin.strip);
+    const correct = Pinyin.pattern(word.pinyin);
+    return {
+      kind: 'tone', mode: 'learn', hanzi: word.hanzi, word, bases, correct,
+      options: shuffle(tonePatterns(correct, bases.length).concat(correct))
+    };
+  }
+
+  // Wrong tone patterns of the same shape as the answer. One syllable: the other
+  // four tones, so the question is simply "which of the five is it?". Longer: 3
+  // random distinct patterns. A non-initial syllable may be neutral, otherwise
+  // "the neutral one is the answer" becomes a free giveaway in words like 謝謝.
+  function tonePatterns(correct, n) {
+    if (n <= 1) return ['1', '2', '3', '4', '5'].filter(t => t !== correct);
+    const seen = new Set([correct]);
+    const out = [];
+    for (let guard = 0; out.length < 3 && guard < 200; guard++) {
+      const p = [];
+      for (let i = 0; i < n; i++) {
+        const max = i === 0 ? 4 : 5; // only a following syllable can be neutral
+        p.push(String(1 + Math.floor(Math.random() * max)));
+      }
+      const key = p.join('-');
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push(key);
+    }
+    return out;
+  }
+
+  // Sound: hear it, pick the spelling. Options come from the same lesson, which
+  // is a deliberate minimal-pair set (zhī/zī, xīn/xīng) — so this is a listening
+  // discrimination, not a guess between unrelated syllables.
+  function soundItem(word, pool) {
+    const correct = word.pinyin;
+    return {
+      kind: 'hear2py', mode: 'learn', hanzi: word.hanzi, word, correct, pool,
+      options: shuffle(distractors(word, 'pinyin', pool, correct).concat(correct))
+    };
+  }
+
+  // Radical: which real word contains this part? The answer is one of the
+  // radical's own example words (curated from the graded corpus, so it's a word
+  // the learner meets in the books); the decoys are OTHER radicals' example
+  // words. Drawing decoys that way means each one provably contains a different
+  // part, instead of merely being assumed not to contain this one — there's no
+  // character-decomposition data here to check that with.
+  function containsItem(word, pool) {
+    const mine = word.examples || [];
+    if (!mine.length) return null;
+    const correct = pick(mine, 1)[0];
+    const mineSet = new Set(mine);
+    const others = [];
+    for (const w of (pool || [])) {
+      if (w.hanzi === word.hanzi) continue;
+      for (const ex of (w.examples || [])) if (!mineSet.has(ex)) others.push(ex);
+    }
+    const seen = new Set([correct]);
+    const opts = [];
+    for (const ex of shuffle(others)) {
+      if (seen.has(ex)) continue;
+      seen.add(ex);
+      opts.push(ex);
+      if (opts.length === 3) break;
+    }
+    if (opts.length < 3) return null;   // not enough curated examples yet
+    return { kind: 'contains', mode: 'learn', hanzi: word.hanzi, word, correct, pool,
+             options: shuffle(opts.concat(correct)) };
   }
 
   // Fill-in-the-blank item: a real sentence with one word blanked, plus its
@@ -106,6 +204,10 @@ const Session = (function () {
   // new words then drills recall (with pinyin); a 'reading' part re-drills the
   // whole section with pinyin hidden.
   function forPart(part) {
+    // Basics: a lesson can ask for a specialised drill instead of the default
+    // vocabulary session.
+    if (part.drill) return forDrill(part);
+
     // Sentence practice: the section's words back in real sentences. Skips any
     // sentence whose blank isn't a known word (so content edits can't break it).
     if (part.kind === 'cloze') {
@@ -165,6 +267,50 @@ const Session = (function () {
     shuffle(quiz).forEach(q => queue.push(q));
 
     return makeSession(part, queue, 'learn');
+  }
+
+  // A Basics drill session: intro cards for anything new, then that drill's own
+  // items. Options are drawn from the part's own (aux) pool, so a radical is
+  // never offered against a Course 101 vocabulary word.
+  //
+  // No typed-recall item here, and no pairs warm-up outside the radical drill:
+  // typing "shou" for 扌 or matching a bare tone syllable to a gloss tests the
+  // wrong thing. The drills themselves are the production practice.
+  function forDrill(part) {
+    const pool = C101.pool(part);
+    const lesson = C101.lesson(part.lessonId);
+    const words = selectWords(part).map(rec);
+    const queue = [];
+
+    words.filter(w => SRS.isNew(w.hanzi))
+         .forEach(w => queue.push({ kind: 'intro', hanzi: w.hanzi, word: w }));
+
+    if (part.drill === 'radical') {
+      const board = words.slice(0, 5);
+      if (board.length >= 4) queue.push(pairsItem(board));
+    }
+
+    const quiz = [];
+    for (const w of words) {
+      if (part.drill === 'tone') {
+        quiz.push(toneItem(w));
+        quiz.push(mcItem(w, 'zh2en', 'learn', pool));
+      } else if (part.drill === 'sound') {
+        // Same-lesson pool for BOTH items: the lesson is the contrast set, and
+        // against the whole chapter "what did you hear?" is no longer a listening
+        // test — the four options wouldn't sound remotely alike.
+        const set = (lesson && lesson.words) || pool;
+        quiz.push(soundItem(w, set));
+        quiz.push(mcItem(w, 'listen', 'learn', set));
+      } else { // 'radical'
+        quiz.push(mcItem(w, 'zh2en', 'learn', pool));
+        quiz.push(mcItem(w, 'en2zh', 'learn', pool));
+        const c = containsItem(w, pool);
+        if (c) quiz.push(c);
+      }
+    }
+    shuffle(quiz).forEach(q => queue.push(q));
+    return makeSession(part, queue, part.drill);
   }
 
   // Back-compat: treat a whole section (book lesson) as one learn part.
@@ -233,8 +379,11 @@ const Session = (function () {
             item.kind === 'cloze' ? clozeItem(item.sentence) :
             (item.kind === 'build' || item.kind === 'dictate') ? buildItem(item.sentence, item.kind) :
             item.kind === 'type' ? typeItem(item.word) :
+            item.kind === 'tone' ? toneItem(item.word) :
+            item.kind === 'hear2py' ? soundItem(item.word, item.pool) :
+            item.kind === 'contains' ? containsItem(item.word, item.pool) :
             item.kind === 'pairs' ? null :
-            mcItem(item.word, item.kind, item.mode);
+            mcItem(item.word, item.kind, item.mode, item.pool);
           if (again) { this.queue.push(again); this.total = this.queue.length; }
         }
         State.save();

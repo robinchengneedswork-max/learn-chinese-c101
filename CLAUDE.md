@@ -51,10 +51,14 @@ words/16 lessons**, dense sections split along paragraph seams. Curate with
 
 Exercises now cover production, not just recognition: tap-the-pairs, typed recall,
 passage cloze (from the book's own text), build-the-sentence from word tiles, and
-listen-and-build. **Tone drills and radical/character-part drills are deliberately
-deferred** to a separate future module — the user knows tones, and radicals are a
-"fun side flashcard thing," not core. A 95-row radicals table already exists in
-`content/gnr-reference.js` if that module gets built.
+listen-and-build.
+
+**The Basics book is built** (`content/basics-*.js`): sounds/pinyin, tones,
+radicals, everyday words — the previously-deferred tone and radical drills, plus
+two more. It's an `aux` + `bookOpen` book (isolated distractor pool, no gating);
+see README "Books (modules)" and "Adding to Basics". The subtle part is the
+radical `examples` curation rule — an example may contain no *second* drilled
+radical, and the tests can only catch part of that.
 
 Simplified-Chinese display is done (`src/lang.js` + generated `src/lang-map.js`, render-time
 only; canonical content and progress stay Traditional). **Still never device-tested** — a real

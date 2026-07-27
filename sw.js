@@ -1,9 +1,9 @@
 // sw.js — offline app shell cache. Bump CACHE when files change so clients update.
-const CACHE = 'c101-v17';
+const CACHE = 'c101-v18';
 const ASSETS = [
   '.', 'index.html', 'style.css', 'manifest.webmanifest',
   'src/config.js', 'src/content.js', 'src/lang-map.js', 'src/lang.js',
-  'src/state.js', 'src/srs.js',
+  'src/pinyin.js', 'src/state.js', 'src/srs.js',
   'src/session.js', 'src/audio.js', 'src/ui.js', 'src/main.js',
   'content/chapter-01.js',
   'content/gnr-chapter-01.js',
@@ -14,6 +14,10 @@ const ASSETS = [
   'content/gnr-chapter-06.js',
   'content/gnr-chapter-07.js',
   'content/gnr-reference.js',
+  'content/basics-01-sounds.js',
+  'content/basics-02-tones.js',
+  'content/basics-03-radicals.js',
+  'content/basics-04-core.js',
   'icons/icon.svg', 'icons/icon-maskable.svg',
   // Course 101 watercolor set dressing (per-section) for the learning path
   'assets/star.png', 'assets/book-tree.png'
