@@ -110,6 +110,20 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
       await sleep(60);
       await touch('touchEnd', yAt(+a));
       await sleep(700); // let the smooth scroll land
+    } else if (kind === 'cancel') {
+      // The browser deciding mid-gesture that the touch was a page scroll: a
+      // couple of pixels of movement, then it takes the gesture away. The rail
+      // must let go without acting — acting here is a tap-jump that then fights
+      // the native scroll, which is the bug this reproduces.
+      // (CDP's touchCancel dispatches no DOM event at all, so the pointercancel
+      // a real browser sends is synthesized in the page instead.)
+      await touch('touchStart', yAt(+a));
+      await touch('touchMove', yAt(+a) + 2);
+      await sleep(60);
+      await send('Runtime.evaluate', { expression:
+        `document.getElementById('path-rail').dispatchEvent(
+           new PointerEvent('pointercancel', { pointerId: 1, bubbles: true }))` });
+      await sleep(700);
     }
     const after = await send('Runtime.evaluate', {
       expression: `JSON.stringify({ scrollY: Math.round(scrollY),

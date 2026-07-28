@@ -874,17 +874,28 @@ const UI = (function () {
     showRailLabel(frac);
   }
 
+  function endRailDrag() {
+    const rail = $('#path-rail');
+    const moved = railDrag && railDrag.moved;
+    railDrag = null;
+    if (!rail) return moved;
+    rail.classList.remove('dragging');
+    const label = rail.querySelector('.rail-label');
+    if (label) label.hidden = true;
+    return moved;
+  }
+
+  // The browser took the gesture away (it decided the touch was a page scroll,
+  // or a system gesture cut in). Drop it silently — treating it as a tap here is
+  // what made a slide fight the native scroll, each jumping the page in turn.
+  function onRailCancel() { endRailDrag(); }
+
   // A tap (no real movement) snaps to the tick you aimed at; if you tapped well
   // away from any tick, it just scrolls there.
   function onRailUp(e) {
     if (!railDrag) return;
     const rail = $('#path-rail');
-    const moved = railDrag.moved;
-    railDrag = null;
-    rail.classList.remove('dragging');
-    const label = rail.querySelector('.rail-label');
-    if (label) label.hidden = true;
-    if (moved) return;
+    if (endRailDrag()) return;
     const frac = railFrac(e, rail);
     let best = null, bd = Infinity;
     for (const s of railStops) {
@@ -1415,7 +1426,18 @@ const UI = (function () {
       rail.addEventListener('pointerdown', onRailDown);
       rail.addEventListener('pointermove', onRailMove);
       rail.addEventListener('pointerup', onRailUp);
-      rail.addEventListener('pointercancel', onRailUp);
+      rail.addEventListener('pointercancel', onRailCancel);
+      // Belt and braces: a gesture the browser takes over doesn't always deliver
+      // pointercancel, and a drag left half-open sticks the label on screen.
+      // Losing the capture covers every way a gesture can end.
+      rail.addEventListener('lostpointercapture', onRailCancel);
+      rail.addEventListener('touchcancel', onRailCancel);   // not touchend: pointerup owns the tap
+      // `touch-action: none` alone didn't stop a phone from also scrolling the
+      // page during a slide — the two then fought over the scroll position. A
+      // non-passive touchmove that cancels the default is what actually holds.
+      rail.addEventListener('touchmove', (e) => {
+        if (e.cancelable) e.preventDefault();
+      }, { passive: false });
     }
     // Follow the scroll with the thumb, at most once a frame.
     let ticking = false;

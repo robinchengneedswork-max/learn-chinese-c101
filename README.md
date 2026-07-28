@@ -96,7 +96,10 @@ chapter, as Course 101 does today):
   pass it. It measures the live document (`layoutRail` in `ui.js`), so anything
   that changes the page height must re-run it. It hides itself on a path shorter
   than ~1.6 screens, and the page keeps a gutter clear for it, since the rail
-  swallows every pointer in its strip.
+  swallows every pointer in its strip. It has to own the gesture outright — if
+  the browser scrolls the page at the same time, the two fight over the scroll
+  position — hence `touch-action: none`, a non-passive `touchmove` that cancels
+  the default, and a `pointercancel` that releases the drag *without* acting.
 - The **🧭 Jump** button, bottom-right: the same waypoints as a menu, plus
   *Current lesson*. Rail is pointer-only by design; this is the keyboard route.
 
