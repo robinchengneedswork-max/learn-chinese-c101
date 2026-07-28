@@ -150,7 +150,9 @@ const UI = (function () {
   };
 
   let trailNodeEls = []; // {btn, node} cached each render for (re)drawing the path
-  let jumpTargets = { current: null, chapters: [] }; // scroll anchors for the Jump menu
+  // Scroll anchors captured each render, shared by the Jump menu and the chapter
+  // rail: one per chapter and one per section, plus the current node's bubble.
+  let jumpTargets = { current: null, chapters: [], sections: [] };
 
   // Build the render model: chapters → sections (each a background band) → nodes,
   // plus a capstone chapter-test node. Assigns each node a linear seq (for the
@@ -232,7 +234,7 @@ const UI = (function () {
     scene.className = 'path-scene';
     scene.innerHTML = '';
     trailNodeEls = [];
-    jumpTargets = { current: null, chapters: [] };
+    jumpTargets = { current: null, chapters: [], sections: [] };
 
     const model = buildModel();
     let rowIdx = 0;
@@ -242,6 +244,7 @@ const UI = (function () {
       scene.appendChild(header);
       for (const sec of ch.sections) {
         const band = el('div', 'band b' + sec.band);
+        jumpTargets.sections.push({ title: sec.title, el: band });
         band.appendChild(sectionBanner(sec));
         for (const node of sec.nodes) band.appendChild(nodeRow(node, rowIdx++));
         band.appendChild(sectionActions(C101.lesson(sec.id)));
@@ -261,8 +264,9 @@ const UI = (function () {
     const cur = trailNodeEls.find(({ node }) => node.current);
     jumpTargets.current = cur ? cur.btn : null;
     buildJumpMenu();
-    // Draw the bending, filling trail once layout has settled.
-    requestAnimationFrame(() => drawTrail(scene));
+    // Draw the bending, filling trail once layout has settled — and measure the
+    // rail from the same settled layout.
+    requestAnimationFrame(() => { drawTrail(scene); layoutRail(); });
   }
 
   // A section's two extra affordances, sitting just below its trail nodes:
@@ -385,8 +389,12 @@ const UI = (function () {
     scene.insertBefore(svg, scene.firstChild);
   }
 
+  // Anything that can change the page height (resize, late-loading art) moves
+  // the trail and the rail's tick positions alike.
   function redrawTrail() {
-    if ($('#home').classList.contains('active')) drawTrail($('#chapter-list'));
+    if (!$('#home').classList.contains('active')) return;
+    drawTrail($('#chapter-list'));
+    layoutRail();
   }
 
   function nodeBubble(node) {
@@ -675,13 +683,20 @@ const UI = (function () {
   // A floating control that scrolls the (long) path to the current lesson or to
   // any chapter. Rebuilt each render from jumpTargets.
 
+  // The waypoints of the path, for both the Jump menu and the rail: chapters
+  // when the book has several, otherwise its sections — a one-chapter book
+  // (Course 101 so far) would get a single useless waypoint.
+  function pathAnchors() {
+    return jumpTargets.chapters.length >= 2 ? jumpTargets.chapters : jumpTargets.sections;
+  }
+
   function buildJumpMenu() {
     const menu = $('#jump-menu');
     if (!menu) return;
     menu.innerHTML = '';
     const items = [];
     if (jumpTargets.current) items.push({ label: '▸ Current lesson', el: jumpTargets.current, cur: true });
-    jumpTargets.chapters.forEach((c) => items.push({ label: c.title, el: c.el }));
+    pathAnchors().forEach((c) => items.push({ label: c.title, el: c.el }));
     for (const it of items) {
       const li = el('li', 'jump-item' + (it.cur ? ' jump-cur' : ''), it.label);
       li.setAttribute('role', 'menuitem');
@@ -704,6 +719,180 @@ const UI = (function () {
   function closeJump() {
     const menu = $('#jump-menu'), btn = $('#jump-btn');
     if (menu && !menu.hidden) { menu.hidden = true; if (btn) btn.setAttribute('aria-expanded', 'false'); }
+  }
+
+  // ---- Chapter rail ---------------------------------------------------------
+  // A book can run long — the Good News Reader is 7 chapters / 25 sections /
+  // ~150 nodes — and flicking down to chapter 6 on a phone is miserable. The
+  // rail is a mini-map of the path pinned to the right edge: a tick per waypoint
+  // at its true position in the page, a thumb showing the slice you're looking
+  // at, and a green dot for the lesson you're up to. Tap a tick to jump; drag
+  // anywhere on the rail to scrub, with the waypoint name shown as you pass it.
+  //
+  // It measures the live document, so it lays out after render (in the same
+  // frame as the trail) and re-lays out whenever the page height can change.
+
+  const RAIL_MIN_PAGES = 1.6;  // don't take up screen unless the path is this tall
+  const RAIL_SNAP = 0.05;      // tap within this fraction of a tick = jump to it
+  const RAIL_DRAG = 6;         // px of movement before a tap becomes a scrub
+  const HEADER_PAD = 76;       // sticky app-header + air, when landing on a waypoint
+
+  let railStops = [];          // {frac, title, el} — the tappable waypoints
+  let railDrag = null;         // {moved} while a pointer is down on the rail
+
+  function docHeight() {
+    return Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+  }
+  function clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+  function absTop(node) { return node.getBoundingClientRect().top + window.scrollY; }
+
+  // (Re)build the ticks from measured positions. Cheap enough to run whole.
+  function layoutRail() {
+    const rail = $('#path-rail');
+    if (!rail) return;
+    const stops = pathAnchors();
+    const docH = docHeight();
+    railStops = [];
+    // Nothing to navigate: a short path scrolls fine on its own.
+    if (stops.length < 2 || docH < window.innerHeight * RAIL_MIN_PAGES) {
+      rail.hidden = true;
+      rail.innerHTML = '';
+      document.body.classList.remove('has-rail');
+      return;
+    }
+    rail.hidden = false;
+    // The rail swallows pointers in its strip, so the page keeps a gutter clear
+    // for it. The book tabs are the exception — squeezing them wraps their names
+    // onto a third line — so the rail simply starts below them instead. They sit
+    // at the top of the document and scroll away, so their at-rest bottom edge is
+    // the only position that can ever collide.
+    document.body.classList.add('has-rail');
+    const tabs = $('#book-tabs');
+    rail.style.top = tabs && !tabs.hidden
+      ? Math.round(absTop(tabs) + tabs.offsetHeight + 10) + 'px' : '';
+    rail.innerHTML = '';
+    rail.appendChild(el('div', 'rail-track'));
+
+    // Numbers only while they stay legible; past that the ticks are plain dots
+    // and the drag label carries the names.
+    const numbered = stops.length <= 12;
+    stops.forEach((s, i) => {
+      const frac = clamp01(absTop(s.el) / docH);
+      const tick = el('div', 'rail-tick' + (numbered ? '' : ' dot'));
+      tick.style.top = (frac * 100) + '%';
+      if (numbered) tick.appendChild(el('span', 'rail-tick-n', String(i + 1)));
+      rail.appendChild(tick);
+      railStops.push({ frac, title: s.title, el: s.el, tick });
+    });
+
+    // Where you're up to, so the rail answers "where's my lesson?" too.
+    if (jumpTargets.current) {
+      const here = el('div', 'rail-here');
+      const frac = clamp01((absTop(jumpTargets.current) + jumpTargets.current.offsetHeight / 2) / docH);
+      here.style.top = (frac * 100) + '%';
+      rail.appendChild(here);
+      railStops.push({ frac, title: '▸ Current lesson', el: jumpTargets.current, current: true });
+    }
+
+    const thumb = el('div', 'rail-thumb');
+    rail.appendChild(thumb);
+    const label = el('div', 'rail-label');
+    label.hidden = true;
+    rail.appendChild(label);
+    updateRail();
+  }
+
+  // Move the thumb to match the scroll position and light the tick we're inside.
+  function updateRail() {
+    const rail = $('#path-rail');
+    if (!rail || rail.hidden) return;
+    const thumb = rail.querySelector('.rail-thumb');
+    if (!thumb) return;
+    const docH = docHeight(), viewH = window.innerHeight, y = window.scrollY;
+    thumb.style.height = clamp01(viewH / docH) * 100 + '%';
+    thumb.style.top = clamp01(y / docH) * 100 + '%';
+
+    const mid = (y + viewH / 2) / docH;
+    let inside = null;
+    for (const s of railStops) { if (!s.current && s.frac <= mid) inside = s; }
+    for (const s of railStops) {
+      if (s.tick) s.tick.classList.toggle('on', s === inside);
+    }
+  }
+
+  function scrollToAnchor(el_) {
+    if (!el_) return;
+    window.scrollTo({ top: Math.max(0, absTop(el_) - HEADER_PAD), behavior: 'smooth' });
+  }
+
+  // Free scrub: put the grabbed fraction of the document a bit above centre, so
+  // what you're aiming at is under your thumb rather than behind it.
+  function scrubTo(frac) {
+    window.scrollTo({ top: Math.max(0, frac * docHeight() - window.innerHeight * 0.35) });
+  }
+
+  function railFrac(e, rail) {
+    const r = rail.getBoundingClientRect();
+    return clamp01((e.clientY - r.top) / r.height);
+  }
+
+  // The waypoint a scrub is currently sitting in (or the nearest one below).
+  function railStopAt(frac) {
+    let cur = null;
+    for (const s of railStops) { if (!s.current && s.frac <= frac + 0.005) cur = s; }
+    return cur || railStops.find((s) => !s.current) || null;
+  }
+
+  function showRailLabel(frac) {
+    const rail = $('#path-rail');
+    const label = rail && rail.querySelector('.rail-label');
+    const stop = railStopAt(frac);
+    if (!label || !stop) return;
+    label.textContent = stop.title;
+    label.style.top = frac * 100 + '%';
+    label.hidden = false;
+  }
+
+  function onRailDown(e) {
+    const rail = $('#path-rail');
+    if (!rail || rail.hidden) return;
+    e.preventDefault();
+    e.stopPropagation();          // don't let the doc-level handlers close menus mid-drag
+    railDrag = { y: e.clientY, moved: false };
+    rail.classList.add('dragging');
+    if (rail.setPointerCapture) rail.setPointerCapture(e.pointerId);
+    showRailLabel(railFrac(e, rail));
+  }
+
+  function onRailMove(e) {
+    if (!railDrag) return;
+    const rail = $('#path-rail');
+    if (!railDrag.moved && Math.abs(e.clientY - railDrag.y) < RAIL_DRAG) return;
+    railDrag.moved = true;
+    const frac = railFrac(e, rail);
+    scrubTo(frac);
+    showRailLabel(frac);
+  }
+
+  // A tap (no real movement) snaps to the tick you aimed at; if you tapped well
+  // away from any tick, it just scrolls there.
+  function onRailUp(e) {
+    if (!railDrag) return;
+    const rail = $('#path-rail');
+    const moved = railDrag.moved;
+    railDrag = null;
+    rail.classList.remove('dragging');
+    const label = rail.querySelector('.rail-label');
+    if (label) label.hidden = true;
+    if (moved) return;
+    const frac = railFrac(e, rail);
+    let best = null, bd = Infinity;
+    for (const s of railStops) {
+      const d = Math.abs(s.frac - frac);
+      if (d < bd) { bd = d; best = s; }
+    }
+    if (best && bd <= RAIL_SNAP) scrollToAnchor(best.el);
+    else window.scrollTo({ top: Math.max(0, frac * docHeight() - window.innerHeight * 0.35), behavior: 'smooth' });
   }
 
   // ---- Session flow ---------------------------------------------------------
@@ -1220,6 +1409,22 @@ const UI = (function () {
 
     $('#session-exit').addEventListener('click', () => { session = null; renderHome(); showScreen('home'); });
     $('#results-done').addEventListener('click', () => { renderHome(); showScreen('home'); });
+    // Chapter rail: pointer-driven, so it owns its gestures outright.
+    const rail = $('#path-rail');
+    if (rail) {
+      rail.addEventListener('pointerdown', onRailDown);
+      rail.addEventListener('pointermove', onRailMove);
+      rail.addEventListener('pointerup', onRailUp);
+      rail.addEventListener('pointercancel', onRailUp);
+    }
+    // Follow the scroll with the thumb, at most once a frame.
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { ticking = false; updateRail(); });
+    }, { passive: true });
+
     // Re-measure the connecting trail when the layout can shift.
     let t = null;
     window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(redrawTrail, 120); });

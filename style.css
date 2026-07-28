@@ -375,6 +375,60 @@ body {
 .jump-item:hover { background: var(--line); }
 .jump-item.jump-cur { color: var(--brand); font-weight: 800; }
 
+/* ---- Chapter rail (mini-map down the right edge of the path) ---- */
+.path-rail {
+  position: fixed; z-index: 25; right: 0; width: 28px;
+  top: calc(env(safe-area-inset-top, 0px) + 104px);
+  bottom: calc(74px + var(--safe-b));   /* clear of the 🧭 Jump button */
+  touch-action: none;                   /* vertical drags scrub, they don't scroll */
+  cursor: pointer;
+}
+.path-rail[hidden] { display: none; }
+/* Keep the page out from under the rail on narrow screens — the rail swallows
+   pointers, and the tab row and Review button are the full width of the column.
+   (Wider screens already have margin either side of the centred 640px column.) */
+@media (max-width: 760px) {
+  body.has-rail .home-main { padding-right: 32px; }
+  /* …except the tab row: the rail starts below it (layoutRail measures where). */
+  body.has-rail .book-tabs { margin-right: -32px; }
+}
+.rail-track {
+  position: absolute; top: 0; bottom: 0; right: 12px; width: 3px;
+  background: var(--line); border-radius: 999px;
+}
+.rail-thumb {
+  position: absolute; right: 8px; width: 11px; min-height: 26px;
+  background: rgba(148,163,184,.45); border: 1px solid var(--line);
+  border-radius: 999px; pointer-events: none;
+}
+.path-rail.dragging .rail-thumb { background: var(--accent); border-color: var(--accent); }
+/* Ticks and markers are painted, not tapped — the rail handles every pointer. */
+.rail-tick {
+  position: absolute; right: 3px; transform: translateY(-50%);
+  width: 22px; height: 22px; pointer-events: none;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-2); color: var(--muted);
+  border: 1px solid var(--line); border-radius: 999px;
+  font-size: 11px; font-weight: 800; line-height: 1;
+}
+.rail-tick.dot { width: 8px; height: 8px; right: 10px; }
+.rail-tick.on { color: var(--text); border-color: var(--accent); }
+.rail-tick.dot.on { background: var(--accent); }
+.rail-here {
+  position: absolute; right: 9px; transform: translateY(-50%);
+  width: 9px; height: 9px; border-radius: 999px; pointer-events: none;
+  background: var(--brand); box-shadow: 0 0 0 3px rgba(34,197,94,.2);
+}
+.rail-label {
+  position: absolute; right: 34px; transform: translateY(-50%);
+  max-width: 60vw; padding: 7px 11px; pointer-events: none;
+  background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px;
+  font-size: 13px; font-weight: 700; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+  box-shadow: 0 8px 20px rgba(0,0,0,.5);
+}
+.rail-label[hidden] { display: none; }
+
 /* ---- Modal (reading passage / vocab list) ---- */
 body.modal-open { overflow: hidden; }
 .modal { position: fixed; inset: 0; z-index: 50; display: flex; align-items: flex-end; justify-content: center; }

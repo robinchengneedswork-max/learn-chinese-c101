@@ -79,6 +79,22 @@ A lesson opts into a specialised session with `drill`:
 Drill lessons get no 📖 Reading part — hiding the pinyin is the point of reading
 practice, and it's the *answer* in a tone or sound drill.
 
+**Getting around a long path.** The Good News Reader is 25 sections — roughly a
+23,000px page — so the home screen carries two navigation aids, both built from
+the same waypoints (each chapter, or each *section* when a book has only one
+chapter, as Course 101 does today):
+
+- The **chapter rail** down the right edge: a mini-map of the whole path. A tick
+  per waypoint at its true position in the page, a thumb showing the slice you're
+  looking at, and a green dot for the lesson you're up to. Tap a tick to jump,
+  or drag anywhere on the rail to scrub, with the waypoint name shown as you
+  pass it. It measures the live document (`layoutRail` in `ui.js`), so anything
+  that changes the page height must re-run it. It hides itself on a path shorter
+  than ~1.6 screens, and the page keeps a gutter clear for it, since the rail
+  swallows every pointer in its strip.
+- The **🧭 Jump** button, bottom-right: the same waypoints as a menu, plus
+  *Current lesson*. Rail is pointer-only by design; this is the keyboard route.
+
 **Sections → parts.** Each book section is split at runtime into bite-size
 **parts** so a sitting is finishable: ~6-word **learn** parts, then a
 **📖 Reading** part that re-drills the whole section with the pinyin hidden — the

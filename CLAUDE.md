@@ -61,5 +61,10 @@ radical `examples` curation rule — an example may contain no *second* drilled
 radical, and the tests can only catch part of that.
 
 Simplified-Chinese display is done (`src/lang.js` + generated `src/lang-map.js`, render-time
-only; canonical content and progress stay Traditional). **Still never device-tested** — a real
-phone playtest is the highest-value untested thing. See the memory for full status.
+only; canonical content and progress stay Traditional).
+
+**First phone playtest happened (2026-07-28)** and produced one ask: reaching a
+given chapter on a long path (GNR is ~23,000px) was painful. Fixed with the
+**chapter rail** — see README "Getting around a long path". Grammar / sentence
+structures for the Basics book is a wanted future addition. See the memory for
+full status.
