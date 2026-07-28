@@ -25,6 +25,11 @@ Run the engine tests:
 npm test            # headless logic tests (no browser)
 ```
 
+The logic tests don't touch the DOM, so UI work is checked by screenshot:
+`node tools/shot.js http://localhost:5173/ out.png` renders the app in a
+phone-sized headless Chrome (and can send real touch gestures — see the header
+comment).
+
 ## How it works
 
 Vanilla JS, no framework, following the `AI SLOP` module conventions. Script
