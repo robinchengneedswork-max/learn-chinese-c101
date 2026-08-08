@@ -27,6 +27,13 @@ const CONFIG = {
   // many words each, plus one no-pinyin Reading part covering the whole section.
   PART_SIZE: 6,
 
+  // How many items must sit between two questions about the same word. A word
+  // gets 3–4 items per session, so a plain shuffle would put ~2 of them
+  // back-to-back — the one gap that teaches nothing, since the answer is still
+  // in working memory and never gets retrieved from long-term memory at all.
+  // Needs MIN_ITEM_LAG+1 distinct words to be satisfiable; see Session.space.
+  MIN_ITEM_LAG: 3,
+
   TTS_LANG: 'zh-TW',        // book is Traditional Chinese
   TTS_RATE: 0.85
 };

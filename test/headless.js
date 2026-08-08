@@ -426,5 +426,66 @@ ok('tone mark placed by the a/o/e rule', Pinyin.withTone('jiu', 2) === 'jiú' &&
    Pinyin.withTone('hui', 4) === 'huì' && Pinyin.withTone('xiang', 3) === 'xiǎng');
 ok('pattern round-trips', Pinyin.spell(['sheng', 'ming'], '1-4') === 'shēng mìng');
 
+// --- min lag: two questions about the same word never bunch together
+{
+  store.clear(); State.reset(); State.load();
+  const LAG = CONFIG.MIN_ITEM_LAG;
+
+  // Closest pair of questions about the same word, in queue positions. The
+  // pairs board is excluded (it stands for five words, not the one in .hanzi).
+  function tightest(queue) {
+    const at = new Map();
+    let min = Infinity;
+    queue.forEach((it, i) => {
+      if (it.kind === 'pairs') return;
+      if (at.has(it.hanzi)) min = Math.min(min, i - at.get(it.hanzi));
+      at.set(it.hanzi, i);
+    });
+    return min;
+  }
+  const distinct = q => new Set(q.filter(i => i.kind !== 'pairs').map(i => i.hanzi)).size;
+
+  // Every learn part of every section, plus the reading parts and the test.
+  const queues = [];
+  for (const les of C101.chapter('ch01').lessons) {
+    for (const part of C101.parts(les)) queues.push(Session.forPart(part).queue);
+  }
+  queues.push(Session.forTest(C101.chapter('ch01')).queue);
+
+  // The gap is only satisfiable when there are more distinct words than the lag.
+  const short = queues.filter(q => distinct(q) > LAG);
+  const bad = short.filter(q => tightest(q) <= LAG);
+  if (bad.length) console.log('     tightest:', bad.map(tightest).join(', '));
+  ok('no two questions about a word land within the min lag',
+     short.length > 0 && bad.length === 0);
+  // Guard against the check above passing vacuously: these queues must really
+  // ask about the same word more than once, or there is nothing to space.
+  ok('the queues do repeat words', short.some(q => q.length > distinct(q)));
+
+  // Intro cards are queued ahead of the drills; the run-in is spaced too, so
+  // the last word introduced is not the first one asked about.
+  const withIntros = queues.filter(q => q.filter(i => i.kind === 'intro').length > LAG);
+  ok('the intro run-in is spaced from the first questions',
+     withIntros.length > 0 && withIntros.every(q => tightest(q) > LAG));
+
+  // space() keeps the queue intact — same items, same count, nothing dropped.
+  {
+    const items = 'abcdef'.split('').flatMap(h => [{ hanzi: h }, { hanzi: h }, { hanzi: h }]);
+    const out = Session.space(items.slice());
+    const count = h => out.filter(i => i.hanzi === h).length;
+    ok('space keeps every item', out.length === items.length);
+    ok('space drops and duplicates nothing',
+       'abcdef'.split('').every(h => count(h) === 3));
+    ok('space satisfies the lag when it can', tightest(out) > LAG);
+  }
+
+  // Degenerate: too few words to satisfy the lag. It must still do the best
+  // available thing (alternate) rather than emit a back-to-back repeat.
+  {
+    const out = Session.space([{ hanzi: 'x' }, { hanzi: 'x' }, { hanzi: 'y' }, { hanzi: 'y' }]);
+    ok('two words alternate when the lag is unsatisfiable', tightest(out) === 2);
+  }
+}
+
 console.log(`\n${pass}/${pass + fail} passed`);
 process.exit(fail ? 1 : 0);

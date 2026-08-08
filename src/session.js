@@ -18,6 +18,61 @@ const Session = (function () {
     return shuffle(pool.slice()).slice(0, n);
   }
 
+  // How far back the same word appears in `out`, counting from the end: 1 means
+  // it's the last item emitted. Infinity if it isn't within the window. The
+  // pairs board is skipped — it carries its first word's hanzi as an id, but it
+  // asks about five words at once, so it isn't a question about that one.
+  function lastGap(out, hanzi, window) {
+    for (let i = out.length - 1, d = 1; i >= 0 && d <= window; i--, d++) {
+      if (out[i].kind !== 'pairs' && out[i].hanzi === hanzi) return d;
+    }
+    return Infinity;
+  }
+
+  // Spread a queue so no two questions about the same word land within
+  // CONFIG.MIN_ITEM_LAG of each other. `prefix` is whatever has already been
+  // queued ahead of these items (intro cards, the pairs board) so the run-in is
+  // spaced too; it is not returned.
+  //
+  // Greedy, ranking each candidate by: clears the gap > sits further back >
+  // most items still to place. That last term is what makes it work. Taking
+  // merely the first candidate that clears the gap starves the words at the
+  // back of the list — it drains a few words early and leaves a tail with too
+  // few left to alternate (abcd abcd abcd efefef). Draining the most-remaining
+  // word first is the standard fix and keeps every word in play to the end.
+  //
+  // Shuffled first so ties — the common case, since words start with equal item
+  // counts — break randomly and the order isn't a predictable round-robin.
+  //
+  // Best-effort by design: a part with fewer than MIN_ITEM_LAG+1 distinct words
+  // cannot satisfy the gap at all. When nothing clears it the least-recently
+  // asked item goes next, which still beats a true back-to-back repeat.
+  function space(items, prefix) {
+    const window = CONFIG.MIN_ITEM_LAG;
+    const left = new Map();
+    for (const it of items) left.set(it.hanzi, (left.get(it.hanzi) || 0) + 1);
+
+    const rest = shuffle(items.slice());
+    const out = (prefix || []).slice();
+    const start = out.length;
+    while (rest.length) {
+      let best = 0, bestClear = false, bestGap = 0, bestLeft = -1;
+      for (let i = 0; i < rest.length; i++) {
+        const gap = lastGap(out, rest[i].hanzi, window);
+        const clear = gap === Infinity;
+        const n = left.get(rest[i].hanzi);
+        const better = clear !== bestClear ? clear
+                     : !clear && gap !== bestGap ? gap > bestGap
+                     : n > bestLeft;
+        if (i === 0 || better) { best = i; bestClear = clear; bestGap = gap; bestLeft = n; }
+      }
+      const it = rest.splice(best, 1)[0];
+      left.set(it.hanzi, left.get(it.hanzi) - 1);
+      out.push(it);
+    }
+    return out.slice(start);
+  }
+
   // The record a drill should use for a word: the lesson's own entry (it carries
   // extras the registry copy may not have, like a radical's example words),
   // backfilled from the registry (which adds chapterId/lessonId).
@@ -219,9 +274,14 @@ const Session = (function () {
         // recognition (fill the gap) with production (produce the whole line).
         if ((s.tokens || []).length >= 3 && i % 2 === 0) quiz.push(buildItem(s, 'build'));
       });
-      // Close with one dictation: hear a sentence, rebuild it.
-      const d = sents.find(s => (s.tokens || []).length >= 3);
-      const quizzes = shuffle(quiz);
+      const quizzes = space(shuffle(quiz));
+      // Close with one dictation: hear a sentence, rebuild it. It sits outside
+      // the spacing pass (the node ends on it deliberately), so choose a
+      // sentence whose word the last few items didn't already ask about.
+      const buildable = sents.filter(s => (s.tokens || []).length >= 3);
+      const d = shuffle(buildable.slice())
+                  .find(s => lastGap(quizzes, s.blank, CONFIG.MIN_ITEM_LAG) === Infinity)
+                || buildable[0];
       if (d) quizzes.push(buildItem(d, 'dictate'));
       return makeSession(part, quizzes, 'cloze');
     }
@@ -240,7 +300,7 @@ const Session = (function () {
             .filter(s => C101.word(s.blank))
             .forEach(s => quiz.push(clozeItem(s)));
       }
-      return makeSession(part, shuffle(quiz), 'reading');
+      return makeSession(part, space(shuffle(quiz)), 'reading');
     }
 
     const words = selectWords(part);
@@ -264,7 +324,7 @@ const Session = (function () {
       // Once a word isn't brand-new, ask for it with no options at all.
       if (!SRS.isNew(full.hanzi)) quiz.push(typeItem(full));
     }
-    shuffle(quiz).forEach(q => queue.push(q));
+    space(shuffle(quiz), queue).forEach(q => queue.push(q));
 
     return makeSession(part, queue, 'learn');
   }
@@ -309,7 +369,7 @@ const Session = (function () {
         if (c) quiz.push(c);
       }
     }
-    shuffle(quiz).forEach(q => queue.push(q));
+    space(shuffle(quiz), queue).forEach(q => queue.push(q));
     return makeSession(part, queue, part.drill);
   }
 
@@ -325,7 +385,7 @@ const Session = (function () {
     const sents = (chapter.sentences || []).filter(s => C101.word(s.blank));
     const quiz = sents.map(clozeItem);
     const pseudo = { id: `test-${chapter.id}`, title: `${chapter.title} — Test`, zh: chapter.zh };
-    return makeSession(pseudo, shuffle(quiz), 'test');
+    return makeSession(pseudo, space(shuffle(quiz)), 'test');
   }
 
   // Public: review session across all due words (the SRS inbox).
@@ -409,5 +469,5 @@ const Session = (function () {
     };
   }
 
-  return { forPart, forLesson, forTest, forReview, pinyinMatches };
+  return { forPart, forLesson, forTest, forReview, pinyinMatches, space };
 })();
