@@ -146,6 +146,13 @@ demoted a box; correct answers promote a word toward "mastered."
 - **Sounds are samples** from Kenney's CC0 *Interface Sounds* (`assets/sfx/`),
   decoded once on the first gesture. If they can't load — `file://` blocks `fetch` —
   each falls back to the synthesised tone it replaced, so nothing goes silent.
+- **A sound can never strand a lesson.** `SFX.correct` is called from the top of
+  `showFeedback`, *before* it draws the banner and the Continue button, so a throw
+  in the audio stack used to cost you the whole question, not just the sound. Every
+  `SFX` entry point and `buzz` now swallow their own failures. Related: play with a
+  bare `start()` unless a note genuinely needs a clock, and re-`resume()` the
+  context on use — mobile parks it whenever it decides the unlocking gesture
+  expired, and a parked context accepts everything and plays nothing.
 - **Finishing counts up.** The XP chip rolls from where the session started rather
   than printing the total, over a short confetti burst. Both are skipped under
   `prefers-reduced-motion`.

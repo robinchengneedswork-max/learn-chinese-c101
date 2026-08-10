@@ -9,6 +9,10 @@ const Audio101 = (function () {
 
   function ac() {
     if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+    // Mobile browsers park the context whenever they think the gesture that
+    // unlocked it has expired — coming back from a locked screen or another tab
+    // is enough. A parked context accepts everything below and plays none of it.
+    if (ctx.state === 'suspended' && ctx.resume) ctx.resume();
     return ctx;
   }
 
@@ -84,7 +88,11 @@ const Audio101 = (function () {
     const g = c.createGain();
     g.gain.value = CONFIG.SFX_VOLUME;
     src.connect(g); g.connect(c.destination);
-    src.start(c.currentTime + (delay || 0));
+    // Bare start() means "as soon as possible" and is the only form that is
+    // reliable on a context that is still waking up. Only the milestone's second
+    // note needs a clock, so only it gets one — scheduling everything else at
+    // exactly currentTime is a WebKit coin-flip between playing and dropping.
+    if (delay) src.start(c.currentTime + delay); else src.start();
     return true;
   }
 
@@ -139,11 +147,26 @@ const Audio101 = (function () {
     tick() { sample('tick', 1.6); }
   };
 
+  // Every sound here is garnish, but it is played from the top of the handlers
+  // that draw the feedback banner and the Continue button (see UI.showFeedback)
+  // and the results screen. So a throw anywhere in the audio stack — a context
+  // the browser parked, a decode that never landed, a start() the platform
+  // dislikes — doesn't just lose a sound, it strands the learner on an
+  // un-continuable question. Nothing in here is worth that: swallow it.
+  Object.keys(SFX).forEach((k) => {
+    const fn = SFX[k];
+    SFX[k] = function () {
+      try { return fn.apply(this, arguments); } catch (e) { /* garnish only */ }
+    };
+  });
+
   // A tick under the thumb. Android honours it; iOS has no Vibration API at all,
   // where the tick instead comes from the native switch overlaid on the button
   // (see UI.tappable) — so this silently does nothing there, by design.
   function buzz() {
-    if (navigator.vibrate) navigator.vibrate(CONFIG.HAPTIC_TAP_MS);
+    try {
+      if (navigator.vibrate) navigator.vibrate(CONFIG.HAPTIC_TAP_MS);
+    } catch (e) { /* same rule as the SFX above: never break a tap over a tick */ }
   }
 
   return { initVoices, speak, hasVoice, SFX, buzz, loadSamples };
