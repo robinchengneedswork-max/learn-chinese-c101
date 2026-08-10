@@ -408,6 +408,11 @@ const Session = (function () {
       total: queue.length,
       correctCount: 0,
       missed: 0,
+      // Consecutive correct answers, and the best run of the session. Drives the
+      // rising-pitch correct sound and the results chip. Like SRS, the pairs board
+      // is excluded: it asks about five words at once, so it isn't a link in a run.
+      combo: 0,
+      bestCombo: 0,
       done: queue.length === 0,
 
       current() { return this.queue[this.idx]; },
@@ -427,7 +432,15 @@ const Session = (function () {
             ? pinyinMatches(choice, item.word)
             : (choice === item.correct);
         // The matching board is a warm-up, not evidence of recall — no SRS.
-        if (item.kind !== 'pairs') SRS.grade(item.hanzi, ok);
+        if (item.kind !== 'pairs') {
+          SRS.grade(item.hanzi, ok);
+          if (ok) {
+            this.combo += 1;
+            if (this.combo > this.bestCombo) this.bestCombo = this.combo;
+          } else {
+            this.combo = 0;
+          }
+        }
         State.touchStreak();
         if (ok) {
           this.correctCount += 1;

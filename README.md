@@ -44,7 +44,7 @@ src/pinyin.js    — tone arithmetic on tone-marked pinyin (powers the tone dril
 src/state.js     — progress in localStorage (xp, streak, per-word SRS record)
 src/srs.js       — Leitner spaced repetition (6 boxes, correct↑ / miss↓)
 src/session.js   — builds an exercise queue for a lesson or a review set
-src/audio.js     — Chinese TTS (SpeechSynthesis) + procedural correct/wrong SFX
+src/audio.js     — Chinese TTS (SpeechSynthesis) + UI sounds (CC0 samples, combo pitch)
 src/ui.js        — screens (home / session / results) + exercise rendering
 src/main.js      — boot + service-worker registration
 content/*.js     — the vocabulary data (one file per chapter)
@@ -128,6 +128,32 @@ build recall:
 
 In a Reading part pinyin is suppressed everywhere. Missed items are re-queued and
 demoted a box; correct answers promote a word toward "mastered."
+
+**How it feels.** Answering should be worth doing, not just correct:
+
+- **Buttons press.** Options and the Continue button have a hard bottom edge that
+  collapses under the thumb, so the screen answers back before the answer is graded.
+- **A run sounds like a run.** Consecutive correct answers build a **combo**
+  (`session.combo`), and the correct-answer sample replays a semitone higher per
+  link, capped by `CONFIG.COMBO_PITCH_MAX`. From `CONFIG.COMBO_CELEBRATE` the banner
+  calls the streak out, and the results screen keeps the session's best. The pairs
+  board is excluded from the run for the same reason it's excluded from SRS.
+- **Sounds are samples** from Kenney's CC0 *Interface Sounds* (`assets/sfx/`),
+  decoded once on the first gesture. If they can't load — `file://` blocks `fetch` —
+  each falls back to the synthesised tone it replaced, so nothing goes silent.
+- **Finishing counts up.** The XP chip rolls from where the session started rather
+  than printing the total, over a short confetti burst. Both are skipped under
+  `prefers-reduced-motion`.
+- **Haptics are one tick, on tap, and nothing else.** Android gets it from
+  `navigator.vibrate`. iOS has no Vibration API at all — WebKit's standards position
+  formally opposes it — so `UI.tappable` also lays an invisible
+  `<input type="checkbox" switch>` over each button: a *direct tap* on a native
+  switch is the only thing that still reaches the Taptic Engine (Apple closed the
+  scripted route in iOS 26.5). The real `<button>` stays underneath for keyboard and
+  assistive tech, which is why the click handler lives on the wrapper. There is
+  deliberately **no reward buzz** — it's impossible on iOS, so it would be an
+  Android-only reward, and the design would come to lean on something half the
+  devices can't do.
 
 **Traditional / Simplified.** The book — and therefore all content and saved
 progress — is **Traditional** Chinese. The picker in the top-left switches the
@@ -311,3 +337,6 @@ Then open the URL on your phone and **Add to Home Screen** to install the PWA.
 
 Vocabulary is derived from _Course 101: Christian Foundations_ for personal
 study. Pinyin/definitions use [CC-CEDICT](https://cc-cedict.org/) (CC BY-SA 4.0).
+UI sounds in `assets/sfx/` are from Kenney's
+[Interface Sounds](https://kenney.nl/assets/interface-sounds) (CC0 — public domain,
+no attribution required; credited here anyway).

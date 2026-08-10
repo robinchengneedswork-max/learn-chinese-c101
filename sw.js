@@ -1,5 +1,5 @@
 // sw.js — offline app shell cache. Bump CACHE when files change so clients update.
-const CACHE = 'c101-v21';
+const CACHE = 'c101-v22';
 const ASSETS = [
   '.', 'index.html', 'style.css', 'manifest.webmanifest',
   'src/config.js', 'src/content.js', 'src/lang-map.js', 'src/lang.js',
@@ -20,7 +20,11 @@ const ASSETS = [
   'content/basics-04-core.js',
   'icons/icon.svg', 'icons/icon-maskable.svg',
   // Course 101 watercolor set dressing (per-section) for the learning path
-  'assets/star.png', 'assets/book-tree.png'
+  'assets/star.png', 'assets/book-tree.png',
+  // UI sounds — Kenney "Interface Sounds" (CC0). Small enough to precache; the
+  // app falls back to synthesised tones if any of them fail to load.
+  'assets/sfx/tap.wav', 'assets/sfx/correct.wav', 'assets/sfx/wrong.wav',
+  'assets/sfx/finish.wav', 'assets/sfx/tick.wav'
 ];
 
 self.addEventListener('install', (e) => {

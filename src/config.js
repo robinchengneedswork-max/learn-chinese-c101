@@ -35,5 +35,20 @@ const CONFIG = {
   MIN_ITEM_LAG: 3,
 
   TTS_LANG: 'zh-TW',        // book is Traditional Chinese
-  TTS_RATE: 0.85
+  TTS_RATE: 0.85,
+
+  // Combo: consecutive correct answers within one session. The correct-answer
+  // sample is replayed a semitone higher per link, so a run *sounds* like a run —
+  // a streak of five feels different from five separate right answers, which is
+  // the one reward a per-item sound can't give you. Capped so it never gets shrill.
+  COMBO_PITCH_STEP: 0.0595, // 2^(1/12) - 1, i.e. one semitone
+  COMBO_PITCH_MAX: 1.5,
+  COMBO_CELEBRATE: 3,       // combo at which the banner starts calling it out
+
+  SFX_VOLUME: 0.55,
+  // A tick under the thumb when an option is tapped. Everything after grading is
+  // deliberately silent on the haptics channel: iOS can't fire it (Apple has never
+  // shipped the Vibration API, and since iOS 26.5 only a direct tap on a native
+  // switch control does anything), so a reward buzz would exist on Android only.
+  HAPTIC_TAP_MS: 15
 };

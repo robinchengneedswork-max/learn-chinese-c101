@@ -487,5 +487,61 @@ ok('pattern round-trips', Pinyin.spell(['sheng', 'ming'], '1-4') === 'shēng mì
   }
 }
 
+// ---- Combo: consecutive correct answers within a session --------------------
+{
+  store.clear(); State.reset(); State.load();
+  const part = C101.parts(C101.lesson('ch01-l1a'))[0];
+
+  // A clean run counts up; bestCombo remembers the high-water mark.
+  const s = Session.forPart(part);
+  let graded = 0;   // items that count toward a run: not intro, not the pairs board
+  let answered = 0;
+  while (!s.done && answered < 6) {
+    const item = s.current();
+    if (item.kind === 'intro') { s.answer(null); continue; }
+    if (item.kind !== 'pairs') graded++;
+    s.answer(item.correct);
+    answered++;
+  }
+  ok('a run of correct answers builds the combo', s.combo === graded && graded > 0);
+  ok('bestCombo tracks the high-water mark', s.bestCombo === s.combo);
+
+  // A miss breaks it, and the next correct answer starts a fresh run — while
+  // bestCombo keeps the earlier best.
+  const before = s.bestCombo;
+  const missItem = s.current();
+  if (missItem && missItem.kind !== 'intro' && missItem.kind !== 'pairs') {
+    const wrongChoice = (missItem.options || []).find(o => o !== missItem.correct) || '__nope__';
+    s.answer(wrongChoice);
+    ok('a miss resets the combo to zero', s.combo === 0);
+    ok('a miss leaves bestCombo alone', s.bestCombo === before);
+  }
+
+  // The pairs board is excluded, exactly as it is from SRS: it asks about five
+  // words at once, so it is not a link in a run either way.
+  store.clear(); State.reset(); State.load();
+  const s2 = Session.forPart(part);
+  const pairsItem = s2.queue.find(i => i.kind === 'pairs');
+  if (pairsItem) {
+    while (s2.current() !== pairsItem && !s2.done) s2.answer(s2.current().correct);
+    const comboBefore = s2.combo;
+    s2.answer(pairsItem.correct);
+    ok('the pairs board does not join a combo run', s2.combo === comboBefore);
+  }
+}
+
+// ---- Combo pitch: the rate the correct sound is replayed at ------------------
+// The arithmetic lives in audio.js (which needs an AudioContext, so it isn't
+// loaded here), but the constants it reads must stay sane or a long run turns
+// shrill — cap first, then check a semitone is a semitone.
+{
+  const rate = n => Math.min(1 + (n - 1) * CONFIG.COMBO_PITCH_STEP, CONFIG.COMBO_PITCH_MAX);
+  ok('a single correct answer plays at normal pitch', rate(1) === 1);
+  ok('one semitone per link', Math.abs(rate(2) - Math.pow(2, 1 / 12)) < 0.001);
+  ok('the pitch climb is capped', rate(100) === CONFIG.COMBO_PITCH_MAX);
+  ok('the cap is reachable but not immediate',
+     CONFIG.COMBO_PITCH_MAX > rate(5) && CONFIG.COMBO_PITCH_MAX < 2);
+}
+
 console.log(`\n${pass}/${pass + fail} passed`);
 process.exit(fail ? 1 : 0);

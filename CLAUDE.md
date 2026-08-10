@@ -68,3 +68,11 @@ given chapter on a long path (GNR is ~23,000px) was painful. Fixed with the
 **chapter rail** — see README "Getting around a long path". Grammar / sentence
 structures for the Basics book is a wanted future addition. See the memory for
 full status.
+
+**Feel / reward layer shipped 2026-08-10** — see README "How it feels" for the
+mechanics. The design was chosen from a three-direction mockup; the two rules
+worth not re-litigating: **haptics are one tick on tap and nothing after**
+(iOS has no Vibration API and Apple closed the scripted switch hack in 26.5, so a
+reward buzz would be Android-only), and the **pairs board never joins a combo
+run** (same reason it's excluded from SRS). Sounds are CC0 samples with the old
+synthesised tones kept as the `file://` fallback — don't delete them.

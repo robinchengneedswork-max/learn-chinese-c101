@@ -5,6 +5,7 @@
 const UI = (function () {
   let session = null;   // active Session or null
   let answered = false; // has the current item been answered (awaiting Continue)?
+  let xpAtStart = 0;    // XP when this session began — the results chip counts up from it
   const $ = (sel, root) => (root || document).querySelector(sel);
 
   function showScreen(id) {
@@ -928,6 +929,8 @@ const UI = (function () {
 
   function beginSession() {
     answered = false;
+    xpAtStart = State.get().xp;   // so the results chip can count up the gain
+    Audio101.loadSamples();       // first gesture — decode the UI sounds now
     showScreen('session');
     renderItem();
   }
@@ -959,14 +962,51 @@ const UI = (function () {
   // All three are option-picking items, so they share onChoose/showFeedback with
   // multiple choice; only the prompt and the option faces differ.
 
+  // ---- Tap feel --------------------------------------------------------------
+  // Wrap a button so that pressing it answers back: a click sample, a haptic tick,
+  // and the press collapse (CSS). The invisible <input switch> on top is the only
+  // way to reach the Taptic Engine from a web page on current iOS — a *direct tap*
+  // on a native switch control. It is progressive enhancement in both directions:
+  // on Android navigator.vibrate does the work and the switch is inert; if Apple
+  // closes the hole again we lose a tick and nothing else. The real <button> stays
+  // underneath so keyboard and assistive tech are unaffected, which is why the
+  // click handler lives on the wrapper — the tap lands on the switch, not the
+  // button, and only the wrapper sees both.
+  function tappable(btn, onTap) {
+    const wrap = el('div', 'tap');
+    const sw = document.createElement('input');
+    sw.type = 'checkbox';
+    sw.setAttribute('switch', '');   // Safari 17.4+; ignored elsewhere
+    sw.className = 'tap-switch';
+    sw.tabIndex = -1;
+    sw.setAttribute('aria-hidden', 'true');
+    wrap.appendChild(btn);
+    wrap.appendChild(sw);
+    wrap.addEventListener('pointerdown', () => {
+      if (btn.disabled) return;
+      Audio101.SFX.tap();
+      Audio101.buzz();
+    });
+    wrap.addEventListener('click', () => { if (!btn.disabled) onTap(); });
+    return wrap;
+  }
+
+  // Same, for a button that's already in the document: wrap it where it stands.
+  function tapWrapInPlace(btn, onTap) {
+    const parent = btn.parentElement;
+    const next = btn.nextSibling;
+    const wrap = tappable(btn, onTap);   // this moves btn into wrap
+    parent.insertBefore(wrap, next);
+    return wrap;
+  }
+
   function optionList(item, faces, foot) {
     const opts = el('div', 'options');
     for (const opt of item.options) {
       const b = el('button', 'option');
       faces(b, opt);
       b.dataset.val = opt;  // canonical value — grading and reveal read this
-      b.addEventListener('click', () => onChoose(item, opt, b, opts, foot));
-      opts.appendChild(b);
+      opts.appendChild(tappable(b, () => onChoose(item, opt, b, opts, foot)));
     }
     return opts;
   }
@@ -1248,8 +1288,7 @@ const UI = (function () {
         if (w && !reading) b.appendChild(el('span', 'opt-pinyin', w.pinyin));
       }
       b.dataset.val = opt; // canonical (Traditional) value — reveal/grade off this, not display text
-      b.addEventListener('click', () => onChoose(item, opt, b, opts, foot));
-      opts.appendChild(b);
+      opts.appendChild(tappable(b, () => onChoose(item, opt, b, opts, foot)));
     }
     stage.appendChild(opts);
   }
@@ -1277,8 +1316,7 @@ const UI = (function () {
       const b = el('button', 'option');
       b.appendChild(el('span', 'opt-hanzi', Lang.zh(opt)));
       b.dataset.val = opt; // canonical value for reveal/grading
-      b.addEventListener('click', () => onChoose(item, opt, b, opts, foot));
-      opts.appendChild(b);
+      opts.appendChild(tappable(b, () => onChoose(item, opt, b, opts, foot)));
     }
     stage.appendChild(opts);
 
@@ -1322,6 +1360,9 @@ const UI = (function () {
       : choice === item.correct;
 
     optsEl.querySelectorAll('.option').forEach(o => { o.disabled = true; });
+    // A disabled input stops taking pointer events, so the overlays stop
+    // swallowing taps once the answer is in.
+    optsEl.querySelectorAll('.tap-switch').forEach(s => { s.disabled = true; });
     const stage = optsEl.parentElement;
     if (stage) stage.querySelectorAll('.type-input, .type-submit, .type-toggle')
       .forEach(n => { n.disabled = true; });
@@ -1341,12 +1382,17 @@ const UI = (function () {
   // Shared end-of-item feedback: sound, banner with the right answer, Continue.
   // Every exercise kind funnels through here so grading stays in one place.
   function showFeedback(item, choice, ok, foot) {
-    ok ? Audio101.SFX.correct() : Audio101.SFX.wrong();
+    // The queue is graded on Continue, not here, so the run this answer *will*
+    // reach is one ahead of session.combo. The pairs board never joins a run.
+    const streak = (ok && item.kind !== 'pairs') ? session.combo + 1 : 0;
+    ok ? Audio101.SFX.correct(streak) : Audio101.SFX.wrong();
 
     foot.classList.add(ok ? 'ok' : 'bad');
     const banner = el('div', 'feedback');
     if (ok) {
-      banner.textContent = 'Correct!';
+      banner.textContent = streak >= CONFIG.COMBO_CELEBRATE
+        ? `Correct! · ${streak} in a row 🔥`
+        : 'Correct!';
     } else if (item.kind === 'build' || item.kind === 'dictate') {
       banner.textContent = `Answer: ${Lang.zh(item.zh)}`;
     } else if (item.kind === 'type') {
@@ -1369,8 +1415,7 @@ const UI = (function () {
     foot.appendChild(banner);
 
     const cont = el('button', 'continue', 'Continue');
-    cont.addEventListener('click', () => { session.answer(choice); renderItem(); });
-    foot.appendChild(cont);
+    foot.appendChild(tappable(cont, () => { session.answer(choice); renderItem(); }));
   }
 
   // ---- Results --------------------------------------------------------------
@@ -1390,8 +1435,66 @@ const UI = (function () {
     const stats = $('#results-body');
     stats.appendChild(statChip(session.correctCount, 'correct'));
     stats.appendChild(statChip(acc + '%', 'accuracy'));
-    stats.appendChild(statChip(State.get().xp, 'total XP'));
+    // Only worth a chip once it's actually a run.
+    if (session.bestCombo >= 2) stats.appendChild(statChip('×' + session.bestCombo, 'best streak'));
+    const xpChip = statChip(xpAtStart, 'total XP');
+    stats.appendChild(xpChip);
+    countUp(xpChip.querySelector('.chip-val'), xpAtStart, State.get().xp);
+    confetti();
     session = null;
+  }
+
+  // Roll the number up rather than printing it: the counting *is* the reward.
+  function countUp(el_, from, to) {
+    if (to <= from) { el_.textContent = String(to); return; }
+    if (reducedMotion()) { el_.textContent = String(to); return; }
+    const step = Math.max(1, Math.round((to - from) / 24));
+    let cur = from;
+    const iv = setInterval(() => {
+      cur = Math.min(to, cur + step);
+      el_.textContent = String(cur);
+      if (cur < to) Audio101.SFX.tick(); else clearInterval(iv);
+    }, 45);
+  }
+
+  function reducedMotion() {
+    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  // A short burst of falling paper over the results screen. Canvas rather than a
+  // pile of DOM nodes, and it clears itself once the last piece is off-screen.
+  function confetti() {
+    const cv = $('#results-fx');
+    if (!cv || reducedMotion()) return;
+    const cx = cv.getContext('2d');
+    const w = cv.width = cv.offsetWidth;
+    const h = cv.height = cv.offsetHeight;
+    const colors = ['#22c55e', '#38bdf8', '#fbbf24', '#e2e8f0', '#4ade80'];
+    const bits = [];
+    for (let i = 0; i < 80; i++) {
+      bits.push({
+        x: Math.random() * w, y: -20 - Math.random() * h * 0.6,
+        vx: (Math.random() - 0.5) * 1.6, vy: 1.5 + Math.random() * 2.5,
+        w: 5 + Math.random() * 6, h: 8 + Math.random() * 8,
+        rot: Math.random() * 6, vr: (Math.random() - 0.5) * 0.3,
+        c: colors[(Math.random() * colors.length) | 0]
+      });
+    }
+    (function frame() {
+      cx.clearRect(0, 0, w, h);
+      let live = 0;
+      for (const b of bits) {
+        b.vy += 0.03; b.x += b.vx; b.y += b.vy; b.rot += b.vr;
+        if (b.y < h + 20) live++;
+        cx.save();
+        cx.translate(b.x, b.y); cx.rotate(b.rot);
+        cx.fillStyle = b.c;
+        cx.fillRect(-b.w / 2, -b.h / 2, b.w, b.h);
+        cx.restore();
+      }
+      if (live) requestAnimationFrame(frame);
+      else cx.clearRect(0, 0, w, h);
+    })();
   }
 
   function statChip(value, label) {
@@ -1419,7 +1522,8 @@ const UI = (function () {
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
     $('#session-exit').addEventListener('click', () => { session = null; renderHome(); showScreen('home'); });
-    $('#results-done').addEventListener('click', () => { renderHome(); showScreen('home'); });
+    // The results CTA is static markup, so it gets the tap layer in place.
+    tapWrapInPlace($('#results-done'), () => { renderHome(); showScreen('home'); });
     // Chapter rail: pointer-driven, so it owns its gestures outright.
     const rail = $('#path-rail');
     if (rail) {
