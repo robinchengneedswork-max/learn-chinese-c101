@@ -96,6 +96,11 @@ body {
 
 .tagline { color: var(--muted); font-size: 13px; text-align: center; margin-top: 26px; }
 .tagline em { color: var(--text); font-style: italic; }
+/* Quiet enough to ignore, findable when a phone is running the wrong version. */
+.build-stamp {
+  color: var(--muted); opacity: .45; font-size: 11px; text-align: center;
+  margin-top: 8px; letter-spacing: .5px; font-variant-numeric: tabular-nums;
+}
 
 /* ---- The learning path (winding trail) ---- */
 /* Each chapter section is its own coloured background "band", divided by a clean
@@ -332,7 +337,18 @@ body {
 .pair-cell.matched { opacity: .25; pointer-events: none; }
 
 /* footer / feedback */
-.session-foot { padding: 16px 18px calc(18px + var(--safe-b)); border-top: 1px solid transparent; max-width: 640px; margin: 0 auto; width: 100%; }
+/* Grading adds a feedback line and the Continue button to this footer, taking it
+   from ~35px to ~127px. Because .session-stage is flex:1 and vertically centred,
+   that growth pushes the question up by half the difference — a measured 46px
+   jump at the exact moment you look down to read whether you were right.
+   So reserve the answered height up front: grading then only ever paints, it
+   never reflows. The number is the sum of the answered state, measured at 390px:
+   16 top + 20 feedback line + 12 gap + 61 button and its shadow + 18 bottom. */
+.session-foot {
+  padding: 16px 18px calc(18px + var(--safe-b));
+  min-height: calc(127px + var(--safe-b));
+  border-top: 1px solid transparent; max-width: 640px; margin: 0 auto; width: 100%;
+}
 .session-foot.ok { background: rgba(34,197,94,.08); border-top-color: var(--brand); }
 .session-foot.bad { background: rgba(239,68,68,.08); border-top-color: var(--wrong); }
 .feedback { font-weight: 700; margin-bottom: 12px; }

@@ -1527,6 +1527,9 @@ const UI = (function () {
     $('#modal').querySelector('.modal-backdrop').addEventListener('click', closeModal);
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
+    const stamp = $('#build-stamp');
+    if (stamp) stamp.textContent = CONFIG.BUILD;
+
     $('#session-exit').addEventListener('click', () => { session = null; renderHome(); showScreen('home'); });
     // The results CTA is static markup, so it gets the tap layer in place.
     tapWrapInPlace($('#results-done'), () => { renderHome(); showScreen('home'); });

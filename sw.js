@@ -1,5 +1,10 @@
 // sw.js — offline app shell cache. Bump CACHE when files change so clients update.
-const CACHE = 'c101-v25';
+// Must stay in step with CONFIG.BUILD in src/config.js — the app shows that
+// string on the home screen, so "which version is this phone actually running?"
+// is answerable at a glance instead of by deduction. test/headless.js fails if
+// the two drift, which is the whole point: changing a file without bumping the
+// cache ships a deploy that cannot reach anyone.
+const CACHE = 'c101-v26';
 const ASSETS = [
   '.', 'index.html', 'style.css', 'manifest.webmanifest',
   'src/config.js', 'src/content.js', 'src/lang-map.js', 'src/lang.js',
@@ -31,10 +36,17 @@ const ASSETS = [
 // whole install, the new worker never activates, and every client keeps being
 // served the previous version *forever* — a broken deploy that no amount of
 // reloading fixes. A missing file should cost us that one file, nothing more.
+//
+// `cache: 'reload'` is the other half of that, and the subtler half: a plain
+// c.add() may be answered by the browser's *HTTP* cache, so bumping CACHE can
+// build a brand-new cache and refill it with the very files you just replaced —
+// per file, depending on what happened to still be in the HTTP cache. That is
+// where a half-updated app comes from: some changes land, some don't, and no
+// number of reloads or cache bumps shakes it out. Go to the network or fail.
 self.addEventListener('install', (e) => {
   e.waitUntil(
     caches.open(CACHE).then(c => Promise.all(
-      ASSETS.map(url => c.add(url).catch(() => {
+      ASSETS.map(url => c.add(new Request(url, { cache: 'reload' })).catch(() => {
         console.warn('[sw] could not cache', url);
       }))
     ))

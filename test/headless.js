@@ -549,5 +549,17 @@ ok('pattern round-trips', Pinyin.spell(['sheng', 'ming'], '1-4') === 'shēng mì
   ok('the two notes read as two', CONFIG.COMBO_LIFT_GAP > 0.03 && CONFIG.COMBO_LIFT_GAP < 0.3);
 }
 
+// ---- Build stamp: the app and the service worker must agree ------------------
+// Editing a file without bumping sw.js's CACHE ships a deploy that no client can
+// reach — the fetch handler is cache-first, so every existing install keeps
+// serving its own copy indefinitely. This is the guard rail for that mistake.
+{
+  const swSrc = require('fs').readFileSync(require('path').join(__dirname, '..', 'sw.js'), 'utf8');
+  const m = swSrc.match(/const CACHE = '([^']+)'/);
+  ok('sw.js declares a CACHE name', !!m);
+  ok('CONFIG.BUILD matches sw.js CACHE (bump both, or nobody gets the deploy)',
+     !!m && m[1] === CONFIG.BUILD);
+}
+
 console.log(`\n${pass}/${pass + fail} passed`);
 process.exit(fail ? 1 : 0);

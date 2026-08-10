@@ -32,7 +32,11 @@ You can also open `index.html` directly on `file://`; everything works except th
 - **Per-word progress is keyed by `hanzi`** (localStorage). Changing a word's hanzi starts a
   fresh learning history for it.
 - **Service worker cache discipline**: when you add/rename an asset, add it to `ASSETS` in
-  `sw.js` AND bump `CACHE` (`c101-vN`) so clients actually refresh.
+  `sw.js` AND bump `CACHE` (`c101-vN`) so clients actually refresh. `CACHE` must equal
+  `CONFIG.BUILD` in `src/config.js` — `npm test` fails if they drift, and the app prints
+  `CONFIG.BUILD` at the bottom of the home screen. **Read that stamp off the device before
+  debugging any "the change didn't land" report**; guessing the version from symptoms has
+  cost more time on this project than any real bug.
 - **Deploy**: static site on Vercel; push `main` = deploy once the repo is imported.
 
 ## Memory
