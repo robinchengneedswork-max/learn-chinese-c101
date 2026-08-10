@@ -530,17 +530,23 @@ ok('pattern round-trips', Pinyin.spell(['sheng', 'ming'], '1-4') === 'shēng mì
   }
 }
 
-// ---- Combo pitch: the rate the correct sound is replayed at ------------------
+// ---- Combo milestones: when the run gets a sound of its own ------------------
 // The arithmetic lives in audio.js (which needs an AudioContext, so it isn't
-// loaded here), but the constants it reads must stay sane or a long run turns
-// shrill — cap first, then check a semitone is a semitone.
+// loaded here), but the constants it reads must stay sane: the reward has to be
+// rare enough to stay a reward, and every ordinary correct answer must sound
+// identical — the thing the old per-link pitch climb got wrong.
 {
-  const rate = n => Math.min(1 + (n - 1) * CONFIG.COMBO_PITCH_STEP, CONFIG.COMBO_PITCH_MAX);
-  ok('a single correct answer plays at normal pitch', rate(1) === 1);
-  ok('one semitone per link', Math.abs(rate(2) - Math.pow(2, 1 / 12)) < 0.001);
-  ok('the pitch climb is capped', rate(100) === CONFIG.COMBO_PITCH_MAX);
-  ok('the cap is reachable but not immediate',
-     CONFIG.COMBO_PITCH_MAX > rate(5) && CONFIG.COMBO_PITCH_MAX < 2);
+  const milestone = n => !!n && n % CONFIG.COMBO_MILESTONE === 0;
+  ok('a single correct answer is not a milestone', !milestone(1));
+  ok('a broken run (streak 0) is not a milestone', !milestone(0));
+  ok('the milestone lands on the Nth link', milestone(CONFIG.COMBO_MILESTONE));
+  ok('and repeats every N after that', milestone(CONFIG.COMBO_MILESTONE * 3));
+  ok('nothing in between fires', !milestone(CONFIG.COMBO_MILESTONE + 1));
+  ok('the milestone is rare enough to stay a reward', CONFIG.COMBO_MILESTONE >= 4);
+  ok('the banner celebrates at or before the first milestone',
+     CONFIG.COMBO_CELEBRATE <= CONFIG.COMBO_MILESTONE);
+  ok('the lift is a real interval, not a chipmunk', CONFIG.COMBO_LIFT > 1 && CONFIG.COMBO_LIFT <= 2);
+  ok('the two notes read as two', CONFIG.COMBO_LIFT_GAP > 0.03 && CONFIG.COMBO_LIFT_GAP < 0.3);
 }
 
 console.log(`\n${pass}/${pass + fail} passed`);

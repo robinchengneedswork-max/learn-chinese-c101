@@ -1390,9 +1390,15 @@ const UI = (function () {
     foot.classList.add(ok ? 'ok' : 'bad');
     const banner = el('div', 'feedback');
     if (ok) {
-      banner.textContent = streak >= CONFIG.COMBO_CELEBRATE
-        ? `Correct! · ${streak} in a row 🔥`
-        : 'Correct!';
+      // The milestone is the one the ear hears too (see SFX.correct), so give it
+      // its own line rather than letting it read as just another 🔥.
+      if (streak && streak % CONFIG.COMBO_MILESTONE === 0) {
+        banner.textContent = `${streak} in a row! 🎉`;
+      } else if (streak >= CONFIG.COMBO_CELEBRATE) {
+        banner.textContent = `Correct! · ${streak} in a row 🔥`;
+      } else {
+        banner.textContent = 'Correct!';
+      }
     } else if (item.kind === 'build' || item.kind === 'dictate') {
       banner.textContent = `Answer: ${Lang.zh(item.zh)}`;
     } else if (item.kind === 'type') {

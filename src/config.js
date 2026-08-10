@@ -37,12 +37,14 @@ const CONFIG = {
   TTS_LANG: 'zh-TW',        // book is Traditional Chinese
   TTS_RATE: 0.85,
 
-  // Combo: consecutive correct answers within one session. The correct-answer
-  // sample is replayed a semitone higher per link, so a run *sounds* like a run —
-  // a streak of five feels different from five separate right answers, which is
-  // the one reward a per-item sound can't give you. Capped so it never gets shrill.
-  COMBO_PITCH_STEP: 0.0595, // 2^(1/12) - 1, i.e. one semitone
-  COMBO_PITCH_MAX: 1.5,
+  // Combo: consecutive correct answers within one session. Every correct answer
+  // sounds the same; the run is rewarded at milestones instead — a two-note lift
+  // every COMBO_MILESTONE links. (An earlier build climbed a semitone per link,
+  // which meant the sound you hear most often was never the same twice and got
+  // faster and shrill on a long run. A rare, fixed reward beats a creeping one.)
+  COMBO_MILESTONE: 5,
+  COMBO_LIFT: 1.5,          // the milestone's second note: a fifth above the first
+  COMBO_LIFT_GAP: 0.09,     // seconds between the two notes
   COMBO_CELEBRATE: 3,       // combo at which the banner starts calling it out
 
   SFX_VOLUME: 0.55,

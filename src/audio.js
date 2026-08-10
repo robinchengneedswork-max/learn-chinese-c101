@@ -72,8 +72,9 @@ const Audio101 = (function () {
   }
 
   // Play a sample if we have it. Returns false when we don't, so each SFX can
-  // fall back to its synthesised version rather than going silent.
-  function sample(name, rate) {
+  // fall back to its synthesised version rather than going silent. `rate`
+  // re-pitches it, `delay` schedules it that many seconds out.
+  function sample(name, rate, delay) {
     const buf = buffers[name];
     if (!buf) { loadSamples(); return false; }
     const c = ac();
@@ -83,14 +84,14 @@ const Audio101 = (function () {
     const g = c.createGain();
     g.gain.value = CONFIG.SFX_VOLUME;
     src.connect(g); g.connect(c.destination);
-    src.start();
+    src.start(c.currentTime + (delay || 0));
     return true;
   }
 
-  // One semitone up per link in the combo, capped.
-  function comboRate(streak) {
-    if (!streak || streak < 2) return 1;
-    return Math.min(1 + (streak - 1) * CONFIG.COMBO_PITCH_STEP, CONFIG.COMBO_PITCH_MAX);
+  // Does this answer land on a combo milestone? Only then does a run make a
+  // sound of its own; every other correct answer is the plain hit.
+  function isMilestone(streak) {
+    return !!streak && streak % CONFIG.COMBO_MILESTONE === 0;
   }
 
   function tone(freq, start, dur, type) {
@@ -109,10 +110,20 @@ const Audio101 = (function () {
 
   const SFX = {
     // `streak` is the combo this answer just reached (1 = first of a run).
+    // Same hit every time; on a milestone the same hit answers itself a fifth
+    // higher, so the reward is a distinct little two-note lift you hear rarely.
     correct(streak) {
-      const rate = comboRate(streak);
-      if (sample('correct', rate)) return;
-      tone(660 * rate, 0, 0.12); tone(990 * rate, 0.1, 0.16);
+      const lift = isMilestone(streak);
+      if (sample('correct')) {
+        if (lift) sample('correct', CONFIG.COMBO_LIFT, CONFIG.COMBO_LIFT_GAP);
+        return;
+      }
+      tone(660, 0, 0.12); tone(990, 0.1, 0.16);
+      if (lift) {
+        const g = CONFIG.COMBO_LIFT_GAP + 0.1;
+        tone(660 * CONFIG.COMBO_LIFT, g, 0.12);
+        tone(990 * CONFIG.COMBO_LIFT, g + 0.1, 0.16);
+      }
     },
     wrong() {
       if (sample('wrong')) return;

@@ -76,3 +76,9 @@ worth not re-litigating: **haptics are one tick on tap and nothing after**
 reward buzz would be Android-only), and the **pairs board never joins a combo
 run** (same reason it's excluded from SRS). Sounds are CC0 samples with the old
 synthesised tones kept as the `file://` fallback — don't delete them.
+
+Playtest follow-up the same day: the combo's **per-link semitone climb was
+removed** in favour of a **milestone lift every `COMBO_MILESTONE` (5)**, and
+`correct.wav` was trimmed 0.50s → 0.33s (reverb tail cut, 70ms fade). Don't
+reintroduce a per-answer pitch ramp — the sound heard most often should be the
+same sound every time.

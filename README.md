@@ -44,7 +44,7 @@ src/pinyin.js    — tone arithmetic on tone-marked pinyin (powers the tone dril
 src/state.js     — progress in localStorage (xp, streak, per-word SRS record)
 src/srs.js       — Leitner spaced repetition (6 boxes, correct↑ / miss↓)
 src/session.js   — builds an exercise queue for a lesson or a review set
-src/audio.js     — Chinese TTS (SpeechSynthesis) + UI sounds (CC0 samples, combo pitch)
+src/audio.js     — Chinese TTS (SpeechSynthesis) + UI sounds (CC0 samples, combo milestone)
 src/ui.js        — screens (home / session / results) + exercise rendering
 src/main.js      — boot + service-worker registration
 content/*.js     — the vocabulary data (one file per chapter)
@@ -133,11 +133,16 @@ demoted a box; correct answers promote a word toward "mastered."
 
 - **Buttons press.** Options and the Continue button have a hard bottom edge that
   collapses under the thumb, so the screen answers back before the answer is graded.
-- **A run sounds like a run.** Consecutive correct answers build a **combo**
-  (`session.combo`), and the correct-answer sample replays a semitone higher per
-  link, capped by `CONFIG.COMBO_PITCH_MAX`. From `CONFIG.COMBO_CELEBRATE` the banner
-  calls the streak out, and the results screen keeps the session's best. The pairs
-  board is excluded from the run for the same reason it's excluded from SRS.
+- **A run is rewarded at milestones, not per link.** Consecutive correct answers
+  build a **combo** (`session.combo`). Every correct answer sounds *identical*;
+  each `CONFIG.COMBO_MILESTONE`th one adds a second copy of the same hit a fifth
+  above it (`COMBO_LIFT` / `COMBO_LIFT_GAP`) — a two-note lift, with its own
+  banner. From `CONFIG.COMBO_CELEBRATE` the banner calls the streak out, and the
+  results screen keeps the session's best. The pairs board is excluded from the
+  run for the same reason it's excluded from SRS.
+  (Earlier this climbed a semitone per link. It sounded clever and wore badly: the
+  sound you hear most often was never twice the same, and because the climb is
+  `playbackRate` it got *faster* as well as higher. Rare and fixed beats creeping.)
 - **Sounds are samples** from Kenney's CC0 *Interface Sounds* (`assets/sfx/`),
   decoded once on the first gesture. If they can't load — `file://` blocks `fetch` —
   each falls back to the synthesised tone it replaced, so nothing goes silent.
