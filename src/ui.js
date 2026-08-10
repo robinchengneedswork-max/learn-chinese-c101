@@ -1559,5 +1559,29 @@ const UI = (function () {
     showScreen('home');
   }
 
-  return { init, showScreen, renderHome };
+  // ---- New-version prompt ----------------------------------------------------
+  // Shown when a newer service worker is installed and waiting. Deliberately a
+  // prompt and not an automatic swap: reloading out from under someone in the
+  // middle of a lesson would lose the queue they're part-way through.
+  let updateOffered = false;
+  function offerUpdate(accept) {
+    if (updateOffered) return;
+    updateOffered = true;
+    const bar = el('div', 'update-toast');
+    bar.appendChild(el('span', 'update-msg', 'New version available'));
+    const go = el('button', 'update-btn', 'Reload');
+    go.addEventListener('click', () => {
+      go.disabled = true;
+      go.textContent = 'Updating…';
+      accept();          // → SKIP_WAITING → controllerchange → reload
+    });
+    bar.appendChild(go);
+    const later = el('button', 'update-dismiss', '✕');
+    later.setAttribute('aria-label', 'Dismiss');
+    later.addEventListener('click', () => bar.remove());
+    bar.appendChild(later);
+    document.body.appendChild(bar);
+  }
+
+  return { init, showScreen, renderHome, offerUpdate };
 })();

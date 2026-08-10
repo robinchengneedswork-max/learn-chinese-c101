@@ -1,5 +1,5 @@
 // sw.js — offline app shell cache. Bump CACHE when files change so clients update.
-const CACHE = 'c101-v22';
+const CACHE = 'c101-v23';
 const ASSETS = [
   '.', 'index.html', 'style.css', 'manifest.webmanifest',
   'src/config.js', 'src/content.js', 'src/lang-map.js', 'src/lang.js',
@@ -27,8 +27,20 @@ const ASSETS = [
   'assets/sfx/finish.wav', 'assets/sfx/tick.wav'
 ];
 
+// Cache each asset on its own. `addAll` is all-or-nothing: one 404 rejects the
+// whole install, the new worker never activates, and every client keeps being
+// served the previous version *forever* — a broken deploy that no amount of
+// reloading fixes. A missing file should cost us that one file, nothing more.
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+  e.waitUntil(
+    caches.open(CACHE).then(c => Promise.all(
+      ASSETS.map(url => c.add(url).catch(() => {
+        console.warn('[sw] could not cache', url);
+      }))
+    ))
+  );
+  // Deliberately no skipWaiting() here: the page asks for the update (below)
+  // rather than having the worker swap itself out mid-lesson.
 });
 
 self.addEventListener('activate', (e) => {
@@ -36,6 +48,11 @@ self.addEventListener('activate', (e) => {
     caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
       .then(() => self.clients.claim())
   );
+});
+
+// The page found a waiting worker and the learner accepted the reload.
+self.addEventListener('message', (e) => {
+  if (e.data === 'SKIP_WAITING') self.skipWaiting();
 });
 
 // Cache-first: instant loads and full offline once installed.

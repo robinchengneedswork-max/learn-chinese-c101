@@ -367,6 +367,32 @@ body {
 .chip-lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
 .results-main .continue { max-width: 320px; }
 
+/* ---- New-version prompt ---- */
+/* Sits above the safe area so it clears the home indicator on an installed PWA. */
+.update-toast {
+  position: fixed; z-index: 60;
+  left: 12px; right: 12px; bottom: calc(12px + var(--safe-b));
+  max-width: 420px; margin: 0 auto;
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 12px 11px 15px;
+  background: var(--bg-2); color: var(--text);
+  border: 1px solid var(--accent); border-radius: 12px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, .5);
+  animation: toast-in .25s ease-out;
+}
+@keyframes toast-in { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.update-msg { flex: 1; font-size: 14px; font-weight: 600; }
+.update-btn {
+  padding: 9px 15px; font-size: 14px; font-weight: 800; cursor: pointer;
+  background: var(--accent); color: #052330; border: none; border-radius: 9px;
+}
+.update-btn:disabled { opacity: .6; }
+.update-dismiss {
+  background: none; border: none; color: var(--muted); font-size: 16px;
+  cursor: pointer; padding: 4px 2px; line-height: 1;
+}
+@media (prefers-reduced-motion: reduce) { .update-toast { animation: none; } }
+
 /* ---- Per-section study aids (read the text / vocab list) ---- */
 .section-actions {
   position: relative; z-index: 3;
