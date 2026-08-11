@@ -990,6 +990,11 @@ const UI = (function () {
   function layoutRail() {
     const rail = $('#path-rail');
     if (!rail) return;
+    // Never rebuild the control someone is currently holding. layoutRail wipes
+    // the rail's contents, and a scrub scrolls the page, which on a phone fires
+    // resize as the URL bar collapses — so without this the thumb and label you
+    // are dragging get destroyed and recreated mid-gesture.
+    if (railDrag) return;
     const stops = pathAnchors();
     const docH = docHeight();
     railStops = [];
@@ -1100,13 +1105,25 @@ const UI = (function () {
   }
 
   // Free scrub: put the grabbed fraction of the document a bit above centre, so
-  // what you're aiming at is under your thumb rather than behind it.
+  // what you're aiming at is under your thumb rather than behind it. Uses the
+  // frozen frame while dragging, for the reason given on railFrac.
   function scrubTo(frac) {
-    window.scrollTo({ top: Math.max(0, frac * docHeight() - window.innerHeight * 0.35) });
+    const docH = (railDrag && railDrag.docH) || docHeight();
+    const viewH = (railDrag && railDrag.viewH) || window.innerHeight;
+    window.scrollTo({ top: Math.max(0, frac * docH - viewH * 0.35) });
   }
 
+  // Where on the rail a pointer is, 0..1.
+  //
+  // While a drag is live this measures against the frame captured at pointerdown
+  // rather than the live one. On a phone, scrolling the page collapses and
+  // expands the URL bar, which changes window.innerHeight — and the rail is
+  // pinned top-and-bottom, so its height changes with it. Re-measuring mid-drag
+  // meant the same finger position mapped to a different fraction from one frame
+  // to the next, and since scrubbing scrolls the page, the scrub was changing the
+  // very ruler it was being measured with. Freeze the ruler for the gesture.
   function railFrac(e, rail) {
-    const r = rail.getBoundingClientRect();
+    const r = (railDrag && railDrag.rect) || rail.getBoundingClientRect();
     return clamp01((e.clientY - r.top) / r.height);
   }
 
@@ -1132,7 +1149,11 @@ const UI = (function () {
     if (!rail || rail.hidden) return;
     e.preventDefault();
     e.stopPropagation();          // don't let the doc-level handlers close menus mid-drag
-    railDrag = { y: e.clientY, moved: false };
+    // Freeze the gesture's frame of reference: the strip we're measuring against,
+    // and the page we're mapping onto. Neither may shift under the finger.
+    railDrag = { y: e.clientY, moved: false,
+                 rect: rail.getBoundingClientRect(),
+                 docH: docHeight(), viewH: window.innerHeight };
     rail.classList.add('dragging');
     if (rail.setPointerCapture) rail.setPointerCapture(e.pointerId);
     showRailLabel(railFrac(e, rail));
@@ -1854,8 +1875,19 @@ const UI = (function () {
     }, { passive: true });
 
     // Re-measure the connecting trail when the layout can shift.
-    let t = null;
-    window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(redrawTrail, 120); });
+    //
+    // Width only. On a phone the address bar collapses and expands as you
+    // scroll, and each toggle fires resize with a new innerHeight — so a plain
+    // resize listener re-renders the path repeatedly *during scrolling*, which
+    // is both wasteful and, mid-scrub, actively destructive. Nothing about the
+    // path's layout depends on viewport height anyway.
+    let t = null, lastW = window.innerWidth;
+    window.addEventListener('resize', () => {
+      if (window.innerWidth === lastW) return;
+      lastW = window.innerWidth;
+      clearTimeout(t);
+      t = setTimeout(redrawTrail, 120);
+    });
     window.addEventListener('load', () => {
       redrawTrail();
       // The decor images are lazy, so they arrive after the first aim and push
