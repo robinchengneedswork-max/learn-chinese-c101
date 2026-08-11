@@ -4,11 +4,11 @@
 // is answerable at a glance instead of by deduction. test/headless.js fails if
 // the two drift, which is the whole point: changing a file without bumping the
 // cache ships a deploy that cannot reach anyone.
-const CACHE = 'c101-v27';
+const CACHE = 'c101-v28';
 const ASSETS = [
   '.', 'index.html', 'style.css', 'manifest.webmanifest',
   'src/config.js', 'src/content.js', 'src/lang-map.js', 'src/lang.js',
-  'src/pinyin.js', 'src/state.js', 'src/srs.js',
+  'src/theme.js', 'src/pinyin.js', 'src/state.js', 'src/srs.js',
   'src/session.js', 'src/audio.js', 'src/ui.js', 'src/main.js',
   'content/chapter-01.js',
   'content/gnr-chapter-01.js',

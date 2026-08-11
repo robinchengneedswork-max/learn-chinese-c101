@@ -184,6 +184,35 @@ demoted a box; correct answers promote a word toward "mastered."
   Android-only reward, and the design would come to lean on something half the
   devices can't do.
 
+**Colour, and the theme picker.** The look is **warm paper & ink**: the app
+teaches out of a printed book, so the default surface is paper, the text is ink,
+a jade primary carries "correct / progress / go", and a persimmon accent carries
+pinyin and XP. Dark is a warm lamp-lit counterpart, deliberately not a blue one.
+
+Every colour in `style.css` is a **token**, declared in one block at the top and
+nowhere else — `npm test` fails on a stray hex below the `END THEME TOKENS`
+marker (neutral black/white `rgba()` for shadows is the one exception, since it
+reads correctly against either palette). That guard exists because the palette
+used to be ~57 literals scattered through 570 lines, which is the real reason the
+app stayed one hardcoded dark theme for so long.
+
+The picker beside the script selector offers **System / Light / Dark**
+(`src/theme.js`, persisted under `c101.theme.v1`). Three CSS states are needed
+and all three are load-bearing: the full light palette on bare `:root`, a
+`prefers-color-scheme: dark` block guarded by `:root:not([data-theme="light"])`,
+and a `:root[data-theme="dark"]` block repeating the same overrides so an
+explicit choice beats the system *in both directions*. A token defined only
+inside the media query has no value when the toggle forces the other way — that's
+the classic way this pattern breaks, and there's a test for it.
+
+Two things aren't styled by CSS and have to be told: the browser/PWA chrome
+(`Theme.paintChrome` writes `<meta name="theme-color">`, reading `--bg` back out
+of the cascade so it can't drift from the tokens) and the results confetti
+(`paletteColors(...)` in `ui.js`, read at draw time). `index.html` also stamps
+the saved theme in a tiny inline `<head>` script — the module loads at the end of
+`<body>`, by which point a reader who chose dark would already have seen a white
+flash.
+
 **Traditional / Simplified.** The book — and therefore all content and saved
 progress — is **Traditional** Chinese. The picker in the top-left switches the
 *displayed* script to **Simplified** (`src/lang.js` converts Chinese at render time

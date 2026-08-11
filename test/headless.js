@@ -549,6 +549,49 @@ ok('pattern round-trips', Pinyin.spell(['sheng', 'ming'], '1-4') === 'shēng mì
   ok('the two notes read as two', CONFIG.COMBO_LIFT_GAP > 0.03 && CONFIG.COMBO_LIFT_GAP < 0.3);
 }
 
+// ---- Theme: every colour is a token -----------------------------------------
+// The palette used to be ~57 literals scattered through 570 lines of CSS, which
+// is why the app stayed one hardcoded dark theme for so long: re-colouring it
+// meant finding all of them. Now the tokens at the top are the only place a
+// colour is named, so light/dark is one block each — and this test is what keeps
+// it that way, since a stray #22c55e would still *work* and nobody would notice
+// until it failed to change with the theme.
+{
+  const cssPath = require('path').join(__dirname, '..', 'style.css');
+  const css = require('fs').readFileSync(cssPath, 'utf8');
+
+  // The marker sits in a comment, so the halves are located in the raw text and
+  // only then de-commented — otherwise the prose above (which necessarily names
+  // @media, :root and rgb()) would be read as if it were the stylesheet.
+  const mark = css.indexOf('END THEME TOKENS');
+  ok('style.css marks where the theme tokens end', mark > 0);
+  const strip = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '');
+  const head = strip(css.slice(0, mark));
+  const body = strip(css.slice(css.indexOf('*/', mark) + 2));
+
+  // All three states must exist. A token defined only inside the media query has
+  // no value when the toggle forces the other way — the classic way this breaks.
+  ok('a complete light palette on bare :root', /^:root\s*\{/m.test(head));
+  ok('a system-dark block that yields to an explicit light choice',
+     head.includes('prefers-color-scheme: dark') && head.includes(':root:not([data-theme="light"])'));
+  ok('an explicit dark block that beats the system', head.includes(':root[data-theme="dark"]'));
+  ok('color-scheme is declared so native controls follow', /color-scheme:\s*light dark/.test(head));
+
+  // Every token a dark block overrides must also exist in the light palette.
+  const names = (s) => (s.match(/--[a-z0-9-]+(?=\s*:)/g) || []);
+  const firstDark = head.indexOf('@media');
+  const lightTokens = new Set(names(head.slice(0, firstDark)));
+  const darkOnly = [...new Set(names(head.slice(firstDark)).filter(n => !lightTokens.has(n)))];
+  ok('no token exists only in a dark block (' + darkOnly.join(', ') + ')', darkOnly.length === 0);
+
+  // Below the marker: no colour literals. Neutral black/white translucency is
+  // allowed — it reads correctly against either palette.
+  const strays = body
+    .replace(/rgba?\(\s*(?:0,\s*0,\s*0|255,\s*255,\s*255)[^)]*\)/g, '')
+    .match(/#[0-9a-fA-F]{3,8}\b|\brgba?\(/g) || [];
+  ok('no colour literals below the theme tokens (' + strays.join(', ') + ')', strays.length === 0);
+}
+
 // ---- Build stamp: the app and the service worker must agree ------------------
 // Editing a file without bumping sw.js's CACHE ships a deploy that no client can
 // reach — the fetch handler is cache-first, so every existing install keeps

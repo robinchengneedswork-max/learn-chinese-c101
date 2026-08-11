@@ -31,6 +31,12 @@ You can also open `index.html` directly on `file://`; everything works except th
   and gitignored.
 - **Per-word progress is keyed by `hanzi`** (localStorage). Changing a word's hanzi starts a
   fresh learning history for it.
+- **Colour lives in tokens, not in rules.** Every colour in `style.css` is declared in the
+  token block at the top; nothing below the `END THEME TOKENS` marker may name one, and
+  `npm test` enforces it. Adding a colour means adding a token to *all three* theme states
+  (light `:root`, the `prefers-color-scheme` block, and `[data-theme="dark"]`) — a token
+  defined only in the dark blocks is a test failure, because it has no value when the reader
+  forces light.
 - **Service worker cache discipline**: when you add/rename an asset, add it to `ASSETS` in
   `sw.js` AND bump `CACHE` (`c101-vN`) so clients actually refresh. `CACHE` must equal
   `CONFIG.BUILD` in `src/config.js` — `npm test` fails if they drift, and the app prints

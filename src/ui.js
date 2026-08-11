@@ -36,54 +36,68 @@ const UI = (function () {
   // radical like 氵 has no reading of its own, so it's read as its parent 水.
   const spoken = (w) => (w && (w.say || w.hanzi)) || '';
 
-  // ---- Language / script picker (top-left) ----------------------------------
-  // A small dropdown driven by Lang.langs(), so adding a language later needs no
-  // UI change here. Picking one re-renders everything through Lang.zh(...).
-  function buildLangSelect() {
-    const root = $('#lang-select');
+  // ---- Header pickers: display script, and colour theme ----------------------
+  // Two small dropdowns with identical mechanics, so they share one builder. Both
+  // are driven by their module's own list (Lang.langs(), Theme.themes()), so
+  // adding an option later needs no UI change here.
+  function buildPicker(root, spec) {
     if (!root) return;
     root.innerHTML = '';
 
     const btn = el('button', 'lang-btn');
     btn.setAttribute('aria-haspopup', 'listbox');
     btn.setAttribute('aria-expanded', 'false');
-    const cur = el('span', 'lang-cur', Lang.current().label);
-    btn.appendChild(cur);
+    btn.setAttribute('aria-label', spec.label);
+    btn.appendChild(el('span', 'lang-cur', spec.current().label));
     btn.appendChild(el('span', 'lang-caret', '▾'));
 
     const menu = el('ul', 'lang-menu');
     menu.setAttribute('role', 'listbox');
     menu.hidden = true;
 
-    Lang.langs().forEach((lng) => {
-      const li = el('li', 'lang-opt', lng.name);
+    for (const opt of spec.options()) {
+      const li = el('li', 'lang-opt', opt.name);
       li.setAttribute('role', 'option');
-      if (lng.id === Lang.current().id) li.classList.add('sel');
-      li.addEventListener('click', () => {
-        if (Lang.set(lng.id)) {
-          buildLangSelect();     // refresh label + selected mark
-          applyLang();           // re-render everything in the new script
-        }
-        closeLangMenu();
-      });
+      if (opt.id === spec.current().id) li.classList.add('sel');
+      li.addEventListener('click', () => { spec.onPick(opt.id); closeMenus(); });
       menu.appendChild(li);
-    });
+    }
 
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
-      menu.hidden ? (menu.hidden = false, btn.setAttribute('aria-expanded', 'true'))
-                  : closeLangMenu();
+      const opening = menu.hidden;
+      closeMenus();   // at most one picker is ever open, including the other one
+      if (opening) { menu.hidden = false; btn.setAttribute('aria-expanded', 'true'); }
     });
 
     root.appendChild(btn);
     root.appendChild(menu);
   }
 
-  // Close the (single) open language menu. Bound once to document in init so
-  // rebuilding the picker doesn't stack listeners.
-  function closeLangMenu() {
-    const m = $('.lang-menu'), b = $('.lang-btn');
-    if (m && !m.hidden) { m.hidden = true; if (b) b.setAttribute('aria-expanded', 'false'); }
+  // Picking a script re-renders everything through Lang.zh(...).
+  function buildLangSelect() {
+    buildPicker($('#lang-select'), {
+      label: 'Display script',
+      options: Lang.langs, current: Lang.current,
+      onPick: (id) => { if (Lang.set(id)) { buildLangSelect(); applyLang(); } }
+    });
+  }
+
+  // Picking a theme needs no re-render: the palette is CSS tokens, and the one
+  // JS-side consumer (the results confetti) reads them at draw time.
+  function buildThemeSelect() {
+    buildPicker($('#theme-select'), {
+      label: 'Colour theme',
+      options: Theme.themes, current: Theme.current,
+      onPick: (id) => { if (Theme.set(id)) buildThemeSelect(); }
+    });
+  }
+
+  // Close every open picker menu. Bound once to document in init so rebuilding a
+  // picker doesn't stack listeners.
+  function closeMenus() {
+    document.querySelectorAll('.lang-menu').forEach((m) => { m.hidden = true; });
+    document.querySelectorAll('.lang-btn').forEach((b) => b.setAttribute('aria-expanded', 'false'));
   }
 
   // Re-paint every screen's Chinese in the active script. Home is fully rebuilt;
@@ -1527,6 +1541,14 @@ const UI = (function () {
     return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
+  // Resolve theme tokens to the colours they currently hold, for the one thing
+  // that paints outside CSS (a canvas). Falls back to the ink colour if a token
+  // is ever renamed, so a typo dulls the confetti instead of erasing it.
+  function paletteColors(names) {
+    const cs = getComputedStyle(document.documentElement);
+    return names.map((n) => cs.getPropertyValue(n).trim() || '#888888');
+  }
+
   // A short burst of falling paper over the results screen. Canvas rather than a
   // pile of DOM nodes, and it clears itself once the last piece is off-screen.
   function confetti() {
@@ -1535,7 +1557,10 @@ const UI = (function () {
     const cx = cv.getContext('2d');
     const w = cv.width = cv.offsetWidth;
     const h = cv.height = cv.offsetHeight;
-    const colors = ['#22c55e', '#38bdf8', '#fbbf24', '#e2e8f0', '#4ade80'];
+    // Read the palette out of the cascade rather than keeping a second copy of
+    // it here — this was the one place a colour was hardcoded in JS, and it went
+    // stale the moment the theme changed.
+    const colors = paletteColors(['--brand', '--accent', '--gold', '--text', '--bar-fill-2']);
     const bits = [];
     for (let i = 0; i < 80; i++) {
       bits.push({
@@ -1575,7 +1600,10 @@ const UI = (function () {
   function init() {
     restoreBook();       // re-select the last-used book before first render
     buildLangSelect();
-    document.addEventListener('click', closeLangMenu); // outside-click, bound once
+    buildThemeSelect();
+    Theme.apply();   // stamp the root + paint the browser chrome to match
+    Theme.watch();   // 'System' means following it while the app is open, too
+    document.addEventListener('click', closeMenus); // outside-click, bound once
     const brand = document.querySelector('.brand');
     if (brand) brand.textContent = Lang.zh('課程 101');
     $('#review-btn').addEventListener('click', startReview);
