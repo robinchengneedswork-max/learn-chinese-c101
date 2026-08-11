@@ -85,7 +85,24 @@ Drill lessons get no 📖 Reading part — hiding the pinyin is the point of rea
 practice, and it's the *answer* in a tone or sound drill.
 
 **Getting around a long path.** The Good News Reader is 25 sections — roughly a
-23,000px page — so the home screen carries two navigation aids, both built from
+23,000px page.
+
+The first thing that helps is not having to navigate at all: **the path opens on
+the node you're up to**, a little above centre so the trail ahead is visible
+(`focusPath` / `focusOn` in `ui.js`). It prefers the node you last *opened* over
+the current one — replaying an old lesson in chapter 5 and being thrown forward to
+chapter 2 is not "where I was" — and it does nothing when that node is already on
+screen, so a fresh install still opens at the top. Coming back from a session it
+travels rather than cuts, because after finishing a node the path advances a step
+and seeing that happen is the point. Two subtleties: the aim runs inside
+`renderHome`'s `requestAnimationFrame` (node geometry isn't valid before it) and
+repeats once on `window load`, since the lazy decor images land after the first
+aim and push every node down the page — but only if the reader hasn't scrolled
+away in the meantime. Every screen shares the document's one scroll position, so
+`showScreen` resets it for the session and results screens; otherwise opening a
+lesson from halfway down the trail would start the question already scrolled past.
+
+Beyond that the home screen carries two navigation aids, both built from
 the same waypoints (each chapter, or each *section* when a book has only one
 chapter, as Course 101 does today):
 

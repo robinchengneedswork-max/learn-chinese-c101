@@ -11,6 +11,10 @@ const UI = (function () {
   function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
+    // Every screen shares the document's one scroll position, and the home path
+    // is now deliberately parked deep in the page. Without this, opening a lesson
+    // from halfway down the trail starts the question already scrolled past.
+    if (id !== 'home') window.scrollTo({ top: 0 });
   }
 
   function el(tag, cls, text) {
@@ -154,6 +158,13 @@ const UI = (function () {
   // Scroll anchors captured each render, shared by the Jump menu and the chapter
   // rail: one per chapter and one per section, plus the current node's bubble.
   let jumpTargets = { current: null, chapters: [], sections: [] };
+  // The node whose session was opened last. The path lands here on the way back,
+  // in preference to the current lesson — replaying an old node in chapter 5 and
+  // then being thrown forward to chapter 2 is not "where I was".
+  let lastPlayedId = null;
+  // Where focusPath last parked the page, so a later re-aim can tell "the reader
+  // hasn't moved" from "the reader scrolled away". null = we didn't place it.
+  let focusedAt = null;
 
   // Build the render model: chapters → sections (each a background band) → nodes,
   // plus a capstone chapter-test node. Assigns each node a linear seq (for the
@@ -212,7 +223,10 @@ const UI = (function () {
     return Math.round(ai * (nodes - 1) / (count - 1));
   }
 
-  function renderHome() {
+  // `focus` is how the page should land afterwards: 'auto' (default) drops you
+  // there, 'smooth' travels — used on the way back from a session so advancing a
+  // node reads as movement rather than a jump cut.
+  function renderHome(focus) {
     const s = State.get();
     $('#stat-streak').textContent = s.streak;
     $('#stat-xp').textContent = s.xp;
@@ -267,7 +281,16 @@ const UI = (function () {
     buildJumpMenu();
     // Draw the bending, filling trail once layout has settled — and measure the
     // rail from the same settled layout.
-    requestAnimationFrame(() => { drawTrail(scene); layoutRail(); });
+    //
+    // Rail FIRST: layoutRail toggles body.has-rail, which changes .home-main's
+    // padding and so moves every node sideways. Measuring the trail before that
+    // ran left the line offset from the bubbles it connects — invisible while the
+    // rail's presence never changed mid-render, but it does now.
+    requestAnimationFrame(() => {
+      layoutRail();
+      drawTrail(scene);
+      focusPath(focus);
+    });
   }
 
   // A section's two extra affordances, sitting just below its trail nodes:
@@ -696,18 +719,21 @@ const UI = (function () {
     if (!menu) return;
     menu.innerHTML = '';
     const items = [];
-    if (jumpTargets.current) items.push({ label: '▸ Current lesson', el: jumpTargets.current, cur: true });
+    if (jumpTargets.current) items.push({ label: '▸ Current lesson', cur: true });
     pathAnchors().forEach((c) => items.push({ label: c.title, el: c.el }));
     for (const it of items) {
       const li = el('li', 'jump-item' + (it.cur ? ' jump-cur' : ''), it.label);
       li.setAttribute('role', 'menuitem');
-      li.addEventListener('click', () => { scrollToEl(it.el); closeJump(); });
+      // Waypoints land under the sticky header; "current lesson" is framed the
+      // same way arriving on the path frames it, so the two routes agree. It asks
+      // for the *current* node specifically — not focusPath's last-played
+      // preference, which would send you somewhere the label didn't promise.
+      li.addEventListener('click', () => {
+        it.cur ? focusOn(jumpTargets.current, 'smooth') : scrollToAnchor(it.el);
+        closeJump();
+      });
       menu.appendChild(li);
     }
-  }
-
-  function scrollToEl(target) {
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
   function toggleJump(e) {
@@ -826,6 +852,38 @@ const UI = (function () {
     window.scrollTo({ top: Math.max(0, absTop(el_) - HEADER_PAD), behavior: 'smooth' });
   }
 
+  // ---- Landing on your place in the path -------------------------------------
+  // Opening at the top of a 23,000px path and hunting for where you are was the
+  // one thing to survive the first phone playtest. The rail and the Jump menu are
+  // for going somewhere *deliberately*; resuming shouldn't need either.
+  const FOCUS_BIAS = 0.45;  // fraction of the viewport left above the target
+
+  function focusTarget() {
+    if (lastPlayedId) {
+      const played = trailNodeEls.find(({ node }) => node.id === lastPlayedId);
+      if (played) return played.btn;
+    }
+    return jumpTargets.current;
+  }
+
+  function focusPath(behavior) { focusOn(focusTarget(), behavior); }
+
+  // Put a node a little above centre, so the path ahead is visible rather than
+  // sitting under the fold.
+  function focusOn(target, behavior) {
+    const how = behavior || 'auto';
+    // Nothing to resume (a finished book, or a path with no nodes): show the top.
+    if (!target) { window.scrollTo({ top: 0, behavior: how }); focusedAt = 0; return; }
+    const r = target.getBoundingClientRect();
+    // Already looking straight at it — don't jiggle the page for nothing.
+    if (r.top >= HEADER_PAD && r.bottom <= window.innerHeight) return;
+    window.scrollTo({ top: Math.max(0, absTop(target) - window.innerHeight * FOCUS_BIAS),
+                      behavior: how });
+    // A smooth scroll hasn't arrived yet, so there's no position to remember; the
+    // re-aim below only ever follows an instant one anyway.
+    focusedAt = how === 'smooth' ? null : Math.round(window.scrollY);
+  }
+
   // Free scrub: put the grabbed fraction of the document a bit above centre, so
   // what you're aiming at is under your thumb rather than behind it.
   function scrubTo(frac) {
@@ -912,12 +970,14 @@ const UI = (function () {
   function startPart(part) {
     session = Session.forPart(part);
     if (session.done) return;
+    lastPlayedId = part.id;   // so the path lands back here, not on the current node
     beginSession();
   }
 
   function startTest(chapterId) {
     session = Session.forTest(C101.chapter(chapterId));
     if (session.done) return;
+    lastPlayedId = `test-${chapterId}`;
     beginSession();
   }
 
@@ -1530,9 +1590,12 @@ const UI = (function () {
     const stamp = $('#build-stamp');
     if (stamp) stamp.textContent = CONFIG.BUILD;
 
-    $('#session-exit').addEventListener('click', () => { session = null; renderHome(); showScreen('home'); });
+    // Coming back from a session, travel to the landing spot rather than cutting
+    // to it: after finishing a node the path advances one step, and seeing that
+    // step happen is the point.
+    $('#session-exit').addEventListener('click', () => { session = null; showScreen('home'); renderHome('smooth'); });
     // The results CTA is static markup, so it gets the tap layer in place.
-    tapWrapInPlace($('#results-done'), () => { renderHome(); showScreen('home'); });
+    tapWrapInPlace($('#results-done'), () => { showScreen('home'); renderHome('smooth'); });
     // Chapter rail: pointer-driven, so it owns its gestures outright.
     const rail = $('#path-rail');
     if (rail) {
@@ -1563,7 +1626,13 @@ const UI = (function () {
     // Re-measure the connecting trail when the layout can shift.
     let t = null;
     window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(redrawTrail, 120); });
-    window.addEventListener('load', redrawTrail);
+    window.addEventListener('load', () => {
+      redrawTrail();
+      // The decor images are lazy, so they arrive after the first aim and push
+      // every node further down the page. Re-aim — but only if the page is still
+      // sitting exactly where we put it, i.e. the reader hasn't taken over.
+      if (focusedAt != null && Math.abs(window.scrollY - focusedAt) < 4) focusPath('auto');
+    });
     renderHome();
     showScreen('home');
   }
