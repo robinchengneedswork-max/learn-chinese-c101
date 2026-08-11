@@ -126,6 +126,43 @@ chapter, as Course 101 does today):
 on-ramp to reading unaided — then a **✍️ Sentences** part that puts the section's
 words back into real sentences. (Tuning: `CONFIG.PART_SIZE`.)
 
+**Reviewing.** The **Review** button at the top of the path opens the **Review
+hub** (`buildReviewHub` in `ui.js`) and is never disabled — wanting to revise has
+to be actionable even when the schedule says nothing is due. Four kinds of mode:
+
+| Mode | Chooses |
+| --- | --- |
+| **Due now** | The SRS inbox, **most overdue first** — the hint shows the backlog when it's bigger than one session |
+| **Weakest words** | Ranked by miss rate, ties broken by raw misses (`SRS.weakWords`) — the leech catcher |
+| **A chapter** | Every chapter of every book, listing only words you've already met, so it's a redrill and not a firehose |
+| **Random mix** | Anything you've met, in any book |
+
+Modes differ only in which words they pick; the session they build is the same.
+Each word gets one **recognition** item and one **production** item, so a review
+asks you to produce the word rather than only recognise it out of four options,
+and the queue goes through `space()` like every other session.
+`CONFIG.REVIEW_SIZE` (12 words) caps it, and the count on each row is what that
+row will actually drill — printing the pool size next to a 12-word session reads
+as a promise it doesn't keep.
+
+Two rules worth not re-deriving:
+
+- **Review sees Basics too.** `SRS.dueWords()` reads `C101.everyWord()`, not
+  `allWords()`. Basics words are graded and boxed like any other, but they live
+  in the aux pool, so for a long time *nothing learned in Basics ever came back*.
+  Distractor pools are untouched — an aux word still draws its options from its
+  own chapter (`C101.pool` takes the word record, which carries `aux`/`chapterId`).
+- **Revising early doesn't move the schedule.** Every mode except *Due now*
+  grades with `SRS.grade(..., { onlyIfDue: true })`: a correct answer on a word
+  that wasn't due neither promotes it nor pushes its next review out. Otherwise
+  drilling a chapter you just finished would shove every word toward the 3-week
+  box and make you forget it *sooner* — the opposite of the point. A miss always
+  demotes, whenever it happens.
+
+*Not built, deliberately:* a warm-up bolted onto the front of every lesson. If
+unlockables are ever added, the better shape for that idea is review turning up
+as an occasional surprise pop quiz that unlocks something.
+
 **Exercise types.** Recognition *and* production — multiple choice alone doesn't
 build recall:
 

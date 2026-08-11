@@ -549,6 +549,103 @@ ok('pattern round-trips', Pinyin.spell(['sheng', 'ming'], '1-4') === 'shēng mì
   ok('the two notes read as two', CONFIG.COMBO_LIFT_GAP > 0.03 && CONFIG.COMBO_LIFT_GAP < 0.3);
 }
 
+// ---- Review hub -------------------------------------------------------------
+// The three things that were actually wrong: Basics words could never come back
+// (dueWords scanned the graded corpus, which excludes aux), a cap of 20 always
+// took the front of the corpus rather than the most overdue, and every review
+// item was multiple choice.
+{
+  State.reset(); State.load();
+
+  const aux = C101.chapter('bas-radicals').lessons[0].words[0];
+  ok('everyWord() reaches the aux pool as well as the graded corpus',
+     C101.everyWord().length > C101.allWords().length &&
+     C101.everyWord().some(w => w.hanzi === aux.hanzi));
+
+  // A Basics word, graded and then overdue, must show up in review.
+  SRS.grade(aux.hanzi, true);
+  State.wordProgress(aux.hanzi).due = Date.now() - 60000;
+  ok('a word learned in Basics comes back for review',
+     SRS.dueWords().some(w => w.hanzi === aux.hanzi));
+
+  // Most overdue first, whatever order the corpus registered them in.
+  const a = '生命', b = '宇宙';
+  SRS.grade(a, true); SRS.grade(b, true);
+  State.wordProgress(a).due = Date.now() - 1000;        // slightly overdue
+  State.wordProgress(b).due = Date.now() - 10 * 86400000; // very overdue
+  const order = SRS.dueWords().map(w => w.hanzi);
+  ok('due words come back most-overdue first', order.indexOf(b) < order.indexOf(a));
+
+  const s = Session.forReview();
+  ok('review is capped by CONFIG.REVIEW_SIZE, not a magic 20',
+     new Set(s.queue.map(i => i.hanzi)).size <= CONFIG.REVIEW_SIZE);
+  ok('review asks about each word more than one way',
+     new Set(s.queue.map(i => i.kind)).size > 1);
+  ok('review includes a production item, not just multiple choice',
+     s.queue.some(i => i.kind === 'type' || i.kind === 'en2zh'));
+
+  // Spacing applies here too — it never used to, because one item per word left
+  // nothing to space.
+  {
+    let bad = 0;
+    for (let i = 1; i < s.queue.length; i++) if (s.queue[i].hanzi === s.queue[i - 1].hanzi) bad++;
+    ok('no two review questions about the same word are adjacent', bad === 0);
+  }
+
+  // An aux word in review must draw its options from its own chapter.
+  //
+  // Pick one that actually belongs to bas-radicals in the registry. Several
+  // radical heads (人 大 女 心 手 …) are registered by an earlier chapter and
+  // keep THAT chapter's identity — register is first-wins by design — so their
+  // pool is that chapter's, which is correct but not what this test is about.
+  {
+    const radical = C101.chapter('bas-radicals').lessons
+      .flatMap(l => l.words)
+      .find(w => (C101.word(w.hanzi) || {}).chapterId === 'bas-radicals');
+    ok('bas-radicals owns at least one of its own words', !!radical);
+    const own = new Set(C101.chapterWords('bas-radicals').map(w => w.hanzi));
+    const r = Session.forReview([C101.word(radical.hanzi)]);
+    const mc = r.queue.filter(i => i.kind === 'en2zh' || i.kind === 'listen');
+    ok('a Basics word keeps its own distractor pool in review',
+       mc.length > 0 && mc.every(i => i.options.every(o => own.has(o))));
+  }
+
+  // The grading policy for ad-hoc modes.
+  {
+    State.reset(); State.load();
+    const h = '生命';
+    SRS.grade(h, true);                       // box 1
+    const before = State.wordProgress(h);
+    const box = before.box, when = before.due;
+    SRS.grade(h, true, { onlyIfDue: true });  // right, but not due yet
+    ok('revising early does not promote a word that was not due',
+       State.wordProgress(h).box === box);
+    ok('revising early does not push the next review further out',
+       State.wordProgress(h).due === when);
+    SRS.grade(h, false, { onlyIfDue: true });
+    ok('a miss demotes even in an ad-hoc review', State.wordProgress(h).box === box - 1);
+
+    State.wordProgress(h).due = Date.now() - 1000;
+    const b2 = State.wordProgress(h).box;
+    SRS.grade(h, true, { onlyIfDue: true });
+    ok('a word that IS due still promotes normally', State.wordProgress(h).box === b2 + 1);
+  }
+
+  // weakWords is the leech list, worst first.
+  {
+    State.reset(); State.load();
+    const bad = '生命', okish = '宇宙';
+    for (let i = 0; i < 4; i++) SRS.grade(bad, false);
+    SRS.grade(okish, true); SRS.grade(okish, false); SRS.grade(okish, true);
+    const w = SRS.weakWords().map(x => x.hanzi);
+    ok('weakest words are ranked by miss rate', w[0] === bad && w.indexOf(okish) > 0);
+    ok('a word never missed is not a weak word',
+       !SRS.weakWords().some(x => x.hanzi === '創造'));
+  }
+
+  State.reset(); State.load();
+}
+
 // ---- Theme: every colour is a token -----------------------------------------
 // The palette used to be ~57 literals scattered through 570 lines of CSS, which
 // is why the app stayed one hardcoded dark theme for so long: re-colouring it

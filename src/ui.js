@@ -254,10 +254,12 @@ const UI = (function () {
       tag.appendChild(document.createTextNode('.'));
     }
 
+    // The Review button opens the hub and is never disabled — "I want to revise"
+    // has to be actionable even when the schedule has nothing due.
     const due = SRS.dueWords().length;
     const reviewBtn = $('#review-btn');
-    reviewBtn.textContent = due ? `Review · ${due} due` : 'Review · all caught up';
-    reviewBtn.disabled = due === 0;
+    reviewBtn.textContent = due ? `Review · ${due} due` : 'Review';
+    reviewBtn.disabled = false;
 
     const scene = $('#chapter-list');
     scene.className = 'path-scene';
@@ -512,6 +514,106 @@ const UI = (function () {
     m.hidden = true;
     document.body.classList.remove('modal-open');
     if (window.speechSynthesis) speechSynthesis.cancel(); // stop any passage playback
+  }
+
+  // ---- The Review hub -------------------------------------------------------
+  // Review used to be a single button that drained the SRS inbox and then
+  // disabled itself, which made it effectively once-a-day: the shortest non-zero
+  // Leitner interval is 4h and the typical one is a day, so after a clean pass
+  // there was nothing due and no way to say "drill me on chapter 3 again".
+  //
+  // The hub is always open. Its modes differ only in which words they choose;
+  // the session they build is the same. Everything except "Due now" grades with
+  // onlyIfDue, so choosing to revise early can't push a word's next review out.
+
+  // The words of one chapter that the learner has actually met, deduped.
+  function seenInChapter(chapter) {
+    const out = [], got = new Set();
+    for (const lesson of chapter.lessons) {
+      for (const w of lesson.words) {
+        if (got.has(w.hanzi)) continue;
+        got.add(w.hanzi);
+        if (!SRS.isNew(w.hanzi)) out.push(C101.word(w.hanzi) || w);
+      }
+    }
+    return out;
+  }
+
+  function shuffled(list) {
+    const a = list.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function reviewModeRow(body, spec) {
+    const n = spec.words.length;
+    // The count is what this row will actually drill, not how big the pool is:
+    // a session takes CONFIG.REVIEW_SIZE words, so printing "61" next to a
+    // 12-word session reads as a promise it doesn't keep. Where the pool is
+    // bigger, the hint says so.
+    const size = Math.min(n, CONFIG.REVIEW_SIZE);
+    const row = el('button', 'review-mode' + (n ? '' : ' empty'));
+    row.disabled = !n;
+    const main = el('div', 'review-mode-main');
+    main.appendChild(el('div', 'review-mode-name', spec.name));
+    const hint = n > size && spec.backlog
+      ? `${spec.hint} · ${n} waiting`
+      : spec.hint;
+    if (hint) main.appendChild(el('div', 'review-mode-hint', hint));
+    row.appendChild(main);
+    row.appendChild(el('div', 'review-mode-count', n ? String(size) : '—'));
+    if (n) {
+      row.addEventListener('click', () => {
+        closeModal();
+        startReview(spec.words, { title: spec.name, zh: spec.zh, onlyIfDue: spec.onlyIfDue });
+      });
+    }
+    body.appendChild(row);
+    return row;
+  }
+
+  function buildReviewHub(body) {
+    const due = SRS.dueWords();
+    const seen = SRS.seenWords();
+    const weak = SRS.weakWords();
+
+    body.appendChild(el('div', 'modal-kicker', 'Review'));
+    body.appendChild(el('div', 'modal-title', 'What would you like to go over?'));
+    body.appendChild(el('div', 'modal-sub',
+      seen.length ? `${seen.length} words met so far` : 'Nothing learned yet — start a lesson.'));
+
+    reviewModeRow(body, { name: 'Due now', zh: '複習', words: due, backlog: true,
+      hint: due.length ? 'Closest to being forgotten'
+                       : 'Nothing is due — try one of the others' });
+    reviewModeRow(body, { name: 'Weakest words', zh: '弱點', words: weak, onlyIfDue: true,
+      hint: 'The ones you keep getting wrong' });
+    reviewModeRow(body, { name: 'Random mix', zh: '隨機', words: shuffled(seen), onlyIfDue: true,
+      hint: 'Anything you\'ve met, in any book' });
+
+    // Per-chapter redrills, across every book — the "I want chapter 3 again"
+    // case, which the schedule alone can never offer.
+    const groups = [];
+    for (const book of C101.books()) {
+      for (const ch of book.chapters) {
+        const words = seenInChapter(ch);
+        if (words.length) groups.push({ book, ch, words });
+      }
+    }
+    if (groups.length) {
+      body.appendChild(el('div', 'ref-group', 'By chapter'));
+      let lastBook = null;
+      for (const g of groups) {
+        if (g.book !== lastBook && C101.books().length > 1) {
+          body.appendChild(el('div', 'review-book', g.book.title));
+          lastBook = g.book;
+        }
+        reviewModeRow(body, { name: g.ch.title, zh: g.ch.zh, words: shuffled(g.words),
+                              onlyIfDue: true });
+      }
+    }
   }
 
   // Split a passage into paragraphs (blank-line separated, single newlines too).
@@ -995,8 +1097,8 @@ const UI = (function () {
     beginSession();
   }
 
-  function startReview() {
-    session = Session.forReview();
+  function startReview(words, opts) {
+    session = Session.forReview(words, opts);
     if (session.done) return;
     beginSession();
   }
@@ -1606,7 +1708,7 @@ const UI = (function () {
     document.addEventListener('click', closeMenus); // outside-click, bound once
     const brand = document.querySelector('.brand');
     if (brand) brand.textContent = Lang.zh('課程 101');
-    $('#review-btn').addEventListener('click', startReview);
+    $('#review-btn').addEventListener('click', () => openModal(buildReviewHub));
 
     // Jump menu (scroll the path) + modal (reading / vocab) wiring.
     $('#jump-btn').addEventListener('click', toggleJump);

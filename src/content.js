@@ -197,6 +197,12 @@ const C101 = (function () {
     // distractors, the glossary and the radical drills' example words draw on;
     // aux items are deliberately absent (see auxWords()).
     allWords: () => [...byHanzi.values()],
+    // Everything the learner can have a progress record for — the graded corpus
+    // PLUS the aux pool. Review works from this: a Basics word is graded and
+    // boxed like any other, so leaving it out of allWords() (which is right, for
+    // distractors and the glossary) meant nothing learned in Basics ever came
+    // back. Distractor pools are untouched — pool() still isolates aux words.
+    everyWord: () => [...byHanzi.values(), ...auxByHanzi.values()],
     word: (hanzi) => byHanzi.get(hanzi) || auxByHanzi.get(hanzi),
     lesson: (id) => C101.lessons().find(l => l.id === id),
     chapter: (id) => allChapters.find(c => c.id === id),

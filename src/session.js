@@ -388,21 +388,44 @@ const Session = (function () {
     return makeSession(pseudo, space(shuffle(quiz)), 'test');
   }
 
-  // Public: review session across all due words (the SRS inbox).
-  function forReview() {
-    const words = SRS.dueWords().slice(0, 20);
+  // Public: a Review-hub session over whatever words the hub selected (it
+  // defaults to the SRS inbox). `opts.title` names the mode on screen, and
+  // `opts.onlyIfDue` is passed through to grading for the ad-hoc modes — see
+  // SRS.grade.
+  //
+  // Every word gets one recognition item and one production item, so a review
+  // actually asks you to *produce* the word rather than only recognise it out of
+  // four options. It also goes through space() like every other session; the old
+  // one didn't, because with a single item per word there was nothing to space.
+  function forReview(words, opts) {
+    const o = opts || {};
+    const list = (words || SRS.dueWords()).slice(0, CONFIG.REVIEW_SIZE);
     const quiz = [];
-    for (const w of words) {
-      quiz.push(mcItem(w, Math.random() < 0.5 ? 'zh2en' : 'en2zh'));
+    for (const w of list) {
+      const full = rec(w);
+      // A Basics word draws its options from its own chapter, exactly as it does
+      // in a Basics drill — a bare 氵 offered against vocabulary is no question
+      // at all. Word records carry `aux`/`chapterId`, which is all pool() reads.
+      const pool = C101.pool(full);
+      quiz.push(mcItem(full, Math.random() < 0.5 ? 'zh2en' : 'listen', 'learn', pool));
+      // Production. Typing a bare radical or a tone syllable tests the wrong
+      // thing, so aux words produce by choosing instead.
+      quiz.push(full.aux || Math.random() < 0.5
+        ? mcItem(full, 'en2zh', 'learn', pool)
+        : typeItem(full));
     }
-    const pseudo = { id: 'review', title: 'Review', zh: '複習' };
-    return makeSession(pseudo, shuffle(quiz), 'learn');
+    const pseudo = { id: 'review', title: o.title || 'Review', zh: o.zh || '複習' };
+    return makeSession(pseudo, space(shuffle(quiz)), 'learn',
+                       { grade: o.onlyIfDue ? { onlyIfDue: true } : null });
   }
 
-  function makeSession(lesson, queue, mode) {
+  function makeSession(lesson, queue, mode, opts) {
     return {
       lesson,
       mode: mode || 'learn',
+      // Passed to SRS.grade on every answer. Only the Review hub's ad-hoc modes
+      // set anything here; a lesson grades normally.
+      gradeOpts: (opts && opts.grade) || null,
       queue,
       idx: 0,
       total: queue.length,
@@ -433,7 +456,7 @@ const Session = (function () {
             : (choice === item.correct);
         // The matching board is a warm-up, not evidence of recall — no SRS.
         if (item.kind !== 'pairs') {
-          SRS.grade(item.hanzi, ok);
+          SRS.grade(item.hanzi, ok, this.gradeOpts);
           if (ok) {
             this.combo += 1;
             if (this.combo > this.bestCombo) this.bestCombo = this.combo;

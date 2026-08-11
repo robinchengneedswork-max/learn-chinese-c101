@@ -5,7 +5,7 @@ const CONFIG = {
   // Shown on the home screen and asserted to equal sw.js's CACHE. A stale phone
   // is the single most expensive bug in this project to diagnose remotely, and
   // it always ends with someone guessing from symptoms. Now you just read it.
-  BUILD: 'c101-v28',
+  BUILD: 'c101-v29',
 
   STORAGE_KEY: 'c101.progress.v1',
 
@@ -27,6 +27,11 @@ const CONFIG = {
 
   // How many distinct words a single lesson session drills at once.
   SESSION_SIZE: 8,
+
+  // How many distinct words any Review-hub session drills. Each gets one
+  // recognition item and one production item, so this is roughly half the
+  // question count. (It used to be a bare `20` inside forReview.)
+  REVIEW_SIZE: 12,
 
   // A section (book lesson, ~12 words) is split into bite-size "parts" of this
   // many words each, plus one no-pinyin Reading part covering the whole section.

@@ -769,6 +769,28 @@ body.modal-open { overflow: hidden; }
 .modal-title { font-size: 22px; font-weight: 800; margin-top: 4px; }
 .modal-sub { color: var(--muted); font-size: 15px; margin-top: 2px; }
 
+/* ---- Review hub (the modes list inside the modal) ---- */
+.review-mode {
+  width: 100%; margin-top: 10px; padding: 13px 15px; cursor: pointer;
+  display: flex; align-items: center; gap: 12px; text-align: left;
+  background: var(--card); color: var(--text);
+  border: 1px solid var(--line); border-radius: 14px;
+}
+.review-mode:active:not(:disabled) { transform: translateY(1px); }
+.review-mode.empty { opacity: .45; cursor: default; }
+.review-mode-main { flex: 1; min-width: 0; }
+.review-mode-name { font-size: 16px; font-weight: 800; }
+.review-mode-hint { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.review-mode-count {
+  font-size: 18px; font-weight: 800; color: var(--brand);
+  font-variant-numeric: tabular-nums;
+}
+.review-mode.empty .review-mode-count { color: var(--muted); }
+.review-book {
+  margin: 16px 0 2px; font-size: 12px; font-weight: 800; letter-spacing: .4px;
+  color: var(--muted); text-transform: uppercase;
+}
+
 .reading-controls { display: flex; gap: 10px; margin: 16px 0 14px; }
 .pill-btn {
   padding: 9px 15px; border: 1px solid var(--line); border-radius: 999px;
