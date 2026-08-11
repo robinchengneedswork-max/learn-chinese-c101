@@ -65,10 +65,22 @@ listen-and-build.
 
 **The Basics book is built** (`content/basics-*.js`): sounds/pinyin, tones,
 radicals, everyday words — the previously-deferred tone and radical drills, plus
-two more. It's an `aux` + `bookOpen` book (isolated distractor pool, no gating);
-see README "Books (modules)" and "Adding to Basics". The subtle part is the
+two more. It's an `aux` + `bookOpen` book (isolated distractor pool, no gating),
+now split into **two tracks** (Phonics / Radicals) with crossover cards between
+them; see README "Books (modules)" and "Adding to Basics". The subtle part is the
 radical `examples` curation rule — an example may contain no *second* drilled
 radical, and the tests can only catch part of that.
+
+**Don't copy radical characters into the sound lessons.** It looks like an easy
+win ("teach the phonics with the parts they already know") and it backfires:
+`register` is first-wins, `basics-01-sounds.js` loads before
+`basics-03-radicals.js`, so every shared character is claimed by the *sound*
+chapter and the radical's gloss, `examples` and `say` stop resolving through
+`C101.word()`. 17 characters are already in this state. Reordering the script
+tags is not the fix either — `basics-01` is the sole carrier of the book's
+`bookTitle` / `bookTagline` / `bookOpen`, so loading `basics-03` first would
+create the Basics book untitled **and gated**. The crossover cards exist to get
+the same teaching effect without the duplication.
 
 Simplified-Chinese display is done (`src/lang.js` + generated `src/lang-map.js`, render-time
 only; canonical content and progress stay Traditional).
@@ -86,6 +98,13 @@ worth not re-litigating: **haptics are one tick on tap and nothing after**
 reward buzz would be Android-only), and the **pairs board never joins a combo
 run** (same reason it's excluded from SRS). Sounds are CC0 samples with the old
 synthesised tones kept as the `file://` fallback — don't delete them.
+
+**QOL sprints shipped 2026-08-11** (v27–v30, `npm test` 186/186): the path now
+**opens on the node you're up to** instead of the top; the palette is **warm
+paper & ink** with a System/Light/Dark picker and every colour tokenised (a test
+fails on a stray hex); **Review is a hub** — always open, with Due now / weakest
+/ by chapter / random mix, and it finally **sees Basics words**, which had never
+once come back for review; **Basics is two tracks**. See README for each.
 
 Playtest follow-up the same day: the combo's **per-link semitone climb was
 removed** in favour of a **milestone lift every `COMBO_MILESTONE` (5)**, and
