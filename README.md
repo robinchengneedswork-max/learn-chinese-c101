@@ -73,6 +73,41 @@ Two things make it different from a normal book:
   its own chapter instead. Progress is still shared by `hanzi` as everywhere else,
   so drilling the tones of 聖經 here feeds its Chapter 1 record.
 
+**Tracks.** Basics runs as **two parallel tracks** — **Phonics** (sounds, tones,
+everyday words) and **Radicals** — chosen by a second row of tabs under the book
+tabs. They're material you dip into on different days, and as one path the 95
+radicals sat in the middle of the sounds as a 19-node block.
+
+A chapter declares its track as data (`track` / `trackTitle` / `trackZh`,
+first-seen wins for the title, exactly like the book metadata).
+`C101.chapters()` then filters to the current track, and **that is the whole
+mechanism**: one track visible at a time is simply a shorter book, so
+`buildModel`, `drawTrail`, `layoutRail` and the Jump menu need no idea tracks
+exist. What must not leak is the filter — `allWords()`, `word()`, `lesson()`,
+`chapter()` and `currentBook().chapters` all stay global, which is why the
+glossary still lists the whole book and review still sees both tracks. The
+selection persists as a `bookId → trackId` map, so a track id can never be
+applied to the wrong book and returning to a book restores the track you left.
+
+Consequences worth knowing: `pathAnchors()` relabels itself per track (Phonics
+has 3 chapters so the rail shows chapters; Radicals has 1, so it falls through to
+its 6 sections), and each track has its own "current" node, which is the point —
+"where am I *in this track*" is the question being asked.
+
+**Crossovers.** A lesson may recommend one in the other track:
+
+```js
+crossover: { to: 'bas-rad-l2', why: '西 xī and 山 shān are both character parts…' }
+```
+
+It renders as a card at the foot of the section's band, and tapping it switches
+track and scrolls to that section. The target's track is *derived* from the
+lesson, never stored, so a chapter changing tracks can't leave a stale pointer.
+Deliberately a card and not a path node: a node would take a `seq`, join the
+trail polyline, and need a cleared state it hasn't got — and it would break the
+contiguous-cleared-prefix gold fill. A test checks every crossover names a real
+lesson in the *other* track, since a typo fails silently in the UI.
+
 A lesson opts into a specialised session with `drill`:
 
 | `drill` | Chapter | What the session does |

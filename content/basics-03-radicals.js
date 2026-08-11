@@ -31,6 +31,7 @@
 // so it is read aloud as its parent 水.
 window.C101.register({
   bookId: 'basics',
+  track: 'radicals', trackTitle: 'Radicals', trackZh: '部首',
   aux: true,
 
   id: 'bas-radicals',
@@ -38,6 +39,7 @@ window.C101.register({
   zh: '部首與字形',
   lessons: [
     { id: 'bas-rad-l1', title: 'People & the body', zh: '人與身體', drill: 'radical',
+      crossover: { to: 'bas-sounds-l4', why: '女 nǚ is the ü sound that English speakers lose — hear it against nu next door.' },
       words: [
         { hanzi: '人', pinyin: 'rén', en: 'person', examples: ['今', '介', '以'],
           note: 'When a part is a whole character on its own it usually sits on top or underneath; the squeezed side-form 亻 is the same word.' },
@@ -73,6 +75,7 @@ window.C101.register({
     },
 
     { id: 'bas-rad-l2', title: 'Nature & the elements', zh: '自然', drill: 'radical',
+      crossover: { to: 'bas-sounds-l2', why: '西 xī vs 中 zhōng is the j/q/x against zh/ch/sh contrast, on parts you now know.' },
       words: [
         { hanzi: '日', pinyin: 'rì', en: 'sun; day', examples: ['早', '晚', '晨'] },
         { hanzi: '月', pinyin: 'yuè', en: 'moon; month', examples: ['期', '有'],
@@ -97,6 +100,7 @@ window.C101.register({
     },
 
     { id: 'bas-rad-l3', title: 'Plants & animals', zh: '植物與動物', drill: 'radical',
+      crossover: { to: 'bas-tones-l1', why: '馬 mǎ is the horse in mā má mǎ mà — the classic four-tone set.' },
       words: [
         { hanzi: '木', pinyin: 'mù', en: 'wood; tree', examples: ['本', '根', '楚', '未'] },
         { hanzi: '禾', pinyin: 'hé', en: 'cereal; growing grain', examples: ['私', '科', '租', '稱'] },
@@ -170,6 +174,7 @@ window.C101.register({
     },
 
     { id: 'bas-rad-l6', title: 'Actions, states & colours', zh: '動作・狀態・顏色', drill: 'radical',
+      crossover: { to: 'bas-sounds-l5', why: '光 guāng is one of the -uang glides drilled over in Phonics.' },
       words: [
         { hanzi: '立', pinyin: 'lì', en: 'to stand', examples: ['產'] },
         { hanzi: '走', pinyin: 'zǒu', en: 'to walk', examples: ['起', '越'] },

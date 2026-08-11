@@ -24,6 +24,10 @@ const C101 = (function () {
   const bookIndex = new Map();        // bookId -> book object
   const referenceDocs = [];           // reference docs (radicals, glossary, …), per book
   let currentBookId = null;           // the home path is showing
+  // bookId -> trackId. Which track of each book is on screen; per book, so a
+  // track id can never be applied to a book it doesn't belong to, and coming
+  // back to a book returns you to the track you left.
+  const currentTrackByBook = new Map();
 
   function ensureBook(chapter) {
     const id = chapter.bookId || 'c101';
@@ -37,7 +41,11 @@ const C101 = (function () {
         // An "open" book is a toolbox, not a course: every node is unlocked from
         // the start, so you can drop straight into the drill you need.
         open: !!chapter.bookOpen,
-        chapters: []
+        chapters: [],
+        // Optional parallel tracks within one book (see ensureTrack). A book
+        // with none behaves exactly as before.
+        tracks: [],
+        trackIndex: new Map()
       };
       bookIndex.set(id, book);
       books.push(book);
@@ -46,14 +54,55 @@ const C101 = (function () {
     return book;
   }
 
+  // Tracks: parallel paths inside a single book, chosen by a second row of tabs.
+  // Basics has two — the phonics material and the radicals — because they're
+  // things you dip into on different days, not one 54-node queue where the
+  // radicals sit in the middle of the sounds.
+  //
+  // Declared on the chapter (`track` / `trackTitle` / `trackZh`), like the book
+  // metadata above and for the same reason: content is data, so adding a chapter
+  // must never mean editing ui.js. Chapter granularity, not lesson — chapter
+  // headers, the jump waypoints and the band cycle are all chapter-scoped.
+  // First-seen wins for a track's title, exactly as for a book's.
+  function ensureTrack(book, chapter) {
+    if (!chapter.track) return null;
+    let track = book.trackIndex.get(chapter.track);
+    if (!track) {
+      track = {
+        id: chapter.track,
+        title: chapter.trackTitle || chapter.track,
+        zh: chapter.trackZh || '',
+        chapters: []
+      };
+      book.trackIndex.set(track.id, track);
+      book.tracks.push(track);
+    }
+    track.chapters.push(chapter);
+    return track;
+  }
+
+  // The track a book is currently showing, or null if it declares none.
+  function currentTrack() {
+    const book = currentBook();
+    if (!book || !book.tracks.length) return null;
+    return book.trackIndex.get(currentTrackByBook.get(book.id)) || book.tracks[0];
+  }
+
   function register(chapter) {
     allChapters.push(chapter);
-    ensureBook(chapter).chapters.push(chapter);
+    const book = ensureBook(chapter);
+    // The book keeps EVERY chapter regardless of track — that array is the whole
+    // book, which is what the glossary and the reference area read. Tracks are a
+    // view on top of it.
+    book.chapters.push(chapter);
+    ensureTrack(book, chapter);
     const pool = chapter.aux ? auxByHanzi : byHanzi;
     for (const lesson of chapter.lessons) {
       // Stamp the lesson with where it came from, so a part built from it can
       // find its own distractor pool without a reverse lookup.
       lesson.chapterId = chapter.id;
+      lesson.bookId = book.id;
+      lesson.trackId = chapter.track || null;
       lesson.aux = !!chapter.aux;
       for (const w of lesson.words) {
         // enrich each word with its location; key by hanzi (a word is a word).
@@ -188,8 +237,33 @@ const C101 = (function () {
     books: () => books,
     currentBook,
     setBook: (id) => { if (bookIndex.has(id)) { currentBookId = id; return true; } return false; },
-    // chapters() is SCOPED to the current book (the home path renders one book).
-    chapters: () => (currentBook() ? currentBook().chapters : []),
+    // Tracks (parallel paths inside one book). A book that declares none reports
+    // an empty list and behaves exactly as it always did.
+    tracks: () => (currentBook() ? currentBook().tracks : []),
+    currentTrack,
+    setTrack: (id, bookId) => {
+      const book = bookId ? bookIndex.get(bookId) : currentBook();
+      if (!book || !book.trackIndex.has(id)) return false;   // same contract as setBook
+      currentTrackByBook.set(book.id, id);
+      return true;
+    },
+    // Where a lesson lives, for crossover links. Read off the stamps register
+    // applies, so a chapter moving between tracks can't leave a stale pointer.
+    trackOfLesson: (lessonId) => {
+      const l = C101.lesson(lessonId);
+      return l ? { bookId: l.bookId, trackId: l.trackId } : null;
+    },
+    // chapters() is SCOPED to the current book AND, if that book declares
+    // tracks, to the current track — one track visible at a time is simply a
+    // shorter book, so the path renderer needs no idea tracks exist. Every other
+    // lookup below stays global; `currentBook().chapters` is the unfiltered
+    // escape hatch (the glossary uses it, and should).
+    chapters: () => {
+      const book = currentBook();
+      if (!book) return [];
+      const track = currentTrack();
+      return track ? track.chapters : book.chapters;
+    },
     // Lookups below are GLOBAL (span every book) so shared words + cross-book
     // ids always resolve regardless of which book is currently selected.
     lessons: () => allChapters.flatMap(c => c.lessons),

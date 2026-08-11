@@ -14,6 +14,9 @@
 // Basics is a toolbox you dip into, not a course you walk end to end.
 window.C101.register({
   bookId: 'basics',
+  // Basics runs as two parallel tracks (see README "Books (modules)"). Only the
+  // first chapter of each needs to name it, exactly as with the book metadata.
+  track: 'phonics', trackTitle: 'Phonics', trackZh: '發音',
   bookTitle: 'Basics',
   bookZh: '基礎',
   bookTagline: 'Basics: the sounds, tones, character parts and everyday words the book assumes',
@@ -44,6 +47,7 @@ window.C101.register({
     // smile; zh/ch/sh at the back with the tongue curled. English hears both as
     // "j / ch / sh", which is exactly the problem.
     { id: 'bas-sounds-l2', title: 'j · q · x vs zh · ch · sh', zh: '舌面音', drill: 'sound',
+      crossover: { to: 'bas-rad-l2', why: '西 xī and 山 shān are both character parts — meet them again as building blocks.' },
       words: [
         { hanzi: '家', pinyin: 'jiā',   en: 'home; family' },
         { hanzi: '七', pinyin: 'qī',    en: 'seven' },
@@ -59,6 +63,7 @@ window.C101.register({
     // -n closes on the tongue tip, -ng at the back of the throat. The pair is
     // meaning-bearing in Chinese and inaudible to most English speakers at first.
     { id: 'bas-sounds-l3', title: 'Final -n vs -ng', zh: '前鼻音與後鼻音', drill: 'sound',
+      crossover: { to: 'bas-rad-l1', why: '心 xīn, the -n half of this pair, is also one of the commonest parts in the book.' },
       words: [
         { hanzi: '心', pinyin: 'xīn',   en: 'heart' },
         { hanzi: '星', pinyin: 'xīng',  en: 'star' },
@@ -74,6 +79,7 @@ window.C101.register({
     // ü (the "umlaut u": say "ee" and round your lips) against plain u. Written
     // without its dots after j/q/x/y, which is why 去 looks like "qu" but isn't.
     { id: 'bas-sounds-l4', title: 'ü vs u', zh: 'ü 與 u', drill: 'sound',
+      crossover: { to: 'bas-rad-l2', why: '雨 yǔ and 月 yuè are parts as well as sounds — 雨 tops every weather character.' },
       words: [
         { hanzi: '女', pinyin: 'nǚ',   en: 'woman; female' },
         { hanzi: '魚', pinyin: 'yú',   en: 'fish' },

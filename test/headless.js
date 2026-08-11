@@ -549,6 +549,84 @@ ok('pattern round-trips', Pinyin.spell(['sheng', 'ming'], '1-4') === 'shēng mì
   ok('the two notes read as two', CONFIG.COMBO_LIFT_GAP > 0.03 && CONFIG.COMBO_LIFT_GAP < 0.3);
 }
 
+// ---- Tracks: parallel paths inside one book ---------------------------------
+// Basics runs as Phonics / Radicals. chapters() filters to the current track,
+// which is what lets the whole path renderer stay ignorant of tracks — so the
+// thing to guard is that the filter never leaks into the global lookups.
+{
+  const prevBook = (C101.currentBook() || {}).id;
+
+  ok('a book with no tracks reports none',
+     C101.setBook('c101') && C101.tracks().length === 0);
+  ok('an untracked book still lists its chapters', C101.chapters().length === 1);
+
+  C101.setBook('basics');
+  const tracks = C101.tracks();
+  ok('basics declares two tracks', tracks.length === 2);
+  ok('every track has an id and a title', tracks.every(t => t.id && t.title));
+  ok('track ids are unique', new Set(tracks.map(t => t.id)).size === tracks.length);
+
+  const basics = C101.books().find(b => b.id === 'basics');
+  ok('every Basics chapter declares a track',
+     basics.chapters.every(c => !!c.track));
+  // The invariant that stops a chapter silently vanishing from the app.
+  {
+    const inTracks = tracks.flatMap(t => t.chapters);
+    ok('every chapter is reachable from exactly one track',
+       inTracks.length === basics.chapters.length &&
+       new Set(inTracks).size === basics.chapters.length);
+  }
+
+  C101.setTrack('phonics');
+  const phon = C101.chapters().map(c => c.id);
+  C101.setTrack('radicals');
+  const rad = C101.chapters().map(c => c.id);
+  ok('phonics holds the sounds, tones and everyday-word chapters',
+     phon.indexOf('bas-radicals') < 0 && phon.indexOf('bas-sounds') >= 0 &&
+     phon.indexOf('bas-tones') >= 0 && phon.indexOf('bas-core') >= 0);
+  ok('radicals holds only the radicals chapter',
+     rad.length === 1 && rad[0] === 'bas-radicals');
+  ok('the two tracks partition the book', phon.length + rad.length === basics.chapters.length);
+
+  ok('setTrack rejects an unknown id', C101.setTrack('nope') === false);
+  ok('rejecting leaves the current track alone', (C101.currentTrack() || {}).id === 'radicals');
+  ok('setTrack rejects a track belonging to another book',
+     C101.setTrack('phonics', 'c101') === false);
+
+  // Filtering is a VIEW. Every global lookup must be untouched by it.
+  ok('the graded corpus is unchanged by tracks', C101.allWords().length === 805);
+  ok('aux lookups are unchanged by tracks', !!C101.word('氵'));
+  ok('lesson lookup crosses tracks', !!C101.lesson('bas-sounds-l1'));
+  ok('chapter lookup crosses tracks', !!C101.chapter('bas-core'));
+  ok('the glossary still sees the whole book',
+     basics.chapters.length > C101.chapters().length);
+
+  // Crossovers: a typo here fails silently in the UI, so it's caught here.
+  {
+    let checked = 0, bad = [];
+    for (const lesson of C101.lessons()) {
+      const x = lesson.crossover;
+      if (!x) continue;
+      checked++;
+      const target = C101.lesson(x.to);
+      const dest = C101.trackOfLesson(x.to);
+      if (!target || !dest || !dest.trackId) bad.push(lesson.id + '→' + x.to);
+      else if (x.to === lesson.id) bad.push(lesson.id + ' points at itself');
+      else if (!x.why || typeof x.why !== 'string') bad.push(lesson.id + ' has no reason');
+    }
+    ok('there are crossovers to check', checked >= 4);
+    ok('every crossover names a real lesson in a real track (' + bad.join(', ') + ')',
+       bad.length === 0);
+    // The point of a crossover is that it goes somewhere else.
+    const sameTrack = C101.lessons().filter(l => l.crossover &&
+      (C101.trackOfLesson(l.crossover.to) || {}).trackId === l.trackId);
+    ok('crossovers link the two tracks, not within one', sameTrack.length === 0);
+  }
+
+  C101.setTrack('phonics');
+  if (prevBook) C101.setBook(prevBook);
+}
+
 // ---- Review hub -------------------------------------------------------------
 // The three things that were actually wrong: Basics words could never come back
 // (dueWords scanned the graded corpus, which excludes aux), a cap of 20 always

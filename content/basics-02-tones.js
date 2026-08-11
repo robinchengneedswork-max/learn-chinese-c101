@@ -12,6 +12,7 @@
 // in Chapter 1.
 window.C101.register({
   bookId: 'basics',
+  track: 'phonics',
   aux: true,
 
   id: 'bas-tones',
@@ -43,6 +44,7 @@ window.C101.register({
     },
 
     { id: 'bas-tones-l3', title: 'Third & fourth tone', zh: '三聲與四聲', drill: 'tone',
+      crossover: { to: 'bas-rad-l1', why: '大 dà and 手 shǒu are drilled here for tone and there for shape.' },
       words: [
         { hanzi: '我', pinyin: 'wǒ',   en: 'I; me' },
         { hanzi: '好', pinyin: 'hǎo',  en: 'good; well' },

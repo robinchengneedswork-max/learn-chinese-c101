@@ -7,6 +7,7 @@
 // hanzi as everywhere else, so a word met here counts if it turns up in a chapter.
 window.C101.register({
   bookId: 'basics',
+  track: 'phonics',
   aux: true,
 
   id: 'bas-core',

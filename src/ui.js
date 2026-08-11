@@ -127,6 +127,52 @@ const UI = (function () {
     renderHome();
   }
 
+  // ---- Track picker ---------------------------------------------------------
+  // A book may run as parallel tracks (Basics: Phonics / Radicals). Stored as a
+  // bookId -> trackId map, not a bare string: that way a track id can never be
+  // applied to the wrong book, and coming back to a book returns you to the
+  // track you left.
+  const TRACK_KEY = 'c101.track.v1';
+
+  function savedTracks() {
+    try { return JSON.parse(localStorage.getItem(TRACK_KEY)) || {}; } catch (e) { return {}; }
+  }
+  function restoreTracks() {
+    const map = savedTracks();
+    // setTrack validates, so a track id left behind by an edited content file is
+    // simply dropped — same contract as setBook.
+    for (const bookId of Object.keys(map)) C101.setTrack(map[bookId], bookId);
+  }
+  function chooseTrack(id) {
+    if (!C101.setTrack(id)) return;
+    const book = C101.currentBook();
+    const map = savedTracks();
+    if (book) map[book.id] = id;
+    try { localStorage.setItem(TRACK_KEY, JSON.stringify(map)); } catch (e) { /* best-effort */ }
+    renderHome();
+  }
+
+  // A segmented control under the book tabs, deliberately lighter than them: two
+  // rows of identical-looking tabs would fight over which is the primary choice.
+  function buildTrackTabs() {
+    const root = $('#track-tabs');
+    if (!root) return;
+    root.innerHTML = '';
+    const list = C101.tracks();
+    if (list.length < 2) { root.hidden = true; return; }
+    root.hidden = false;
+    const curId = (C101.currentTrack() || {}).id;
+    for (const tr of list) {
+      const tab = el('button', 'track-tab' + (tr.id === curId ? ' active' : ''));
+      tab.setAttribute('role', 'tab');
+      tab.setAttribute('aria-selected', tr.id === curId ? 'true' : 'false');
+      tab.appendChild(el('span', 'track-tab-name', tr.title));
+      if (tr.zh) tab.appendChild(el('span', 'track-tab-zh', Lang.zh(tr.zh)));
+      tab.addEventListener('click', () => { if (tr.id !== curId) chooseTrack(tr.id); });
+      root.appendChild(tab);
+    }
+  }
+
   // A row of book tabs, rebuilt each render so the active one stays highlighted.
   // Hidden entirely when there's only one book (nothing to switch between).
   function buildBookTabs() {
@@ -246,6 +292,7 @@ const UI = (function () {
     $('#stat-xp').textContent = s.xp;
 
     buildBookTabs();
+    buildTrackTabs();
     const book = C101.currentBook();
     const tag = document.querySelector('.tagline');
     if (tag && book) {
@@ -275,10 +322,14 @@ const UI = (function () {
       scene.appendChild(header);
       for (const sec of ch.sections) {
         const band = el('div', 'band b' + sec.band);
-        jumpTargets.sections.push({ title: sec.title, el: band });
+        // The id is what a crossover link targets; pathAnchors/layoutRail only
+        // ever read .title and .el, so carrying it is free.
+        jumpTargets.sections.push({ id: sec.id, title: sec.title, el: band });
         band.appendChild(sectionBanner(sec));
         for (const node of sec.nodes) band.appendChild(nodeRow(node, rowIdx++));
         band.appendChild(sectionActions(C101.lesson(sec.id)));
+        const cross = crossoverCard(C101.lesson(sec.id));
+        if (cross) band.appendChild(cross);
         scene.appendChild(band);
       }
       if (ch.test) {
@@ -493,6 +544,52 @@ const UI = (function () {
       row.appendChild(el('span', 'star' + (i < stars ? ' on' : ''), '★'));
     }
     return row;
+  }
+
+  // ---- Crossovers between tracks --------------------------------------------
+  // A lesson may recommend another one: `crossover: { to, why }`. The point is
+  // that the two Basics tracks teach each other — the 氵 you just met is the
+  // part in 洗, and 洗 vs 西 is exactly the sound contrast next door.
+  //
+  // Deliberately a card at the foot of the band, NOT a node on the path: a node
+  // would take a seq, join the trail polyline, and need a cleared state it
+  // hasn't got — and it would break the contiguous-cleared-prefix gold fill.
+  //
+  // The target's track is derived, never stored, so a chapter changing tracks
+  // can't leave a stale pointer behind.
+  function crossoverCard(lesson) {
+    const x = lesson && lesson.crossover;
+    if (!x) return null;
+    const target = C101.lesson(x.to);
+    const dest = C101.trackOfLesson(x.to);
+    if (!target || !dest) return null;   // fail soft; the test is what catches typos
+
+    const book = (C101.books().find(b => b.id === dest.bookId) || {});
+    const track = book.trackIndex && book.trackIndex.get(dest.trackId);
+    const card = el('button', 'crossover-card');
+    card.appendChild(el('div', 'crossover-kicker',
+      track ? `↗ Also in ${track.title}` : '↗ Also see'));
+    const name = el('div', 'crossover-name', target.title);
+    if (target.zh) name.appendChild(el('span', 'crossover-zh', ' ' + Lang.zh(target.zh)));
+    card.appendChild(name);
+    if (x.why) card.appendChild(el('div', 'crossover-why', x.why));
+    card.addEventListener('click', () => goToLesson(x.to));
+    return card;
+  }
+
+  // Switch to whatever book/track a lesson lives in, then scroll to its band.
+  function goToLesson(lessonId) {
+    const dest = C101.trackOfLesson(lessonId);
+    if (!dest) return;
+    const book = C101.currentBook();
+    if (book && dest.bookId !== book.id) chooseBook(dest.bookId);
+    if (dest.trackId && dest.trackId !== (C101.currentTrack() || {}).id) chooseTrack(dest.trackId);
+    // renderHome fills jumpTargets synchronously, but the band's position isn't
+    // settled until the same frame the trail is measured in.
+    requestAnimationFrame(() => {
+      const stop = jumpTargets.sections.find(s => s.id === lessonId);
+      if (stop) scrollToAnchor(stop.el);
+    });
   }
 
   // ---- Modal: reading passage & vocab list ----------------------------------
@@ -910,9 +1007,11 @@ const UI = (function () {
     // at the top of the document and scroll away, so their at-rest bottom edge is
     // the only position that can ever collide.
     document.body.classList.add('has-rail');
-    const tabs = $('#book-tabs');
-    rail.style.top = tabs && !tabs.hidden
-      ? Math.round(absTop(tabs) + tabs.offsetHeight + 10) + 'px' : '';
+    // Start below whichever header rows are showing — the track row is a second
+    // one, and the rail would otherwise sit on top of it.
+    const rows = [$('#book-tabs'), $('#track-tabs')].filter(r => r && !r.hidden);
+    rail.style.top = rows.length
+      ? Math.round(Math.max(...rows.map(r => absTop(r) + r.offsetHeight)) + 10) + 'px' : '';
     rail.innerHTML = '';
     rail.appendChild(el('div', 'rail-track'));
 
@@ -1701,6 +1800,7 @@ const UI = (function () {
 
   function init() {
     restoreBook();       // re-select the last-used book before first render
+    restoreTracks();     // …and each book's last-used track
     buildLangSelect();
     buildThemeSelect();
     Theme.apply();   // stamp the root + paint the browser chrome to match
