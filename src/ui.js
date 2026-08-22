@@ -1055,7 +1055,11 @@ const UI = (function () {
     if (!rail || rail.hidden) return;
     const thumb = rail.querySelector('.rail-thumb');
     if (!thumb) return;
-    const docH = docHeight(), viewH = window.innerHeight, y = window.scrollY;
+    // Same frame as the scrub — see dragFrame. During a drag this fires on every
+    // scroll the scrub causes, and reading a live innerHeight here meant the thumb
+    // grew and shifted as the URL bar collapsed, under a finger that hadn't moved.
+    const f = dragFrame();
+    const docH = f.docH, viewH = f.viewH, y = window.scrollY;
     thumb.style.height = clamp01(viewH / docH) * 100 + '%';
     thumb.style.top = clamp01(y / docH) * 100 + '%';
 
@@ -1104,24 +1108,36 @@ const UI = (function () {
     focusedAt = how === 'smooth' ? null : Math.round(window.scrollY);
   }
 
+  // The page and viewport as they were when the finger went down — or as they are
+  // now, if no finger is down. EVERY number a gesture computes has to come from
+  // here: the scroll it maps to, and the thumb it paints. Mixing a frozen ruler
+  // into one and a live ruler into the other is what made the thumb crawl out
+  // from under the finger while the page went somewhere else again.
+  function dragFrame() {
+    return railDrag || { docH: docHeight(), viewH: window.innerHeight };
+  }
+
   // Free scrub: put the grabbed fraction of the document a bit above centre, so
-  // what you're aiming at is under your thumb rather than behind it. Uses the
-  // frozen frame while dragging, for the reason given on railFrac.
+  // what you're aiming at is under your thumb rather than behind it.
   function scrubTo(frac) {
-    const docH = (railDrag && railDrag.docH) || docHeight();
-    const viewH = (railDrag && railDrag.viewH) || window.innerHeight;
-    window.scrollTo({ top: Math.max(0, frac * docH - viewH * 0.35) });
+    const f = dragFrame();
+    window.scrollTo({ top: Math.max(0, frac * f.docH - f.viewH * 0.35) });
   }
 
   // Where on the rail a pointer is, 0..1.
   //
-  // While a drag is live this measures against the frame captured at pointerdown
-  // rather than the live one. On a phone, scrolling the page collapses and
-  // expands the URL bar, which changes window.innerHeight — and the rail is
-  // pinned top-and-bottom, so its height changes with it. Re-measuring mid-drag
+  // Measured against the strip as it was at pointerdown. On a phone, scrolling
+  // collapses and expands the URL bar, which changes window.innerHeight — and the
+  // rail is pinned top-and-bottom, so its height follows. Re-measuring mid-drag
   // meant the same finger position mapped to a different fraction from one frame
-  // to the next, and since scrubbing scrolls the page, the scrub was changing the
-  // very ruler it was being measured with. Freeze the ruler for the gesture.
+  // to the next, and since scrubbing scrolls, the scrub was changing the very
+  // ruler it was measured with.
+  //
+  // Freezing this rect is only half the job, though, and the half that isn't done
+  // here: a frozen rect describes a strip that is still visibly resizing, so the
+  // arithmetic and the thing under the finger drift apart instead. onRailDown
+  // pins the rail's height in the DOM for the gesture as well, which is what makes
+  // this frozen rect stay *true* rather than merely stable.
   function railFrac(e, rail) {
     const r = (railDrag && railDrag.rect) || rail.getBoundingClientRect();
     return clamp01((e.clientY - r.top) / r.height);
@@ -1147,20 +1163,49 @@ const UI = (function () {
   function onRailDown(e) {
     const rail = $('#path-rail');
     if (!rail || rail.hidden) return;
+    // One finger owns the rail until it lets go. A second touch landing in the
+    // strip — a thumb steadying the phone against the edge — used to overwrite
+    // railDrag outright: new origin, new rect, `moved` reset to false. That second
+    // finger's pointerup was then read as a *tap* and snapped the page to wherever
+    // it happened to be resting, which is the jump to the top of the path.
+    //
+    // The exception is a drag that has already ended without telling us. iOS does
+    // not always deliver an end event for a gesture it takes over (which is why
+    // there are four of them bound), and a drag left open would wedge the rail for
+    // good: layoutRail refuses to rebuild while one is live, and the height stays
+    // pinned. If we took the capture and no longer hold it, the finger is gone.
+    if (railDrag) {
+      const stale = railDrag.captured && rail.hasPointerCapture
+                 && !rail.hasPointerCapture(railDrag.id);
+      if (!stale) return;
+      endRailDrag();
+    }
     e.preventDefault();
     e.stopPropagation();          // don't let the doc-level handlers close menus mid-drag
-    // Freeze the gesture's frame of reference: the strip we're measuring against,
-    // and the page we're mapping onto. Neither may shift under the finger.
-    railDrag = { y: e.clientY, moved: false,
-                 rect: rail.getBoundingClientRect(),
-                 docH: docHeight(), viewH: window.innerHeight };
+    // Freeze the gesture's frame of reference — and freeze it in the DOM too.
+    //
+    // The rail is pinned top-and-bottom, so its height is the viewport's height
+    // less two constants. Scrubbing scrolls, scrolling collapses the URL bar, the
+    // viewport grows, and the strip grows with it. Recording the rect alone left
+    // the arithmetic stable while the strip under the finger kept resizing, so the
+    // two described different rails. Pinning the height in pixels for the duration
+    // means the strip on screen and the strip in the arithmetic are one strip, and
+    // the URL bar can do as it likes.
+    const rect = rail.getBoundingClientRect();
+    rail.style.height = rect.height + 'px';
+    rail.style.bottom = 'auto';
+    railDrag = { id: e.pointerId, y: e.clientY, moved: false,
+                 rect, docH: docHeight(), viewH: window.innerHeight };
     rail.classList.add('dragging');
-    if (rail.setPointerCapture) rail.setPointerCapture(e.pointerId);
+    if (rail.setPointerCapture) {
+      rail.setPointerCapture(e.pointerId);
+      railDrag.captured = true;
+    }
     showRailLabel(railFrac(e, rail));
   }
 
   function onRailMove(e) {
-    if (!railDrag) return;
+    if (!railDrag || e.pointerId !== railDrag.id) return;
     const rail = $('#path-rail');
     if (!railDrag.moved && Math.abs(e.clientY - railDrag.y) < RAIL_DRAG) return;
     railDrag.moved = true;
@@ -1175,30 +1220,45 @@ const UI = (function () {
     railDrag = null;
     if (!rail) return moved;
     rail.classList.remove('dragging');
+    // Hand the strip's height back to the stylesheet, and repaint the thumb on the
+    // live ruler now that the frozen one is gone.
+    rail.style.height = '';
+    rail.style.bottom = '';
     const label = rail.querySelector('.rail-label');
     if (label) label.hidden = true;
+    updateRail();
     return moved;
   }
 
   // The browser took the gesture away (it decided the touch was a page scroll,
   // or a system gesture cut in). Drop it silently — treating it as a tap here is
   // what made a slide fight the native scroll, each jumping the page in turn.
-  function onRailCancel() { endRailDrag(); }
+  // Bound to touchcancel and lostpointercapture as well as pointercancel, and
+  // those don't all carry a pointerId — so only a positively *mismatched* one is
+  // ignored. A cancel we can't attribute still ends the gesture.
+  function onRailCancel(e) {
+    if (e && e.pointerId != null && railDrag && e.pointerId !== railDrag.id) return;
+    endRailDrag();
+  }
 
   // A tap (no real movement) snaps to the tick you aimed at; if you tapped well
   // away from any tick, it just scrolls there.
   function onRailUp(e) {
-    if (!railDrag) return;
+    if (!railDrag || e.pointerId !== railDrag.id) return;
     const rail = $('#path-rail');
-    if (endRailDrag()) return;
+    // Read the position and the frame BEFORE ending the drag: endRailDrag drops
+    // the frozen rect and unpins the height, after which railFrac would measure
+    // this tap against a differently-sized strip than the one it was aimed at.
     const frac = railFrac(e, rail);
+    const f = { docH: railDrag.docH, viewH: railDrag.viewH };
+    if (endRailDrag()) return;
     let best = null, bd = Infinity;
     for (const s of railStops) {
       const d = Math.abs(s.frac - frac);
       if (d < bd) { bd = d; best = s; }
     }
     if (best && bd <= RAIL_SNAP) scrollToAnchor(best.el);
-    else window.scrollTo({ top: Math.max(0, frac * docHeight() - window.innerHeight * 0.35), behavior: 'smooth' });
+    else window.scrollTo({ top: Math.max(0, frac * f.docH - f.viewH * 0.35), behavior: 'smooth' });
   }
 
   // ---- Session flow ---------------------------------------------------------

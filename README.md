@@ -152,6 +152,39 @@ chapter, as Course 101 does today):
   the browser scrolls the page at the same time, the two fight over the scroll
   position — hence `touch-action: none`, a non-passive `touchmove` that cancels
   the default, and a `pointercancel` that releases the drag *without* acting.
+
+  **A scrub is a closed loop, and every fix here is about not letting it feed
+  itself.** Dragging scrolls the page; on a phone scrolling collapses the URL
+  bar; that changes the viewport — and the rail is pinned top-and-bottom, so its
+  height changes too. Three rules keep the gesture honest, and all three are load
+  bearing:
+
+  1. **One ruler.** At `pointerdown` the drag captures the document height, the
+     viewport height and the rail's rect, and *everything* for the rest of the
+     gesture is computed from those — the scroll it maps to (`scrubTo`) and the
+     thumb it paints (`updateRail`) alike. Mixing a frozen ruler into one and a
+     live one into the other is worse than using either consistently: the thumb
+     crawls out from under the finger while the page goes somewhere else again.
+     `dragFrame()` is the single source; don't reach past it to `innerHeight`.
+  2. **One rail.** Freezing the rect is not enough on its own, because a frozen
+     rect describes a strip that is still visibly resizing — the arithmetic and
+     the thing under the finger come apart. So `onRailDown` also pins the rail's
+     height in the DOM (`height` in px, `bottom: auto`) and `endRailDrag` hands
+     it back. That is what makes the frozen rect stay *true* rather than merely
+     stable.
+  3. **One pointer.** The drag records its `pointerId` and ignores every other
+     one. A second touch in the strip — a thumb steadying the phone against the
+     edge — used to replace the live drag outright, and its release was then read
+     as a *tap* that snapped the page to wherever that finger sat. The one
+     exception is a drag whose pointer is demonstrably gone (we took the capture
+     and no longer hold it): iOS doesn't always deliver an end event, and a drag
+     left open would wedge the rail, since `layoutRail` won't rebuild while one
+     is live.
+
+  `tools/shot.js` reproduces both failures directly — `shrink:a:b` drags while
+  the viewport grows underneath (the rail's height must not move), and
+  `multi:a:b` drops a stray second touch into a live scrub (the scroll must not
+  move). Both fail loudly against the code as it was before these rules.
 - The **🧭 Jump** button, bottom-right: the same waypoints as a menu, plus
   *Current lesson*. Rail is pointer-only by design; this is the keyboard route.
 

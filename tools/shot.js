@@ -19,8 +19,11 @@
 // It prints what the rail measured, and after a gesture, where it landed.
 //
 // usage: node tools/shot.js <url> <out.png> [gesture]
-//   gesture: "drag:<fromFrac>:<toFrac>"  drag down the rail, shoot mid-drag
-//            "tap:<frac>"                tap the rail at that fraction
+//   gesture: "drag:<fromFrac>:<toFrac>"    drag down the rail, shoot mid-drag
+//            "tap:<frac>"                  tap the rail at that fraction
+//            "cancel:<frac>"               browser takes the gesture away mid-slide
+//            "shrink:<fromFrac>:<toFrac>"  drag while the viewport grows under it
+//            "multi:<fromFrac>:<toFrac>"   drag, with a stray second touch in the strip
 const fs = require('fs');
 const http = require('http');
 
@@ -110,19 +113,68 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
       await sleep(60);
       await touch('touchEnd', yAt(+a));
       await sleep(700); // let the smooth scroll land
+    } else if (kind === 'shrink') {
+      // The URL bar collapsing mid-scrub, which is what scrubbing *causes* on a
+      // phone. The finger does not move during the change; only the viewport does.
+      // The rail is pinned top-and-bottom, so an unpinned strip grows with it and
+      // the gesture ends up measured against a different rail than it started on.
+      // What must hold: the strip's height is the same before and after.
+      const railH = () => send('Runtime.evaluate', { expression:
+        `Math.round(document.getElementById('path-rail').getBoundingClientRect().height)`,
+        returnByValue: true }).then(r => r.result.value);
+      await touch('touchStart', yAt(+a));
+      await touch('touchMove', yAt(+a + (+b - +a) / 3));
+      await sleep(60);
+      const hBefore = await railH();
+      await send('Emulation.setDeviceMetricsOverride',
+        { width: W, height: H + 90, deviceScaleFactor: 2, mobile: true });
+      await sleep(120);
+      const hAfter = await railH();
+      await touch('touchMove', yAt(+b));
+      await sleep(60);
+      console.log('rail height during drag:', hBefore, '->', hAfter,
+                  hBefore === hAfter ? 'OK (pinned)' : 'DRIFTED');
+    } else if (kind === 'multi') {
+      // A second finger resting in the strip — steadying the phone against the
+      // edge. It must be ignored outright: before the pointerId guard it replaced
+      // the live drag, and its release was then read as a tap that snapped the
+      // page to wherever that finger sat. (CDP multi-touch end semantics are
+      // fiddly, so the stray pointer is synthesized in the page, as with cancel.)
+      const scroll = () => send('Runtime.evaluate',
+        { expression: 'Math.round(scrollY)', returnByValue: true }).then(r => r.result.value);
+      await touch('touchStart', yAt(+a));
+      for (let s = 1; s <= 3; s++) { await touch('touchMove', yAt(+a + (+b - +a) * s / 3)); await sleep(60); }
+      const before = await scroll();
+      await send('Runtime.evaluate', { expression:
+        `(() => { const r = document.getElementById('path-rail');
+           const b = r.getBoundingClientRect();
+           const at = (t, y) => r.dispatchEvent(new PointerEvent(t,
+             { pointerId: 99, clientY: y, bubbles: true, cancelable: true }));
+           at('pointerdown', b.top + b.height * 0.04);
+           at('pointerup', b.top + b.height * 0.04); })()` });
+      await sleep(200);
+      const after = await scroll();
+      console.log('scrollY across a stray second touch:', before, '->', after,
+                  before === after ? 'OK (ignored)' : 'HIJACKED');
     } else if (kind === 'cancel') {
       // The browser deciding mid-gesture that the touch was a page scroll: a
       // couple of pixels of movement, then it takes the gesture away. The rail
       // must let go without acting — acting here is a tap-jump that then fights
       // the native scroll, which is the bug this reproduces.
       // (CDP's touchCancel dispatches no DOM event at all, so the pointercancel
-      // a real browser sends is synthesized in the page instead.)
+      // a real browser sends is synthesized in the page instead. It has to carry
+      // the *live* gesture's pointerId — the rail ignores end events belonging to
+      // any pointer but the one that owns it, and a hardcoded id here would be
+      // testing that guard rather than the cancel path.)
+      await send('Runtime.evaluate', { expression:
+        `document.getElementById('path-rail').addEventListener(
+           'pointerdown', (e) => { window.__pid = e.pointerId; }, true)` });
       await touch('touchStart', yAt(+a));
       await touch('touchMove', yAt(+a) + 2);
       await sleep(60);
       await send('Runtime.evaluate', { expression:
         `document.getElementById('path-rail').dispatchEvent(
-           new PointerEvent('pointercancel', { pointerId: 1, bubbles: true }))` });
+           new PointerEvent('pointercancel', { pointerId: window.__pid, bubbles: true }))` });
       await sleep(700);
     }
     const after = await send('Runtime.evaluate', {
