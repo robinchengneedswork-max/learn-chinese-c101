@@ -737,7 +737,11 @@ body {
   right: 12px;
   top: calc(env(safe-area-inset-top, 0px) + 104px);
   bottom: calc(74px + var(--safe-b));   /* clear of the 🧭 Jump button */
-  touch-action: none;                   /* vertical drags scrub, they don't scroll */
+  /* Swipes over the track belong to the PAGE. The rail runs down the right edge,
+     which is exactly where a thumb scrolls — claiming the whole strip meant an
+     ordinary scroll was read as navigation and jumped the page somewhere else.
+     Only the thumb takes a gesture; a tap anywhere still jumps. */
+  touch-action: pan-y;
   cursor: pointer;
 }
 .path-rail[hidden] { display: none; }
@@ -755,10 +759,18 @@ body {
   position: absolute; top: 0; bottom: 0; right: 12px; width: 3px;
   background: var(--line); border-radius: 999px;
 }
+/* The thumb is the handle — the only part of the rail you can drag, and the only
+   part that stops the page scrolling under the gesture. */
 .rail-thumb {
-  position: absolute; right: 8px; width: 11px; min-height: 26px;
+  position: absolute; right: 8px; width: 11px; min-height: 32px;
   background: var(--rail-thumb); border: 1px solid var(--line);
-  border-radius: 999px; pointer-events: none;
+  border-radius: 999px;
+  pointer-events: auto; touch-action: none;
+}
+/* A finger is not 11px wide. Widen what you can grab without widening the strip
+   the page has to keep clear for it. */
+.rail-thumb::before {
+  content: ''; position: absolute; inset: -14px -14px -14px -18px;  /* == THUMB_GRAB */
 }
 .path-rail.dragging .rail-thumb { background: var(--accent); border-color: var(--accent); }
 /* Ticks and markers are painted, not tapped — the rail handles every pointer. */

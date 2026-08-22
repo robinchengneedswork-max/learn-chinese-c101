@@ -993,8 +993,9 @@ const UI = (function () {
     // Never rebuild the control someone is currently holding. layoutRail wipes
     // the rail's contents, and a scrub scrolls the page, which on a phone fires
     // resize as the URL bar collapses — so without this the thumb and label you
-    // are dragging get destroyed and recreated mid-gesture.
-    if (railDrag) return;
+    // are dragging get destroyed and recreated mid-gesture. A pending tap holds
+    // nothing and must not block a rebuild.
+    if (railDrag && railDrag.scrub) return;
     const stops = pathAnchors();
     const docH = docHeight();
     railStops = [];
@@ -1113,15 +1114,33 @@ const UI = (function () {
   // here: the scroll it maps to, and the thumb it paints. Mixing a frozen ruler
   // into one and a live ruler into the other is what made the thumb crawl out
   // from under the finger while the page went somewhere else again.
+  // Only a live *scrub* freezes anything. A pending tap on the track holds no
+  // frame — the page is scrolling natively underneath it, so the live numbers are
+  // the true ones.
   function dragFrame() {
-    return railDrag || { docH: docHeight(), viewH: window.innerHeight };
+    return (railDrag && railDrag.scrub)
+      ? railDrag
+      : { docH: docHeight(), viewH: window.innerHeight };
   }
 
-  // Free scrub: put the grabbed fraction of the document a bit above centre, so
-  // what you're aiming at is under your thumb rather than behind it.
-  function scrubTo(frac) {
+  // Scrub, relative to where the thumb was grabbed: move the thumb n pixels and
+  // the document moves the n pixels' worth it represents. Deliberately NOT
+  // absolute — mapping the finger's position straight onto the document meant
+  // touching the rail at all teleported you, which is fine for a tap and wrong
+  // for a drag. Returns the fraction to label.
+  function scrubBy(dy) {
     const f = dragFrame();
-    window.scrollTo({ top: Math.max(0, frac * f.docH - f.viewH * 0.35) });
+    const max = Math.max(0, f.docH - f.viewH);
+    const top = Math.min(max, Math.max(0, f.startScroll + dy / f.rect.height * f.docH));
+    window.scrollTo({ top });
+    return labelFrac(top);
+  }
+
+  // The point the label names: what's a little below the top of the viewport,
+  // rather than the very first pixel of it.
+  function labelFrac(scroll) {
+    const f = dragFrame();
+    return clamp01((scroll + f.viewH * 0.35) / f.docH);
   }
 
   // Where on the rail a pointer is, 0..1.
@@ -1160,26 +1179,54 @@ const UI = (function () {
     label.hidden = false;
   }
 
+  // Is the pointer on the thumb — the one part of the rail you may grab? The
+  // strip is narrow enough that only the vertical axis matters, and a finger is
+  // not 11px wide, hence the slop.
+  const THUMB_GRAB = 14;
+  function onThumb(e, rail) {
+    const thumb = rail.querySelector('.rail-thumb');
+    if (!thumb) return false;
+    const t = thumb.getBoundingClientRect();
+    return e.clientY >= t.top - THUMB_GRAB && e.clientY <= t.bottom + THUMB_GRAB;
+  }
+
   function onRailDown(e) {
     const rail = $('#path-rail');
     if (!rail || rail.hidden) return;
-    // One finger owns the rail until it lets go. A second touch landing in the
+    // One finger owns a scrub until it lets go. A second touch landing in the
     // strip — a thumb steadying the phone against the edge — used to overwrite
     // railDrag outright: new origin, new rect, `moved` reset to false. That second
     // finger's pointerup was then read as a *tap* and snapped the page to wherever
     // it happened to be resting, which is the jump to the top of the path.
     //
-    // The exception is a drag that has already ended without telling us. iOS does
+    // The exception is a scrub that has already ended without telling us. iOS does
     // not always deliver an end event for a gesture it takes over (which is why
-    // there are four of them bound), and a drag left open would wedge the rail for
-    // good: layoutRail refuses to rebuild while one is live, and the height stays
-    // pinned. If we took the capture and no longer hold it, the finger is gone.
-    if (railDrag) {
+    // there are four of them bound), and a scrub left open would wedge the rail
+    // for good: layoutRail refuses to rebuild while one is live, and the height
+    // stays pinned. If we took the capture and no longer hold it, the finger is
+    // gone. A pending *tap* holds nothing and is simply replaced.
+    if (railDrag && railDrag.scrub) {
       const stale = railDrag.captured && rail.hasPointerCapture
                  && !rail.hasPointerCapture(railDrag.id);
       if (!stale) return;
       endRailDrag();
     }
+    railDrag = null;
+
+    // Only the thumb claims the gesture. The rail lives down the right edge,
+    // which is exactly where a thumb scrolls, so treating every swipe in the strip
+    // as a scrub meant ordinary scrolling was read as navigation — and because the
+    // scrub was *absolute*, it teleported to wherever the finger happened to land:
+    // down went to the bottom, up went to the top, and each new swipe jumped again
+    // from wherever you now were. A swipe over the empty track now belongs to the
+    // page (see `touch-action` in the stylesheet); we only watch for a tap.
+    if (!onThumb(e, rail)) {
+      railDrag = { id: e.pointerId, y: e.clientY, moved: false, scrub: false,
+                   rect: rail.getBoundingClientRect(),
+                   docH: docHeight(), viewH: window.innerHeight };
+      return;
+    }
+
     e.preventDefault();
     e.stopPropagation();          // don't let the doc-level handlers close menus mid-drag
     // Freeze the gesture's frame of reference — and freeze it in the DOM too.
@@ -1194,14 +1241,15 @@ const UI = (function () {
     const rect = rail.getBoundingClientRect();
     rail.style.height = rect.height + 'px';
     rail.style.bottom = 'auto';
-    railDrag = { id: e.pointerId, y: e.clientY, moved: false,
-                 rect, docH: docHeight(), viewH: window.innerHeight };
+    railDrag = { id: e.pointerId, y: e.clientY, moved: false, scrub: true,
+                 rect, docH: docHeight(), viewH: window.innerHeight,
+                 startScroll: window.scrollY };
     rail.classList.add('dragging');
     if (rail.setPointerCapture) {
       rail.setPointerCapture(e.pointerId);
       railDrag.captured = true;
     }
-    showRailLabel(railFrac(e, rail));
+    showRailLabel(labelFrac(window.scrollY));
   }
 
   function onRailMove(e) {
@@ -1209,9 +1257,10 @@ const UI = (function () {
     const rail = $('#path-rail');
     if (!railDrag.moved && Math.abs(e.clientY - railDrag.y) < RAIL_DRAG) return;
     railDrag.moved = true;
-    const frac = railFrac(e, rail);
-    scrubTo(frac);
-    showRailLabel(frac);
+    // A swipe that started on the track is the page scrolling natively underneath
+    // us. Nothing to do but remember it wasn't a tap.
+    if (!railDrag.scrub) return;
+    showRailLabel(scrubBy(e.clientY - railDrag.y));
   }
 
   function endRailDrag() {
@@ -1251,7 +1300,12 @@ const UI = (function () {
     // this tap against a differently-sized strip than the one it was aimed at.
     const frac = railFrac(e, rail);
     const f = { docH: railDrag.docH, viewH: railDrag.viewH };
-    if (endRailDrag()) return;
+    // A scrub has already put the page where it belongs — including one where the
+    // finger never moved, which is a grab-and-let-go and means "no thanks", not
+    // "jump to the thumb". A moved track swipe was the page scrolling itself.
+    // Either way there is no tap to act on.
+    const wasScrub = railDrag.scrub;
+    if (endRailDrag() || wasScrub) return;
     let best = null, bd = Infinity;
     for (const s of railStops) {
       const d = Math.abs(s.frac - frac);
@@ -1919,11 +1973,13 @@ const UI = (function () {
       // Losing the capture covers every way a gesture can end.
       rail.addEventListener('lostpointercapture', onRailCancel);
       rail.addEventListener('touchcancel', onRailCancel);   // not touchend: pointerup owns the tap
-      // `touch-action: none` alone didn't stop a phone from also scrolling the
-      // page during a slide — the two then fought over the scroll position. A
-      // non-passive touchmove that cancels the default is what actually holds.
+      // `touch-action: none` on the thumb alone didn't stop a phone from also
+      // scrolling the page during a slide — the two then fought over the scroll
+      // position. A non-passive touchmove that cancels the default is what
+      // actually holds. Strictly while a scrub is live, though: every other swipe
+      // in the strip has to pass through, or the rail eats the page's scrolling.
       rail.addEventListener('touchmove', (e) => {
-        if (e.cancelable) e.preventDefault();
+        if (railDrag && railDrag.scrub && e.cancelable) e.preventDefault();
       }, { passive: false });
     }
     // Follow the scroll with the thumb, at most once a frame.

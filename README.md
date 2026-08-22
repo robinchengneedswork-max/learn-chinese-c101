@@ -143,15 +143,25 @@ chapter, as Course 101 does today):
 
 - The **chapter rail** down the right edge: a mini-map of the whole path. A tick
   per waypoint at its true position in the page, a thumb showing the slice you're
-  looking at, and a green dot for the lesson you're up to. Tap a tick to jump,
-  or drag anywhere on the rail to scrub, with the waypoint name shown as you
-  pass it. It measures the live document (`layoutRail` in `ui.js`), so anything
-  that changes the page height must re-run it. It hides itself on a path shorter
-  than ~1.6 screens, and the page keeps a gutter clear for it, since the rail
-  swallows every pointer in its strip. It has to own the gesture outright — if
-  the browser scrolls the page at the same time, the two fight over the scroll
-  position — hence `touch-action: none`, a non-passive `touchmove` that cancels
-  the default, and a `pointercancel` that releases the drag *without* acting.
+  looking at, and a green dot for the lesson you're up to. **Tap** a tick to jump;
+  **drag the thumb** to scrub, with the waypoint name shown as you pass it. It
+  measures the live document (`layoutRail` in `ui.js`), so anything that changes
+  the page height must re-run it, and it hides itself on a path shorter than ~1.6
+  screens.
+
+  **Only the thumb takes a drag, and dragging it is relative.** Both halves of
+  that matter, and getting either wrong is the same bug. The rail runs down the
+  right edge — exactly where a thumb scrolls — so when the whole strip claimed
+  every vertical swipe *and* the scrub mapped the finger's absolute position onto
+  the document, an ordinary scroll was read as navigation and teleported the page
+  to wherever the finger happened to land: down went to the bottom, up went to the
+  top, and each new swipe jumped again from wherever you now were. Now the track
+  is `touch-action: pan-y` and passes its swipes to the page; only `.rail-thumb`
+  is `touch-action: none`, and only a gesture that starts on it (± `THUMB_GRAB`)
+  scrubs — moving the thumb *n* pixels moves the document the *n* pixels' worth it
+  represents (`scrubBy`). A tap anywhere still jumps, because a tap has no
+  scrolling to steal. The non-passive `touchmove` that cancels the default now
+  fires **only while a scrub is live**, for the same reason.
 
   **A scrub is a closed loop, and every fix here is about not letting it feed
   itself.** Dragging scrolls the page; on a phone scrolling collapses the URL
@@ -181,10 +191,13 @@ chapter, as Course 101 does today):
      left open would wedge the rail, since `layoutRail` won't rebuild while one
      is live.
 
-  `tools/shot.js` reproduces both failures directly — `shrink:a:b` drags while
-  the viewport grows underneath (the rail's height must not move), and
-  `multi:a:b` drops a stray second touch into a live scrub (the scroll must not
-  move). Both fail loudly against the code as it was before these rules.
+  `tools/shot.js` reproduces every one of these directly, and each fails loudly
+  against the code as it was before the rule it tests: `shrink:<dy>` scrubs while
+  the viewport grows underneath (the rail's height must not move), `multi:<dy>`
+  drops a stray second touch into a live scrub (the scroll must not move),
+  `scrub:<dy>` checks the drag is relative (the document moves the thumb's worth,
+  no teleport on grab), and `swipe:a:b` swipes the empty track (the page scrolls;
+  it does not jump to `b`'s position in the document).
 - The **🧭 Jump** button, bottom-right: the same waypoints as a menu, plus
   *Current lesson*. Rail is pointer-only by design; this is the keyboard route.
 

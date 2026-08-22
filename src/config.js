@@ -5,7 +5,7 @@ const CONFIG = {
   // Shown on the home screen and asserted to equal sw.js's CACHE. A stale phone
   // is the single most expensive bug in this project to diagnose remotely, and
   // it always ends with someone guessing from symptoms. Now you just read it.
-  BUILD: 'c101-v33',
+  BUILD: 'c101-v34',
 
   STORAGE_KEY: 'c101.progress.v1',
 

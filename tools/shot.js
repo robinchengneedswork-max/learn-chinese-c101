@@ -19,11 +19,16 @@
 // It prints what the rail measured, and after a gesture, where it landed.
 //
 // usage: node tools/shot.js <url> <out.png> [gesture]
-//   gesture: "drag:<fromFrac>:<toFrac>"    drag down the rail, shoot mid-drag
-//            "tap:<frac>"                  tap the rail at that fraction
-//            "cancel:<frac>"               browser takes the gesture away mid-slide
-//            "shrink:<fromFrac>:<toFrac>"  drag while the viewport grows under it
-//            "multi:<fromFrac>:<toFrac>"   drag, with a stray second touch in the strip
+//   gesture: "scrub:<dyFrac>"      grab the THUMB, drag it down by that much of
+//                                  the rail; shoot mid-drag. The thumb is the only
+//                                  part that takes a gesture.
+//            "swipe:<a>:<b>"       swipe the empty track — must reach the PAGE as
+//                                  an ordinary scroll, not teleport the way an
+//                                  absolute scrub did
+//            "tap:<frac>"          tap the rail at that fraction
+//            "cancel:<frac>"       browser takes the gesture away mid-slide
+//            "shrink:<dyFrac>"     scrub while the viewport grows underneath
+//            "multi:<dyFrac>"      scrub, with a stray second touch in the strip
 const fs = require('fs');
 const http = require('http');
 
@@ -101,13 +106,51 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
       type, touchPoints: type === 'touchEnd' ? [] : [{ x, y }]
     });
     const [kind, a, b] = gesture.split(':');
-    if (kind === 'drag') {
-      await touch('touchStart', yAt(+a));
-      for (let s = 1; s <= 6; s++) {
-        await touch('touchMove', yAt(+a + (+b - +a) * s / 6));
+    const scrollY = () => send('Runtime.evaluate',
+      { expression: 'Math.round(scrollY)', returnByValue: true }).then(r => r.result.value);
+    // Where the thumb is right now — the scrub gestures have to grab it, since
+    // that is the only part of the rail that takes a drag.
+    const thumbMid = () => send('Runtime.evaluate', { expression:
+      `(() => { const t = document.querySelector('.rail-thumb').getBoundingClientRect();
+                return Math.round(t.top + t.height / 2); })()`, returnByValue: true
+    }).then(r => r.result.value);
+    // Drag the thumb down by `dy` px in `steps`, from wherever it sits.
+    const scrub = async (dy, steps) => {
+      const from = await thumbMid();
+      await touch('touchStart', from);
+      for (let s = 1; s <= steps; s++) {
+        await touch('touchMove', from + dy * s / steps);
         await sleep(60);
       }
+      return from;
+    };
+
+    if (kind === 'scrub') {
+      const before = await scrollY();
+      await scrub(rect[3] * +a, 6);
+      const after = await scrollY();
+      // Relative, not absolute: dragging the thumb by a fraction of the rail must
+      // move the document by that fraction of its height — and grabbing it must
+      // not teleport anywhere first.
+      const want = Math.round(+a * JSON.parse(probe.result.value).docH);
+      const got = after - before;
+      console.log('scrub moved', got, 'px, expected ~' + want,
+                  Math.abs(got - want) <= 40 ? 'OK' : 'OFF');
       // shoot mid-drag: label + thumb should be live, finger still down
+    } else if (kind === 'swipe') {
+      // An ordinary scroll swipe over the empty track. It must reach the page —
+      // when the whole strip claimed the gesture AND the scrub was absolute, this
+      // teleported to `b`'s position in the document instead of scrolling.
+      const before = await scrollY();
+      await touch('touchStart', yAt(+a));
+      for (let s = 1; s <= 6; s++) { await touch('touchMove', yAt(+a + (+b - +a) * s / 6)); await sleep(60); }
+      await touch('touchEnd', yAt(+b));
+      await sleep(400);
+      const after = await scrollY();
+      const teleport = Math.round(+b * JSON.parse(probe.result.value).docH);
+      console.log('swipe: scrollY', before, '->', after,
+                  '| absolute-scrub would have gone to ~' + teleport,
+                  Math.abs(after - teleport) > 1500 ? 'OK (not a teleport)' : 'TELEPORTED');
     } else if (kind === 'tap') {
       await touch('touchStart', yAt(+a));
       await sleep(60);
@@ -122,15 +165,17 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
       const railH = () => send('Runtime.evaluate', { expression:
         `Math.round(document.getElementById('path-rail').getBoundingClientRect().height)`,
         returnByValue: true }).then(r => r.result.value);
-      await touch('touchStart', yAt(+a));
-      await touch('touchMove', yAt(+a + (+b - +a) / 3));
+      const from = await thumbMid();
+      const dy = rect[3] * +a;
+      await touch('touchStart', from);
+      await touch('touchMove', from + dy / 3);
       await sleep(60);
       const hBefore = await railH();
       await send('Emulation.setDeviceMetricsOverride',
         { width: W, height: H + 90, deviceScaleFactor: 2, mobile: true });
       await sleep(120);
       const hAfter = await railH();
-      await touch('touchMove', yAt(+b));
+      await touch('touchMove', from + dy);
       await sleep(60);
       console.log('rail height during drag:', hBefore, '->', hAfter,
                   hBefore === hAfter ? 'OK (pinned)' : 'DRIFTED');
@@ -140,10 +185,8 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
       // the live drag, and its release was then read as a tap that snapped the
       // page to wherever that finger sat. (CDP multi-touch end semantics are
       // fiddly, so the stray pointer is synthesized in the page, as with cancel.)
-      const scroll = () => send('Runtime.evaluate',
-        { expression: 'Math.round(scrollY)', returnByValue: true }).then(r => r.result.value);
-      await touch('touchStart', yAt(+a));
-      for (let s = 1; s <= 3; s++) { await touch('touchMove', yAt(+a + (+b - +a) * s / 3)); await sleep(60); }
+      const scroll = scrollY;
+      await scrub(rect[3] * +a, 3);
       const before = await scroll();
       await send('Runtime.evaluate', { expression:
         `(() => { const r = document.getElementById('path-rail');
