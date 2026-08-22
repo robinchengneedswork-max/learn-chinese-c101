@@ -138,9 +138,11 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
                   Math.abs(got - want) <= 40 ? 'OK' : 'OFF');
       // shoot mid-drag: label + thumb should be live, finger still down
     } else if (kind === 'swipe') {
-      // An ordinary scroll swipe over the empty track. It must reach the page —
-      // when the whole strip claimed the gesture AND the scrub was absolute, this
-      // teleported to `b`'s position in the document instead of scrolling.
+      // An ordinary scroll swipe over the track. The rail still claims the touch —
+      // that is what keeps iOS's own indicator out of the gesture — so it has to
+      // do the scrolling itself, 1:1 with the finger. What must NOT happen is the
+      // absolute jump this used to make: straight to `b`'s position in the whole
+      // document, which on GNR is thousands of pixels away.
       const before = await scrollY();
       await touch('touchStart', yAt(+a));
       for (let s = 1; s <= 6; s++) { await touch('touchMove', yAt(+a + (+b - +a) * s / 6)); await sleep(60); }
@@ -148,9 +150,11 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
       await sleep(400);
       const after = await scrollY();
       const teleport = Math.round(+b * JSON.parse(probe.result.value).docH);
+      const want = Math.round(-(+b - +a) * rect[3]);   // 1:1, content follows the finger
       console.log('swipe: scrollY', before, '->', after,
-                  '| absolute-scrub would have gone to ~' + teleport,
-                  Math.abs(after - teleport) > 1500 ? 'OK (not a teleport)' : 'TELEPORTED');
+                  '| moved', after - before, 'want ~' + want,
+                  '| absolute would have gone to ~' + teleport,
+                  Math.abs((after - before) - want) <= 40 ? 'OK (1:1)' : 'OFF');
     } else if (kind === 'tap') {
       await touch('touchStart', yAt(+a));
       await sleep(60);

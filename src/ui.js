@@ -1204,31 +1204,39 @@ const UI = (function () {
     // there are four of them bound), and a scrub left open would wedge the rail
     // for good: layoutRail refuses to rebuild while one is live, and the height
     // stays pinned. If we took the capture and no longer hold it, the finger is
-    // gone. A pending *tap* holds nothing and is simply replaced.
-    if (railDrag && railDrag.scrub) {
+    // gone.
+    if (railDrag) {
       const stale = railDrag.captured && rail.hasPointerCapture
                  && !rail.hasPointerCapture(railDrag.id);
       if (!stale) return;
       endRailDrag();
     }
     railDrag = null;
+    e.preventDefault();
+    e.stopPropagation();          // don't let the doc-level handlers close menus mid-drag
 
-    // Only the thumb claims the gesture. The rail lives down the right edge,
-    // which is exactly where a thumb scrolls, so treating every swipe in the strip
-    // as a scrub meant ordinary scrolling was read as navigation — and because the
-    // scrub was *absolute*, it teleported to wherever the finger happened to land:
-    // down went to the bottom, up went to the top, and each new swipe jumped again
-    // from wherever you now were. A swipe over the empty track now belongs to the
-    // page (see `touch-action` in the stylesheet); we only watch for a tap.
+    // Dragging the track scrolls; only the thumb scrubs.
+    //
+    // The rail must keep claiming every touch in its strip — that is what stops
+    // iOS handing the gesture to its own scroll indicator, which lives right there
+    // and is itself a draggable scrubber. But claiming a swipe and then treating
+    // it as an *absolute* position was the other half of the problem: an ordinary
+    // scroll near the right edge teleported to wherever the finger landed. So the
+    // strip stays claimed and the track simply does what the reader was asking for
+    // — it scrolls the page 1:1 with the finger. Nothing here is absolute; the
+    // only absolute gesture on the rail is a tap, which steals no scrolling.
     if (!onThumb(e, rail)) {
-      railDrag = { id: e.pointerId, y: e.clientY, moved: false, scrub: false,
+      railDrag = { id: e.pointerId, y: e.clientY, lastY: e.clientY,
+                   moved: false, scrub: false,
                    rect: rail.getBoundingClientRect(),
                    docH: docHeight(), viewH: window.innerHeight };
+      if (rail.setPointerCapture) {
+        rail.setPointerCapture(e.pointerId);
+        railDrag.captured = true;
+      }
       return;
     }
 
-    e.preventDefault();
-    e.stopPropagation();          // don't let the doc-level handlers close menus mid-drag
     // Freeze the gesture's frame of reference — and freeze it in the DOM too.
     //
     // The rail is pinned top-and-bottom, so its height is the viewport's height
@@ -1257,9 +1265,14 @@ const UI = (function () {
     const rail = $('#path-rail');
     if (!railDrag.moved && Math.abs(e.clientY - railDrag.y) < RAIL_DRAG) return;
     railDrag.moved = true;
-    // A swipe that started on the track is the page scrolling natively underneath
-    // us. Nothing to do but remember it wasn't a tap.
-    if (!railDrag.scrub) return;
+    // Track: hand-scroll the page 1:1, the way the browser would have if we hadn't
+    // taken the touch off it. Incremental, so there is no ruler to drift.
+    if (!railDrag.scrub) {
+      const dy = e.clientY - railDrag.lastY;
+      railDrag.lastY = e.clientY;
+      window.scrollBy(0, -dy);
+      return;
+    }
     showRailLabel(scrubBy(e.clientY - railDrag.y));
   }
 
@@ -1976,10 +1989,12 @@ const UI = (function () {
       // `touch-action: none` on the thumb alone didn't stop a phone from also
       // scrolling the page during a slide — the two then fought over the scroll
       // position. A non-passive touchmove that cancels the default is what
-      // actually holds. Strictly while a scrub is live, though: every other swipe
-      // in the strip has to pass through, or the rail eats the page's scrolling.
+      // actually holds — for every touch in the strip, not just a scrub. Letting
+      // the page scroll natively under any of them is what brings iOS's own
+      // indicator out next to us, and it will take the gesture. We scroll the
+      // page ourselves instead (see onRailMove).
       rail.addEventListener('touchmove', (e) => {
-        if (railDrag && railDrag.scrub && e.cancelable) e.preventDefault();
+        if (e.cancelable) e.preventDefault();
       }, { passive: false });
     }
     // Follow the scroll with the thumb, at most once a frame.

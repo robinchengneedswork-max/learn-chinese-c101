@@ -149,19 +149,27 @@ chapter, as Course 101 does today):
   the page height must re-run it, and it hides itself on a path shorter than ~1.6
   screens.
 
-  **Only the thumb takes a drag, and dragging it is relative.** Both halves of
-  that matter, and getting either wrong is the same bug. The rail runs down the
-  right edge — exactly where a thumb scrolls — so when the whole strip claimed
-  every vertical swipe *and* the scrub mapped the finger's absolute position onto
-  the document, an ordinary scroll was read as navigation and teleported the page
-  to wherever the finger happened to land: down went to the bottom, up went to the
-  top, and each new swipe jumped again from wherever you now were. Now the track
-  is `touch-action: pan-y` and passes its swipes to the page; only `.rail-thumb`
-  is `touch-action: none`, and only a gesture that starts on it (± `THUMB_GRAB`)
-  scrubs — moving the thumb *n* pixels moves the document the *n* pixels' worth it
-  represents (`scrubBy`). A tap anywhere still jumps, because a tap has no
-  scrolling to steal. The non-passive `touchmove` that cancels the default now
-  fires **only while a scrub is live**, for the same reason.
+  **The rail claims every touch in its strip, and nothing it does with one is
+  absolute except a tap.** Those are two separate rules and the reader's phone
+  found the bug in dropping either.
+
+  *Claim everything*, because `touch-action: none` plus a non-passive `touchmove`
+  is not only about our drag not double-scrolling the page. It **shields the strip
+  from iOS**: let a swipe here scroll the page natively and the system's own scroll
+  indicator comes out right beside us, and since iOS 13 that indicator is itself a
+  draggable scrubber, so it takes the gesture and jumps the page absolutely. A
+  build that handed track swipes back to the page (`touch-action: pan-y`) got the
+  two-scrubber fight straight back, from a reader who had just confirmed it fixed.
+
+  *Nothing absolute*, because the rail runs down the right edge — exactly where a
+  thumb scrolls — so claiming a swipe and then reading it as a **position** meant
+  ordinary scrolling teleported: down went to the bottom, up went to the top, and
+  each new swipe jumped again from wherever you now were. So the strip is claimed
+  and then handled honestly: dragging the **track** hand-scrolls the page 1:1 with
+  the finger (incremental, so there is no ruler to drift), and dragging the
+  **thumb** — a gesture starting within `THUMB_GRAB` of it — scrubs *relatively*,
+  moving the document the pixels'-worth the thumb moved (`scrubBy`). Only a **tap**
+  is absolute, and a tap steals no scrolling from anyone.
 
   **A scrub is a closed loop, and every fix here is about not letting it feed
   itself.** Dragging scrolls the page; on a phone scrolling collapses the URL
@@ -195,9 +203,9 @@ chapter, as Course 101 does today):
   against the code as it was before the rule it tests: `shrink:<dy>` scrubs while
   the viewport grows underneath (the rail's height must not move), `multi:<dy>`
   drops a stray second touch into a live scrub (the scroll must not move),
-  `scrub:<dy>` checks the drag is relative (the document moves the thumb's worth,
-  no teleport on grab), and `swipe:a:b` swipes the empty track (the page scrolls;
-  it does not jump to `b`'s position in the document).
+  `scrub:<dy>` checks the thumb drag is relative (the document moves the thumb's
+  worth, no teleport on grab), and `swipe:a:b` drags the track (the page moves 1:1
+  with the finger; it does not jump to `b`'s position in the document).
 - The **🧭 Jump** button, bottom-right: the same waypoints as a menu, plus
   *Current lesson*. Rail is pointer-only by design; this is the keyboard route.
 
